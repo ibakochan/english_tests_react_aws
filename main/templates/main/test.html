@@ -1,0 +1,88 @@
+{% load static %}
+{% load my_tags %}
+<html lang="en-JP">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    <link href="{% static 'main/test.css' %}" rel="stylesheet">
+    <link href="{% static 'main/my_custom.css' %}" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>威張る英語</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+</head>
+<script>
+        window.correctAudioUrls = [
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(17)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(18)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(19)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(20)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(21)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(22)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(23)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(24)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(25)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(25)%20(1).mp3"
+        ];
+
+        window.correctEnglishAudioUrls = [
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(17)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_44_01_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_44_07_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_44_43_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_44_49_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_44_56_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_45_01_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_45_20_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_45_28_1.mp3"
+        ];
+
+        window.wrongAudioUrls = [
+            "https://storage.googleapis.com/ivar_reactions/sound13%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(27)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(28)%20(1).mp3",
+            "https://storage.googleapis.com/ivar_reactions/Record%20(online-voice-recorder.com)%20(29)%20(1).mp3"
+        ];
+
+        window.wrongEnglishAudioUrls = [
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_36_49_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_36_54_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_37_00_1.mp3",
+            "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_37_30_1.mp3"
+        ];
+        window.urlPath = "{{ request.path }}";
+</script>
+
+<body style="background-image: url('https://storage.googleapis.com/profile_assets/WhatsApp%E7%94%BB%E5%83%8F%202024-02-14%2013.27.37_9343389c%20(2).jpg'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; margin: 0; padding: 0;">
+<div class="container-fluid" style="padding: 0;">
+    <div class="quiz-container" id="app" style="width: 100%; padding: 0; margin: 0;"></div>
+    <div class="row w-100" style="width: 100%; padding: 0; margin: 0;">
+        <div class="card w-100 border-dark">
+            {% if not classroom.character_voice %}
+            <audio id="audio" src="{{ profile_audio }}" preload="auto"></audio>
+            {% endif %}
+        <div>
+            <form method="post" action="{% url 'accounts:logout' %}?next={% url 'accounts:login' %}">
+                {% csrf_token %}
+                <div>
+                    {% if user %}
+                    <button type="submit" style="width: 200px; border: 4px solid black;" class="btn btn-danger">
+                        ログアウト
+                    </button>
+                    {% else %}
+                    <button type="submit" style="width: 200px; border: 4px solid black;" class="btn btn-primary">
+                        ログイン
+                    </button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+<script type="module" src="{% static 'my-vite-app/dist/assets/index-CH9mBtmR.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

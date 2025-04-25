@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Django
+*.pot
+*.pyc
+*.pyo
+*.db
+*.bak
+*.swp
+staticfiles/
+
+# Environment
+.env
+venv/
+mysite/.env  # This line specifically for your important .env
+
+# Node (if any frontend exists)
+node_modules/
+build/
+
+# IDEs & Editor
+.vscode/
+
+# Logs
+*.log
