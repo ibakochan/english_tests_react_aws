@@ -4,6 +4,8 @@ import { useCookies } from 'react-cookie';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { useUser } from "../context/UserContext";
 import { FaPlay, FaArrowLeft } from 'react-icons/fa';
+import { CategoryButtons, CategoryReturnButton } from "./TestChildren/CategoryTogglers";
+import { FinalsButton, FinalsReturnButton, TestReturnButton, TestButtons } from './TestChildren/TestTogglers';
 
 
 const UserTestRecords = () => {
@@ -46,6 +48,30 @@ const UserTestRecords = () => {
     handleAccountRemove(activeUserDeleteId, activeClassroomId);
   };
 
+
+  const resetStudentPassword = async (userId, newPassword) => {
+    try {
+      const csrfToken = cookies.csrftoken;
+  
+      const response = await axios.post(
+        `/accounts/update/password/${userId}`,
+        { password: newPassword },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        }
+      );
+  
+      alert('Password reset successfully!');
+    } catch (error) {
+      console.error('Error changing password:', error);
+      alert('An error occurred while changing the password.');
+    }
+  };
+  
 
   const fetchClassroomRequests = async () => {
         try {
@@ -270,14 +296,15 @@ const UserTestRecords = () => {
       {error && <p>{error}</p>}
           <span>
             <span>
+                <span>
                 <span style={{ display: 'flex', justifyContent: 'center', marginBottom: urlPath === "/portfolio/" ? '0' : '20px' }}>
                 {activity === "" &&
                 <>
-                <label className="me-2">教室：</label> 
                 <select
                   style={{ width: "150px", height: "30px" }}
                   className="form-select"
                   value={activeClassroomName}
+                  placeholder={isEnglish ? "Currently no classrooms" : "教室まだない"}
                   onChange={(e) => {
                     const selectedClassroom = userClassrooms.find(c => c.name === e.target.value);
                     if (selectedClassroom) {
@@ -286,11 +313,17 @@ const UserTestRecords = () => {
                     }
                   }}
                 >
-                  {userClassrooms.map(classroom => (
-                    <option key={classroom.id} value={classroom.name}>
-                      {classroom.name}
+                  {userClassrooms.length === 0 ? (
+                    <option value="" disabled selected>
+                      {isEnglish ? "No classrooms" : "教室まだない"}
                     </option>
-                  ))}
+                  ) : (
+                    userClassrooms.map(classroom => (
+                      <option key={classroom.id} value={classroom.name}>
+                        {classroom.name}
+                      </option>
+                    ))
+                  )}
                 </select>
                 </>
                 }
@@ -328,10 +361,12 @@ const UserTestRecords = () => {
                 </button>
                 }
                 </span>
+                </span>
                 {currentUser?.teacher.classrooms.length > 0 &&
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                <div>
                 {acceptMessage && <h5 className="text-center mb-2">{acceptMessage}</h5>}
                 {classroomRequests.map((request) => (
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
                     <button
                       className="btn btn-dark mb-3 category_button"
                       onClick={() => toggleAccept(request.id, false)}
@@ -343,22 +378,53 @@ const UserTestRecords = () => {
                             <span className="text-danger" style={{ fontSize: '50px' }}>&#x2717;</span>
                         )}
                     </button>
+                    </div>
                 ))}
                 {userDetailButtonActive && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
                     {users.map(user => (
                       <span key={user.id}>
                       <button
-                        style={{ height: '210px', width: '250px', padding: '10px', margin: '5px', border: '5px solid black' }}
+                        style={{ height: 'flex', width: '250px', padding: '10px', margin: '5px', border: '5px solid black' }}
                         className={`btn btn-success mb-3`}
                       >
                         <h5>{user.username} - {user.student.student_number}</h5>
-                        <h5>{user.last_name}</h5>
                         <h5>最大記録トータル＝{user.total_max_scores}</h5>
                         <h5>英検トータル＝{user.total_eiken_score}</h5>
                       <button className={`btn btn-danger submit_buttons`} style={{ border: '5px solid black' }} onClick={() => openModal(user.id)}>
-                        教室から追い出す
+                        {isEnglish ? "Remove from classroom" : "教室から追い出す"}
                       </button>
+                      <div style={{ marginTop: '10px' }}>
+                        <input
+                          type="password"
+                          placeholder={isEnglish ? "New password" : "新しいパスワード"}
+                          value={user.newPassword || ''}
+                          onChange={(e) => {
+                            const updatedUsers = users.map(u =>
+                              u.id === user.id ? { ...u, newPassword: e.target.value } : u
+                            );
+                            setUsers(updatedUsers);
+                          }}
+                          className="form-control mb-2"
+                        />
+                        <button
+                          className="btn btn-warning"
+                          onClick={() => {
+                            if (user.newPassword) {
+                              resetStudentPassword(user.id, user.newPassword);
+    
+                              const updatedUsers = users.map(u =>
+                                u.id === user.id ? { ...u, newPassword: '' } : u
+                              );
+                              setUsers(updatedUsers);
+                            } else {
+                              alert(isEnglish ? 'Please enter a password' : 'パスワードを入力してください');
+                            }
+                          }}
+                        >
+                          {isEnglish ? "Reset Password" : "パスワードをリセット"}
+                        </button>
+                      </div>
                       </button>
                       </span>
                     ))}
@@ -366,45 +432,18 @@ const UserTestRecords = () => {
                 )}
                 {activatedClassroomId === activeClassroomId && (
                   <div className="classroom-details">
-                  <button
-                    onClick={() => toggleCategories('japanese')}
-                    className={`btn btn-success mb-3 category_button ${activeCategory === null ? 'active' : 'd-none'}`}
-                  >日本語</button>
-                  <button
-                    onClick={() => toggleCategories('english_5')}
-                    className={`btn btn-success mb-3 category_button ${activeCategory === null ? 'active' : 'd-none'}`}
-                  >５年英語</button>
-                  <button
-                    onClick={() => toggleCategories('english_6')}
-                    className={`btn btn-success mb-3 category_button ${activeCategory === null ? 'active' : 'd-none'}`}
-                  >６年英語</button>
-                  <button
-                    onClick={() => toggleCategories('phonics')}
-                    className={`btn btn-success mb-3 category_button ${activeCategory === null ? 'active' : 'd-none'}`}
-                  >アルファベットとフォニックス</button>
-                  <button
-                    onClick={() => toggleCategories('numbers')}
-                    className={`btn btn-success mb-3 category_button ${activeCategory === null ? 'active' : 'd-none'}`}
-                  >数字</button>
-                  <p>
-                  <button
-                    style={{ border: '5px solid black' }}
-                    className={`btn btn-success mb-3 return_buttons ${activeCategory !== null && activeTestId === null ? 'active' : 'd-none'}`}
-                    onClick={() => toggleCategories(activeCategory)}
-                  >
-                    <span
-                      className="text-center text-white text_shadow"
-                    >
-                    {activeCategory}から戻る
-                    </span>
-                  </button>
-                 </p>
+                  <div style={{ justifyContent: 'center' }}>
+                    <CategoryButtons isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} currentUser={currentUser} />
+                    {!activeTestId &&
+                      <CategoryReturnButton isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} activeTestId={activeTestId} />
+                    }
+                  </div>
                     {Object.values(tests).flat().sort((a, b) => a.lesson_number - b.lesson_number).map(test => (
                       <span key={test.id}>
                         {activeTestId === null || activeTestId === test.id ? (
-                        <span style={{ marginRight: '10px' }}>
+                        <span>
                         <button
-                          className={`btn btn-warning mb-3 test_buttons ${activeTestId === test.id || activeTestId === null && activeCategory === test.category ? 'active' : 'd-none'}`}
+                          className={`btn btn-warning test_buttons test_button_hover ${activeCategory === test.category && activeTestId === null ? 'active' : 'd-none'}`}
                           onClick={() => toggleTestDetails(test.id)}
                         >
                           <span
@@ -418,14 +457,32 @@ const UserTestRecords = () => {
                         </button>
                         </span>
                         ) : null}
+                        {activeTestId !== null &&
+                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        <button
+                          translate="no"
+                          className={`btn btn-warning test_button_hover ${activeTestId === test.id || activeTestId === null ? 'active' : 'd-none'}`}
+                          style={{ height: '50px', width: '400px', border: '5px solid black', marginBottom: '20px' }}
+                          onClick={() => {
+                            setActiveTestId(null);  
+                          }}
+                        >
+                          <span className="text-center text-white text_shadow">
+                            <FaArrowLeft style={{ marginRight: '10px' }} />
+                            {isEnglish ? 'Go back from ' : ''}
+                            {test.name}{!isEnglish ? 'から戻る!' : ''}
+                          </span>
+                        </button>
+                        </div>
+                        }
                         {activeTestId === test.id && (
-                          <div className="test-details">
+                          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
                             {users.map(user => (
                               <span key={user.id}>
                                 {activeUserId === null || activeUserId === user.id ? (
                                 <button
                                   className={`btn btn-success mb-3 toggle-user-btn${activeUserId === user.id ? ' active' : ''}`}
-                                  style={{ height: '120px', width: '200px', padding: '10px', margin: '5px', border: '5px solid black' }}
+                                  style={{ height: '150px', width: '250px', padding: '10px', margin: '5px', border: '5px solid black' }}
                                   onClick={() => toggleUserDetails(user.id)}
                                 >
                                   <h5>{user.username}</h5>
@@ -450,9 +507,9 @@ const UserTestRecords = () => {
                 {urlPath === "/portfolio/" &&
                 <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                   <div>This section is only available to teachers</div>
-                  <div>You can manage students in your active classrooms</div>
+                  <div>You can manage students in your active classroom</div>
                   <div>You can check their test scores</div>
-                  <div>You can kick them from the classroom</div>
+                  <div>You can remove them from your active classroom</div>
                   <div>you can accept teacher requests to join your active classroom</div>
                 </div>
                 }
@@ -460,11 +517,11 @@ const UserTestRecords = () => {
           </span>
       <Modal show={modalIsOpen} onHide={closeReturnModal}>
         <Modal.Body>
-          <p>この生徒を本当に教室から追い出すんですか？</p>
+          <p>{isEnglish ? "Are you sure you want to remove this student from the classroom?" : "この生徒を本当に教室から追い出すんですか？"}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeReturnModal}>いいえ</Button>
-          <Button variant="primary" onClick={handleBackClick}>はい</Button>
+          <Button variant="secondary" onClick={closeReturnModal}>{isEnglish ? "No" : "いいえ"}</Button>
+          <Button variant="primary" onClick={handleBackClick}>{isEnglish ? "Yes" : "はい"}</Button>
         </Modal.Footer>
       </Modal>
     </span>

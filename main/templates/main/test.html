@@ -1,14 +1,27 @@
-{% load static %}
-{% load my_tags %}
+<!DOCTYPE html>
 <html lang="en-JP">
 <head>
+    {% load static %}
+    {% load my_tags %}
+    {% load socialaccount %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.6">
     <link href="{% static 'main/test.css' %}" rel="stylesheet">
-    <link href="{% static 'main/my_custom.css' %}" rel="stylesheet">
+    <link href="{% static 'main/my_custom.css' %}?v=10" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <title>威張る英語</title>
+    <meta name="description" content="小中学生向けの英語と英検練習サイト。英検5級〜3級、フォニックス、数字、英語の基礎を楽しく学べます！">
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VR8B465LL"></script>
+    <link rel="canonical" href="https://eibaru.jp/" />
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-0VR8B465LL');
+    </script>
 </head>
 <script>
         window.correctAudioUrls = [
@@ -61,6 +74,7 @@
             <audio id="audio" src="{{ profile_audio }}" preload="auto"></audio>
             {% endif %}
         <div>
+            <h5>英検５級と英検４級の練習と、小学校と中学校の英語練習</h5>
             <form method="post" action="{% url 'accounts:logout' %}?next={% url 'accounts:login' %}">
                 {% csrf_token %}
                 <div>
@@ -75,13 +89,34 @@
                     {% endif %}
                 </div>
             </form>
+            {% if user == "" %}
+            <a href="{% provider_login_url 'google' process='login' %}" 
+                   class="btn btn-light d-flex align-items-center mt-3 justify-content-center"
+                   style="border: 1px solid #dadce0; width: 200px; height: 40px; font-weight: 500; text-decoration: none;">
+                  <img src="https://developers.google.com/identity/images/g-logo.png" 
+                       alt="Google logo" 
+                       style="width: 20px; height: 20px; margin-right: 10px;">
+                  <span>Googleでログイン</span>
+            </a>
+            {% elif has_google %}
+                      <p>Google account already linked.</p>
+                    {% else %}
+                    <a href="{% provider_login_url 'google' process='connect' %}"
+                         class="btn btn-light d-flex align-items-center mt-3 justify-content-center"
+                         style="border: 1px solid #dadce0; width: 200px; height: 40px; font-weight: 500; text-decoration: none;">
+                        <img src="https://developers.google.com/identity/images/g-logo.png" 
+                             alt="Google logo" 
+                             style="width: 20px; height: 20px; margin-right: 10px;">
+                        <span>Googleと連携</span>
+                    </a>
+            {% endif %}
         </div>
         </div>
     </div>
     </div>
 </div>
 </body>
-<script type="module" src="{% static 'my-vite-app/dist/assets/index-CH9mBtmR.js' %}"></script>
+<script type="module" src="{% static 'my-vite-app/dist/assets/index-B3faWqdy.js' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

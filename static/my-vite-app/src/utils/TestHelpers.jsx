@@ -9,10 +9,45 @@ export const formatText = (text) => {
                 <p>B:{parts[1]}</p>
             </>
         );
+    } else if (text.includes("。")) {
+        const parts = text.split("。");
+        return (
+            <>
+                <p>{parts[0]}。</p>
+                <p>{parts[1]}</p>
+            </>
+        );
     } else {
         return <p>{text}</p>;
     }
 };
+
+
+export const wrapTextSafe = (text, limit = 15) => {
+  if (!text) return [];
+
+  const lines = [];
+  let i = 0;
+
+  while (i < text.length) {
+    let breakIndex = i + limit;
+    while (breakIndex < text.length && text[breakIndex] !== ' ') {
+      breakIndex++;
+    }
+
+    if (breakIndex >= text.length) {
+      lines.push(text.slice(i).trim());
+      break;
+    }
+
+    lines.push(text.slice(i, breakIndex).trim());
+    i = breakIndex + 1;
+  }
+
+  return lines;
+};
+
+
 
 export const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -50,6 +85,7 @@ export const getRandomizedValues = (questions) => {
   
       const isArray = Array.isArray(randomValue);
       const isArrayfour = isArray && randomValue.length >= 4;
+      const isArrayfive = isArray && randomValue.length >= 5;
   
       acc[question.duplicateId] = {
         randomAlphabetSliced,
@@ -61,6 +97,7 @@ export const getRandomizedValues = (questions) => {
         randomWrongTwo: isArrayfour ? randomValue[1] : null,
         randomWrongThree: isArrayfour ? randomValue[2] : null,
         randomCorrect: isArrayfour ? randomValue[3] : null,
+        randomFifth: isArrayfive ? randomValue[4] : null,
         randomNumbers: randomValue.numbers || null,
         randomWord: randomValue.word
           ? Array.isArray(randomValue.word)

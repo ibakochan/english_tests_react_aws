@@ -10,7 +10,7 @@ import { useWebsocket } from "../context/WebsocketContext";
 import { useTest } from "../context/TestContext";
 import { gameReducer, initialGameState } from "../context/GameReducer";
 
-import { formatText, shuffleArray, getRandomizedValues, getRandomizedOptions, handlePlay, useAutoPlay } from "../utils/TestHelpers";
+import { formatText, wrapTextSafe, shuffleArray, getRandomizedValues, getRandomizedOptions, handlePlay, useAutoPlay } from "../utils/TestHelpers";
 import { useScoreHelpers } from '../utils/TestRecordHelpers';
 import { TestModal, ReturnConfirmModal, SignupPromptModal, InvitationModal } from '../utils/TestModalHelpers';
 import { filterTests } from '../utils/filtering';
@@ -21,6 +21,7 @@ import { ws, connect, disconnect, sendData, setConnectedUsersCallback, setInvita
 import Practice from './TestChildren/Practice';
 import TestRenderForm from './TestChildren/TestRenderForm';
 import DisplayAllVocab from './TestChildren/DisplayAllVocab';
+import Login from './TestChildren/Login';
 import { CategoryButtons, CategoryReturnButton } from "./TestChildren/CategoryTogglers";
 import { FinalsButton, FinalsReturnButton, TestReturnButton, TestButtons } from './TestChildren/TestTogglers';
 
@@ -82,9 +83,28 @@ const Test = () => {
   const urlPath = window.urlPath
 
   const audioRef = useRef(null);
+  const testSectionRef = useRef(null);
+  useEffect(() => {
+    if (testSectionRef.current) {
+      const element = testSectionRef.current;
+      const rect = element.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const elementTop = rect.top + scrollTop;
+      const offset = window.innerHeight / 2 - rect.height / 2;
+
+      window.scrollTo({
+        top: elementTop - offset,
+        behavior: 'smooth'
+      });
+    }
+  }, []);
+
 
   const { fetchData } = useFetch('', 'GET', null, setLoading, setError);
 
+  const isEikenCategory = activeCategory === 'eiken' || activeCategory === 'eiken4';
+  const isGrammarOrLongDashTest = (activeTestName || '').includes('ー') || (activeTestName || '').includes('文法的語彙');
+  const shouldShowEikenPracticeSection = isEikenCategory && isGrammarOrLongDashTest;
 
 
   const activeQuestion = testQuestions.questions
@@ -97,7 +117,7 @@ const Test = () => {
 
   const questionData = activeQuestion ? randomizedValues[activeQuestion.duplicateId] || {} : {};
 
-  const { randomAlphabetSliced, randomAlphabet, randomUrl, randomWrongOne, randomWrongTwo, randomWrongThree, randomCorrect, randomEikenUrl, randomTranslation, randomNumbers, randomWord, randomWord2, randomJapanese, randomPicture, randomSound, randomSound2, randomSound3, randomLabel } = questionData;
+  const { randomAlphabetSliced, randomAlphabet, randomUrl, randomWrongOne, randomWrongTwo, randomWrongThree, randomFifth, randomCorrect, randomEikenUrl, randomTranslation, randomNumbers, randomWord, randomWord2, randomJapanese, randomPicture, randomSound, randomSound2, randomSound3, randomLabel } = questionData;
 
   const label = activeQuestion?.label;
   const sound2 = activeQuestion?.sound2;
@@ -105,6 +125,7 @@ const Test = () => {
   const word2 = activeQuestion?.word2;
   
   const isAudio = typeof randomUrl === 'string' && (randomUrl.includes('Record') || randomUrl.includes('mp3'));
+  const isEikenAudio = typeof randomEikenUrl === 'string' && (randomEikenUrl.includes('Record') || randomEikenUrl.includes('mp3'));
   const isPicture = typeof randomUrl === 'string' && randomUrl.includes('image');
 
   const handleAutoPlay = useAutoPlay(isPlayDisabled, setIsPlayDisabled, testQuestions, activeTestId, activeFinals, 
@@ -200,9 +221,9 @@ const Test = () => {
       type: 'SET_ACTIVE_QUESTION_INDEX',
       payload: gameState.activeQuestionIndex + 1
     });
+    setShowModal(false);
     setOpponentATimestamp(null);
     setTimestamp(null);
-    setShowModal(false);
     setRecordMessage('');
     setOpponentAnsweredWrong(false);
     setYouAnsweredCorrect(false);
@@ -461,18 +482,21 @@ const Test = () => {
         <div>
         <div className="quiz-header flex-center-column">
           <>
+          {!currentUser &&
+            <Login />
+          }
           {activity !== "memories" && (opponentA === "" || inviter) &&
-          <span>
+          <div ref={testSectionRef}>
           <CategoryButtons isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} currentUser={currentUser} />
           {!activeTestId && !activeFinals &&
             <CategoryReturnButton isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} activeTestId={activeTestId} />
           }
-          </span>
+          </div>
           }
           {urlPath === "/portfolio/" && !activeCategory &&
               <div>Here we have the category buttons. Click on them, choose a test and then play</div>
           }
-          {activeCategory === 'eiken' ? <h4>最大２５点の語彙テスト以外７割以上とれたら次のテストが現れる</h4> : ''}
+          {activeCategory === 'eiken' ? <h4>７割以上とれたら次のテストが現れる</h4> : ''}
           </>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
@@ -498,10 +522,10 @@ const Test = () => {
                 {activeTestId !== null && (
                   <>
                   <div className="test-details flex-center-column" >
-                  {isPractice && questions && ((activeCategory === 'eiken' && activeTestName.includes('英検語彙')) || activeCategory !== 'eiken') && (
+                  {isPractice && questions && ((shouldShowEikenPracticeSection) || activeCategory !== 'eiken') && (
                     <Practice questions={questions} handlePlay={handlePlay} isPlayDisabled={isPlayDisabled} activeTestDescription={activeTestDescription} activeTestDescriptionSound={activeTestDescriptionSound} />
                   )}
-                  {!isPractice && questions && questions.sound3 && (
+                  {!isPractice && questions && (questions.sound3 || questions.display_all) && (
                     <div key={questions.id} style={{ display: 'flex', flexWrap: 'wrap' }}>
                       <DisplayAllVocab questions={questions} shuffledKeys={gameState.shuffledKeys} />
                     </div>
@@ -529,28 +553,34 @@ const Test = () => {
                                 </>
                               ) : randomSound ? null : null
                             ) : null}
-                            {activeCategory !== "eiken" &&
+                            {!isEikenAudio && !randomWrongThree &&
                             <button className="play_buttons btn btn-success mb-3" style={{ border: '5px solid black' }} onClick={(e) => handleAutoPlay()} disabled={isPlayDisabled}>
                                   {isEnglish ? "Play sound" : "音声"} <FaPlay style={{ marginLeft: '10px' }} />
                             </button>    
                             }
 
-                            <h4 style={{ whiteSpace: 'pre' }}>{randomCorrect ? formatText(randomAlphabet) : randomTranslation}</h4>
+                            {randomCorrect ? (
+                              <h4 style={{ whiteSpace: 'pre-wrap' }}>
+                                {formatText(wrapTextSafe(randomAlphabet, 50).join(' '))}
+                              </h4>
+                            ) : (
+                              <h4 style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: randomTranslation }} />
+                            )}
                             {randomNumbers && (
-                            <h4>{randomWord}</h4>
+                            <h4 style={{ whiteSpace: 'pre-wrap' }}>{wrapTextSafe(randomWord, 50).join('\n')}</h4>
                             )}
                             {question.japanese_option && (
-                              <h4>{randomWord}</h4>
+                              <h4 style={{ whiteSpace: 'pre-wrap' }}>{wrapTextSafe(randomWord, 50).join('\n')}</h4>
                             )}
                             {question.description && !question.write_answer && (
-                              <h4>{question.name}</h4>
+                              <h4 style={{ whiteSpace: 'pre-wrap' }}>{wrapTextSafe(question.name, 50).join('\n')}</h4>
                             )}
                             {!youAnsweredWrong ? (
                             <TestRenderForm 
                               {...{ 
                                 timestamp, question, selectedKeys, randomizedOptions, correctOption, opponentAnsweredWrong, selectedOption, inputValue, 
                                 setInputValue, setCorrectOption, setSelectedOption, handleSubmit, randomAlphabet, randomLabel, randomWord2, 
-                                randomPicture, randomCorrect, randomWord, randomJapanese, randomNumbers, questions, randomEikenUrl, randomWrongThree, 
+                                randomPicture, randomCorrect, randomWord, randomJapanese, randomNumbers, questions, randomEikenUrl, randomWrongThree, randomFifth,
                                 randomWrongOne, randomWrongTwo, randomAlphabetSliced, opponentA, ws, isEnglish, gameState, sendData, handlePlay, 
                                 isPractice, activeCategory, youAnsweredWrong, setYouAnsweredWrong}} 
                             />
@@ -571,7 +601,7 @@ const Test = () => {
                 </div>
         </div>
           {activeTestId !== null &&
-            <h1>{opponentA === "" ? "質問ナンバー" : "ラウンド"}{gameState.activeQuestionIndex + 1}/{totalQuestions}</h1>
+            <h1 translate="no">{opponentA === "" ? "質問ナンバー" : "ラウンド"}{gameState.activeQuestionIndex + 1}/{totalQuestions}</h1>
           }
             <div>
             {opponentA !== '' &&

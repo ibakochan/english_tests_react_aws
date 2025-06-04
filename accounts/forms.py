@@ -14,6 +14,35 @@ class CustomAuthenticationForm(AuthenticationForm):
         self.fields['password'].widget.attrs['placeholder'] = 'パスワード'
         self.fields['password'].label = 'パスワード'
 
+class SignUpForm(forms.ModelForm):
+    username = forms.CharField(
+        label="ユーザー名",
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+
+    password = forms.CharField(
+        label="パスワード",
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'password')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        password = self.cleaned_data.get('password')
+        user.set_password(password)
+        if commit:
+            user.save()
+        return user
+
+    def clean(self):
+        cleaned_data = super().clean()
+        return cleaned_data
+
 class TeacherSignUpForm(forms.ModelForm):
     username = forms.CharField(
         label="ユーザー名",
@@ -27,9 +56,15 @@ class TeacherSignUpForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
 
+    email = forms.CharField(
+        label="メール",
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+
     class Meta:
         model = CustomUser
-        fields = ('username', 'password', 'last_name')
+        fields = ('username', 'password', 'last_name', 'email')
 
     def save(self, commit=True):
         user = super().save(commit=False)

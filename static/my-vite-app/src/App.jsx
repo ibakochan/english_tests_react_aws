@@ -37,7 +37,7 @@ function AppContent() {
         </div>
       </div>
       )}
-      {activity !== "test" &&  (
+      {activity !== "test" && (
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
         <Classrooms />
       </div>

@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from accounts.forms import StudentSignUpForm, TeacherSignUpForm
 from .models import Classroom, Test, Question, Option, Teacher, Student, MaxScore, ClassroomRequest
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import UserPassesTestMixin
 import json
 from .profile_assets import get_profile_assets, get_memories, get_total_questions, get_total_category_scores, get_eiken_pet, get_eiken_memories
@@ -13,6 +13,7 @@ from django.db.models import Sum
 from django.urls import reverse_lazy
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
+from allauth.socialaccount.models import SocialAccount
 
 from rest_framework.response import Response
 
@@ -38,35 +39,6 @@ class ClassroomSilenceView(View):
 
         return redirect('main:profile')
 
-class TestClassroomView(View):
-    def post(self, request, pk):
-        test = Test.objects.get(pk=pk)
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'})
-
-        connect_form = ConnectTestForm(data)
-        print(data)
-        print(connect_form.errors)
-
-        if connect_form.is_valid():
-            classroom_name = connect_form.cleaned_data.get('classroom_name')
-            classroom_password = connect_form.cleaned_data.get('classroom_password')
-
-            try:
-                classroom = Classroom.objects.get(name=classroom_name)
-                if classroom.hashed_password == classroom_password:
-                    test.classroom.add(classroom)
-                    response_data = {'status': 'success', 'message': 'Successfully added to the classroom!'}
-                else:
-                    response_data = {'status': 'error', 'message': 'Invalid classroom password.'}
-            except Classroom.DoesNotExist:
-                response_data = {'status': 'error', 'message': 'Classroom not found.'}
-        else:
-            response_data = {'status': 'error', 'message': 'Form is not valid.', 'errors': connect_form.errors}
-
-        return JsonResponse(response_data)
 
 class ClassroomJoinView(LoginRequiredMixin, View):
     def post(self, request):
@@ -149,7 +121,25 @@ class ClassroomAcceptView(LoginRequiredMixin, View):
         return JsonResponse(response_data)
 
 
+class ToggleBattlePermissionView(View):
+    def post(self, request, id):
+        classroom = get_object_or_404(Classroom, id=id)
+        classroom.battle_permission = not classroom.battle_permission
+        classroom.save()
+        return JsonResponse({
+            'classroom_id': classroom.id,
+            'battle_permission': classroom.battle_permission
+        })
 
+class ToggleCharacterVoiceView(View):
+    def post(self, request, id):
+        classroom = get_object_or_404(Classroom, id=id)
+        classroom.character_voice = not classroom.character_voice
+        classroom.save()
+        return JsonResponse({
+            'classroom_id': classroom.id,
+            'character_voice': classroom.character_voice
+        })
 
 class ProfilePageView(View):
 
@@ -158,34 +148,72 @@ class ProfilePageView(View):
 
     def get(self, request):
         user = ""
+        has_google = False
         if request.user.is_authenticated:
             user=request.user
+            has_google = SocialAccount.objects.filter(user=user, provider='google').exists()
 
 
 
-        return render(request, self.template_name, {'user': user})
+        return render(request, self.template_name, {'user': user, 'has_google': has_google})
 
 
 
-class NotLoggedInRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        return not self.request.user.is_authenticated
-
-    def handle_no_permission(self):
-
-        if self.request.user.is_authenticated:
-            return redirect(reverse_lazy('main:profile'))
-        return super().handle_no_permission()
 
 
-class PortfolioView(NotLoggedInRequiredMixin, View):
+
+class PortfolioView(View):
     template_name = 'main/test.html'
 
     def get(self, request):
         return render(request, self.template_name)
 
 
+class StudentTeacherChooseView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            role = data.get('role')
 
+            if role == 'teacher':
+                student = Student.objects.filter(user=request.user).first()
+                if student:
+                    student.delete()
+
+                teacher = Teacher.objects.create(user=request.user)
+                teacher_data = {
+                    "id": teacher.id,
+                    "classrooms": [],
+                    "user": {
+                        "id": request.user.id,
+                        "username": request.user.username,
+                    }
+                }
+                return JsonResponse({"message": "先生になりました", "teacher": teacher_data}, status=201)
+
+            elif role == 'student':
+                teacher = Teacher.objects.filter(user=request.user).first()
+                if teacher:
+                    teacher.delete()
+
+                student = Student.objects.create(user=request.user)
+                student_data = {
+                    "id": student.id,
+                    "classrooms": [],
+                    "user": {
+                        "id": request.user.id,
+                        "username": request.user.username,
+                    },
+                    "student_number": student.student_number,
+                }
+                return JsonResponse({"message": "生徒になりました", "student": student_data}, status=201)
+
+            else:
+                return JsonResponse({"error": "エラーになった"}, status=400)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "JSONエラー"}, status=400)
+        
 
 @method_decorator(never_cache, name='dispatch')
 class StudentSignUpView(View):
@@ -199,6 +227,7 @@ class StudentSignUpView(View):
         form = StudentSignUpForm(request.POST)
 
         username = request.POST.get('username')
+        password = request.POST.get('password')
         if CustomUser.objects.filter(username=username).exists():
             error_message = "このユーザネームはすでに使われている"
             return render(request, self.template_name, {'form': form, 'error_message': error_message})
@@ -210,10 +239,11 @@ class StudentSignUpView(View):
 
         if form.is_valid():
             user = form.save()
+            user = authenticate(request, username=username, password=password)
             login(request, user)
             return redirect('/')
         else:
-            error_message = "パスワードが一致してない"
+            error_message = "ユーザーネームにスペースや記号などは入れません"
             return render(request, self.template_name, {'form': form, 'error_message': error_message})
         return render(request, self.template_name, {'form': form})
 
@@ -230,6 +260,7 @@ class TeacherSignUpView(View):
         form = TeacherSignUpForm(request.POST)
 
         username = request.POST.get('username')
+        password = request.POST.get('password')
         if CustomUser.objects.filter(username=username).exists():
             error_message = "A user with that username already exists."
             return render(request, self.template_name, {'form': form, 'error_message': error_message})
@@ -238,11 +269,14 @@ class TeacherSignUpView(View):
         if form.is_valid():
             user = form.save(commit=False)
             password = form.cleaned_data.get('password')
+            email = form.cleaned_data.get('email')
             user.set_password(password)
+            user.email = email
             user.save()
 
             teacher =Teacher.objects.create(user=user)
-
+            
+            user = authenticate(request, username=username, password=password)
             login(request, user)
             return redirect('/')
 
@@ -258,23 +292,14 @@ class UpdateProfileView(View):
         try:
             data = json.loads(request.body)
             student_number = data.get("studentNumber")
-            last_name = data.get("lastName")
         
             student = Student.objects.get(user=user)
             if student_number != "":
                 student.student_number = student_number
                 student.save()
-
-            if last_name != "":
-                user.last_name = last_name
-                user.save()
             
-            message_response = f"出席番号と名前を {student_number} と {last_name} に変更できた"
-            if student_number == "" and last_name != "":
-                message_response = f"名字を {last_name} に変更できた"
-            if student_number != "" and last_name == "":
-                message_response = f"出席番号を {student_number} に変更できた"
-            return JsonResponse({'status': 'success', 'message': message_response, 'student_number': student_number, 'last_name': last_name})
+            message_response = f"出席番号を {student_number} に変更できた"
+            return JsonResponse({'status': 'success', 'message': message_response, 'student_number': student_number})
         except ObjectDoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)        
 
@@ -457,26 +482,44 @@ class FinalScoreView(View):
             user.total_english_5_score = total_category_score
         elif category == 'english_6':
             user.total_english_6_score = total_category_score
+        elif category == 'jr_1':
+            user.total_jr_1_score = total_category_score
         elif category == 'phonics':
             user.total_phonics_score = total_category_score
         elif category == 'numbers':
             user.total_numbers_score = total_category_score
         elif category == 'eiken':
             user.total_eiken_score = total_category_score
+        elif category == 'eiken3':
+            user.total_eiken3_score = total_category_score
+        elif category == 'eiken_pre2':
+            user.total_eiken_pre2_score = total_category_score
+        elif category == 'eiken2':
+            user.total_eiken2_score = total_category_score
         
         user.save()
         total_max_scores = MaxScore.objects.filter(user=user).aggregate(total_score=Sum('score'))['total_score'] or 0
-
-        user.total_max_scores = total_max_scores - user.total_eiken_score
+        eiken_total = (
+            user.total_eiken_score +
+            user.total_4eiken_score +
+            user.total_eiken3_score +
+            user.total_eiken_pre2_score +
+            user.total_eiken2_score
+        )
+        user.total_max_scores = total_max_scores - eiken_total
         user.save()
 
         user_data = {
             'total_english_5_score': user.total_english_5_score,
             'total_english_6_score': user.total_english_6_score,
+            'total_jr_1_score': user.total_jr_1_score,
             'total_phonics_score': user.total_phonics_score,
             'total_numbers_score': user.total_numbers_score,
             'total_eiken_score': user.total_eiken_score,
             'total_max_scores': user.total_max_scores,
+            'total_eiken3_score': user.total_eiken3_score,
+            'total_eiken_pre2_score': user.total_eiken_pre2_score,
+            'total_eiken2_score': user.total_eiken2_score,
         }
 
         return JsonResponse({'success': True, 'message': 'Scores recorded successfully!', 'user_data': user_data})
@@ -514,24 +557,46 @@ class ScoreRecordView(View):
             user.total_english_5_score = total_category_score
         elif test.category == 'english_6':
             user.total_english_6_score = total_category_score
+        elif test.category == 'jr_1':
+            user.total_jr_1_score = total_category_score
         elif test.category == 'phonics':
             user.total_phonics_score = total_category_score
         elif test.category == 'numbers':
             user.total_numbers_score = total_category_score
         elif test.category == 'eiken':
             user.total_eiken_score = total_category_score
+        elif test.category == 'eiken4':
+            user.total_4eiken_score = total_category_score
+        elif test.category == 'eiken3':
+            user.total_eiken3_score = total_category_score
+        elif test.category == 'eiken_pre2':
+            user.total_eiken_pre2_score = total_category_score
+        elif test.category == 'eiken2':
+            user.total_eiken2_score = total_category_score
 
         user.save()
-        user.total_max_scores = total_max_scores - user.total_eiken_score
+        eiken_total = (
+            user.total_eiken_score +
+            user.total_4eiken_score +
+            user.total_eiken3_score +
+            user.total_eiken_pre2_score +
+            user.total_eiken2_score
+        )
+        user.total_max_scores = total_max_scores - eiken_total
         user.save()
 
         user_data = {
             'total_english_5_score': user.total_english_5_score,
             'total_english_6_score': user.total_english_6_score,
+            'total_jr_1_score': user.total_jr_1_score,
             'total_phonics_score': user.total_phonics_score,
             'total_numbers_score': user.total_numbers_score,
             'total_eiken_score': user.total_eiken_score,
+            'total_4eiken_score': user.total_4eiken_score,
             'total_max_scores': user.total_max_scores,
+            'total_eiken3_score': user.total_eiken3_score,
+            'total_eiken_pre2_score': user.total_eiken_pre2_score,
+            'total_eiken2_score': user.total_eiken2_score,
         }
 
         response_data = {'success': True, 'message': f'点数: {score}/{total_score}!', 'maxscore': maxscore_data, 'user_data': user_data, }

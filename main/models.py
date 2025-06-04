@@ -22,7 +22,9 @@ class Classroom(models.Model):
     teacher = models.ManyToManyField(Teacher, blank=True, related_name='classrooms')
     students = models.ManyToManyField(Student, blank=True, related_name='classrooms')
     character_voice = models.BooleanField(default=False)
+    ivar_voice = models.BooleanField(default=False)
     name = models.CharField(max_length=200, unique=True)
+    battle_permission = models.BooleanField(default=False)
 
     def set_password(self, raw_password):
         self.hashed_password = make_password(raw_password)
@@ -45,9 +47,16 @@ class Test(models.Model):
         ('japanese', 'Japanese'),
         ('english_5', 'English 5'),
         ('english_6', 'English 6'),
+        ('jr_1', 'jr_1'),
+        ('jr_2', 'jr_2'),
+        ('jr_3', 'jr_3'),
         ('phonics', 'Phonics'),
         ('numbers', 'Numbers'),
         ('eiken', 'Eiken'),
+        ('eiken4', 'Eiken4'),
+        ('eiken3', 'Eiken3'),
+        ('eiken_pre2', 'Eiken Pre 2'),
+        ('eiken2', 'Eiken2'),
     ]
     name = models.CharField(max_length=200)
     creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=12)
@@ -95,6 +104,8 @@ class Question(models.Model):
     word2 = models.BooleanField(default=False)
     label = models.BooleanField(default=False)
     japanese_option = models.BooleanField(default=False)
+    display_all = models.BooleanField(default=False)
+    sentence_order = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

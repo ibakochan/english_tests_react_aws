@@ -29,7 +29,7 @@ const DisplayAllVocab = ({ questions }) => {
                     }
               }
             >
-              {value.label || value.word || key}
+              {questions.display_all ? value.word : (value.label || value.word || key)}
             </div>
             {value.picture && (
               <img

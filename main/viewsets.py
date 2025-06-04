@@ -162,7 +162,7 @@ class NameIdTestViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='by-category')
     def by_category(self, request):
         categories = request.query_params.getlist('category')
-        valid_categories = ['japanese', 'english_5', 'english_6', 'phonics', 'numbers', 'eiken']
+        valid_categories = ['japanese', 'english_5', 'english_6', 'jr_1', 'phonics', 'numbers', 'eiken', 'eiken4', 'eiken3', 'eiken_pre2', 'eiken2']
 
         if any(category in valid_categories for category in categories):
             tests = self.queryset.filter(category__in=categories)
@@ -257,10 +257,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         question_counts = get_total_questions()
         total_category_scores = get_total_category_scores(user)
         total_max_scores = user.total_max_scores
-        if user.username == 'ivar' or user.username == 'gund':
-            total_eiken_scores = 9999
-        else:
-            total_eiken_scores = user.total_eiken_score + user.total_numbers_score + user.total_phonics_score
+        total_eiken_scores = user.total_eiken_score + user.total_4eiken_score + user.total_numbers_score + user.total_phonics_score
         memories = get_memories(total_max_scores)
         asset = get_profile_assets(total_max_scores)
         pets = get_eiken_pet(total_eiken_scores)

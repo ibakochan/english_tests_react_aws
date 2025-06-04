@@ -55,7 +55,7 @@ def get_eiken_pet(total_eiken_scores):
     return pets
 
 def get_eiken_memories(total_eiken_scores):
-    levels = int(total_eiken_scores // 50)
+    levels = int(total_eiken_scores // 100)
 
     pets = {
         1: {"image": 'https://storage.googleapis.com/profile_pets/one_cellframe.png', "text": 'まだ細胞一つしかない生物', "audio": 'https://storage.googleapis.com/profile_pets/2024_12_23_12_14_25_1.mp3', "english_text": 'still only a one celled organism'},
@@ -113,6 +113,7 @@ def get_total_question():
         "total_japanese_questions": Question.objects.filter(test__category='japanese').count(),
         "total_english_5_questions": Question.objects.filter(test__category='english_5').count(),
         "total_english_6_questions": Question.objects.filter(test__category='english_6').count(),
+        "total_jr_1_questions": Question.objects.filter(test__category='jr_1').count(),
         "total_phonics_questions": Question.objects.filter(test__category='phonics').count(),
         "total_numbers_questions": Question.objects.filter(test__category='numbers').count(),
     }
@@ -123,9 +124,11 @@ def get_total_questions():
         "total_japanese_questions": Test.objects.filter(category='japanese').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
         "total_english_5_questions": Test.objects.filter(category='english_5').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
         "total_english_6_questions": Test.objects.filter(category='english_6').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
+        "total_jr_1_questions": Test.objects.filter(category='jr_1').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
         "total_phonics_questions": Test.objects.filter(category='phonics').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
         "total_numbers_questions": Test.objects.filter(category='numbers').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
         "total_eiken_questions": Test.objects.filter(category='eiken').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
+        "total_eiken4_questions": Test.objects.filter(category='eiken4').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
     }
     return question_counts
 
@@ -138,8 +141,10 @@ def get_total_category_scores(user):
         "total_japanese_scores": MaxScore.objects.filter(user=user, test__category='japanese').aggregate(total_score=Sum('score'))['total_score'] or 0,
         "total_english_5_scores": MaxScore.objects.filter(user=user, test__category='english_5').aggregate(total_score=Sum('score'))['total_score'] or 0,
         "total_english_6_scores": MaxScore.objects.filter(user=user, test__category='english_6').aggregate(total_score=Sum('score'))['total_score'] or 0,
+        "total_jr_1_scores": MaxScore.objects.filter(user=user, test__category='jr_1').aggregate(total_score=Sum('score'))['total_score'] or 0,
         "total_phonics_scores": MaxScore.objects.filter(user=user, test__category='phonics').aggregate(total_score=Sum('score'))['total_score'] or 0,
         "total_numbers_scores": MaxScore.objects.filter(user=user, test__category='numbers').aggregate(total_score=Sum('score'))['total_score'] or 0,
         "total_eiken_scores": MaxScore.objects.filter(user=user, test__category='eiken').aggregate(total_score=Sum('score'))['total_score'] or 0,
+        "total_eiken4_scores": MaxScore.objects.filter(user=user, test__category='eiken4').aggregate(total_score=Sum('score'))['total_score'] or 0,
     }
     return total_category_scores

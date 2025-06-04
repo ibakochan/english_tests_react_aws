@@ -6,8 +6,11 @@ from main.humanize import naturalsize
 from django.forms import DateInput
 from django.core.exceptions import ValidationError
 from django.forms import CharField
-from .lists_eiken import eiken5_vocab1, eiken5_vocab2, eiken5_vocab3, eiken5_vocab4, eiken5_vocab5, eiken5_vocab6, eiken5_vocab7, eiken5_vocab8, eiken5_vocab9, eiken5_vocab10, eiken5_vocab11, eiken5_vocab12, eiken5_vocab13, eiken5_vocab14, eiken5_vocab15, eiken5_vocab16, eiken5_grammar_conversation, eiken5_vocab, eiken5_vocab_practice, eiken5_grammar_practice, eiken5_conversation_vocab_practice
+from .eiken3_lists import eiken3_vocab
+from .eiken4_lists import eiken4_sentence_order, eiken4_grammar_sentence_answers, eiken4_grammar_practice, eiken4_conversation_vocab_practice, eiken4_grammar_vocab, eiken4_vocab_practice, eiken4_vocab, eiken4_vocab1, eiken4_vocab2, eiken4_vocab3, eiken4_vocab4, eiken4_vocab5, eiken4_vocab6, eiken4_vocab7, eiken4_vocab8, eiken4_vocab9, eiken4_vocab10, eiken4_vocab11, eiken4_vocab12
+from .lists_eiken import eiken5_sentence_order, eiken5_grammar_sentence_answers, eiken5_grammar_vocab, eiken5_vocab1, eiken5_vocab2, eiken5_vocab3, eiken5_vocab4, eiken5_vocab5, eiken5_vocab6, eiken5_vocab7, eiken5_vocab8, eiken5_vocab9, eiken5_vocab10, eiken5_vocab11, eiken5_vocab12, eiken5_vocab13, eiken5_vocab14, eiken5_vocab15, eiken5_vocab16, eiken5_vocab, eiken5_vocab_practice, eiken5_grammar_practice, eiken5_conversation_vocab_practice
 from .lists import alphabet_sounds3, grade5_lesson8, grade5_lesson7, grade5_lesson1_names, grade5_lesson1_words, grade5_lesson1_sentence, grade5_lesson2, grade5_lesson3, grade5_lesson4_sentence, dates, months, days, grade6_lesson1, grade6_lesson2, grade6_lesson3, grade_6_lesson_8, grade_6_lesson_7, phonics3, alphabet_sounds2, japanese_numbers, grade_6_lesson_6, alphabet_sounds, one_twenty, one_hundred, eleven_ninety, one_thousand, one_quadrillion, thousand_quadrillion, grade_6_lesson_5, grade_5_lesson_5, grade_5_lesson_6, small_alphabet_sounds, alphabet_phonics, jlpt_n5_vocabulary, phonics1, phonics_2, lesson4_list, lesson4_grade6_dict
+from .jr_high_grade_1_lists import jr_1_lesson_1_vocab, jr_1_lesson_1_conversation, jr_1_lesson_2_vocab, jr_1_lesson_2_conversation, jr_1_lesson_3_vocab, jr_1_lesson_3_sentence
 
 class ClassroomJoinForm(forms.Form):
     classroom_name = forms.CharField(
@@ -102,6 +105,12 @@ class QuestionCreateForm(forms.ModelForm):
         ('grade6_lesson1', 'grade6_lesson1'),
         ('grade6_lesson2', 'grade6_lesson2'),
         ('grade6_lesson3', 'grade6_lesson3'),
+        ('jr_1_lesson_1_vocab', 'jr_1_lesson_1_vocab'),
+        ('jr_1_lesson_1_conversation', 'jr_1_lesson_1_conversation'),
+        ('jr_1_lesson_2_vocab', 'jr_1_lesson_2_vocab'),
+        ('jr_1_lesson_2_conversation', 'jr_1_lesson_2_conversation'),
+        ('jr_1_lesson_3_vocab', 'jr_1_lesson_3_vocab'),
+        ('jr_1_lesson_3_sentence', 'jr_1_lesson_3_sentence'),
         ('months', 'Months'),
         ('dates', 'Dates'),
         ('days', 'Days'),
@@ -114,6 +123,26 @@ class QuestionCreateForm(forms.ModelForm):
         ('japanese_numbers', 'Japanese_Numbers'),
         ('alphabet_sounds2', 'Alphabet Sounds2'),
         ('alphabet_sounds3', 'Alphabet Sounds3'),
+        ('eiken3_vocab', 'Eiken3_vocab'),
+        ('eiken4_vocab', 'Eiken4_vocab'),
+        ('eiken4_grammar_vocab', 'Eiken4_grammar_vocab'),
+        ('eiken4_vocab1', 'Eiken4_vocab1'),
+        ('eiken4_vocab2', 'Eiken4_vocab2'),
+        ('eiken4_vocab3', 'Eiken4_vocab3'),
+        ('eiken4_vocab4', 'Eiken4_vocab4'),
+        ('eiken4_vocab5', 'Eiken4_vocab5'),
+        ('eiken4_vocab6', 'Eiken4_vocab6'),
+        ('eiken4_vocab7', 'Eiken4_vocab7'),
+        ('eiken4_vocab8', 'Eiken4_vocab8'),
+        ('eiken4_vocab9', 'Eiken4_vocab9'),
+        ('eiken4_vocab10', 'Eiken4_vocab10'),
+        ('eiken4_vocab11', 'Eiken4_vocab11'),
+        ('eiken4_vocab12', 'Eiken4_vocab12'),
+        ('eiken4_vocab_practice', 'eiken4_vocab_practice'),
+        ('eiken4_conversation_vocab_practice', 'eiken4_conversation_vocab_practice'),
+        ('eiken4_grammar_practice', 'eiken4_grammar_practice'),
+        ('eiken4_grammar_sentence_answers', 'eiken4_grammar_sentence_answers'),
+        ('eiken4_sentence_order', 'eiken4_sentence_order'),
         ('eiken5_vocab1', 'Eiken5_vocab1'),
         ('eiken5_vocab2', 'Eiken5_vocab2'),
         ('eiken5_vocab3', 'Eiken5_vocab3'),
@@ -132,9 +161,11 @@ class QuestionCreateForm(forms.ModelForm):
         ('eiken5_vocab16', 'Eiken5_vocab16'),
         ('eiken5_vocab', 'Eiken5_vocab'),
         ('eiken5_vocab_practice', 'eiken5_vocab_practice'),
+        ('eiken5_grammar_vocab', 'Eiken5_grammar_vocab'),
+        ('eiken5_grammar_sentence_answers', 'eiken5_grammar_sentence_answers'),
         ('eiken5_grammar_practice', 'eiken5_grammar_practice'),
-        ('eiken5_grammar_conversation', 'eiken5_grammar_conversation'),
         ('eiken5_conversation_vocab_practice', 'eiken5_conversation_vocab_practice'),
+        ('eiken5_sentence_order', 'eiken5_sentence_order'),
     ]
     list_selection = forms.ChoiceField(choices=list_choices, required=False, label='Select List')
 
@@ -142,7 +173,7 @@ class QuestionCreateForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ['name', 'description', 'double_object', 'write_answer', 'japanese_option', 'question_list', 'list_selection', 'first_letter', 'second_letter', 'third_letter', 'last_letter', 'no_sound', 'sound2', 'sound3', 'sound4', 'picture2', 'word2', 'label']
+        fields = ['name', 'description', 'double_object', 'write_answer', 'japanese_option', 'question_list', 'list_selection', 'first_letter', 'second_letter', 'third_letter', 'last_letter', 'no_sound', 'sound2', 'sound3', 'sound4', 'picture2', 'word2', 'label', 'display_all', 'sentence_order']
 
     widgets = {
         'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -206,6 +237,18 @@ class QuestionCreateForm(forms.ModelForm):
                 instance.question_list = grade6_lesson2
             elif selected_list == 'grade6_lesson3':
                 instance.question_list = grade6_lesson3
+            elif selected_list == 'jr_1_lesson_1_vocab':
+                instance.question_list = jr_1_lesson_1_vocab
+            elif selected_list == 'jr_1_lesson_1_conversation':
+                instance.question_list = jr_1_lesson_1_conversation
+            elif selected_list == 'jr_1_lesson_2_vocab':
+                instance.question_list = jr_1_lesson_2_vocab
+            elif selected_list == 'jr_1_lesson_2_conversation':
+                instance.question_list = jr_1_lesson_2_conversation
+            elif selected_list == 'jr_1_lesson_3_vocab':
+                instance.question_list = jr_1_lesson_3_vocab
+            elif selected_list == 'jr_1_lesson_3_sentence':
+                instance.question_list = jr_1_lesson_3_sentence
             elif selected_list == 'one_twenty':
                 instance.question_list = one_twenty
             elif selected_list == 'months':
@@ -230,6 +273,46 @@ class QuestionCreateForm(forms.ModelForm):
                 instance.question_list = alphabet_sounds2
             elif selected_list == 'alphabet_sounds3':
                 instance.question_list = alphabet_sounds3
+            elif selected_list == 'eiken3_vocab':
+                instance.question_list = eiken3_vocab
+            elif selected_list == 'eiken4_vocab':
+                instance.question_list = eiken4_vocab
+            elif selected_list == 'eiken4_grammar_vocab':
+                instance.question_list = eiken4_grammar_vocab
+            elif selected_list == 'eiken4_vocab1':
+                instance.question_list = eiken4_vocab1
+            elif selected_list == 'eiken4_vocab2':
+                instance.question_list = eiken4_vocab2
+            elif selected_list == 'eiken4_vocab3':
+                instance.question_list = eiken4_vocab3
+            elif selected_list == 'eiken4_vocab4':
+                instance.question_list = eiken4_vocab4
+            elif selected_list == 'eiken4_vocab5':
+                instance.question_list = eiken4_vocab5
+            elif selected_list == 'eiken4_vocab6':
+                instance.question_list = eiken4_vocab6
+            elif selected_list == 'eiken4_vocab7':
+                instance.question_list = eiken4_vocab7
+            elif selected_list == 'eiken4_vocab8':
+                instance.question_list = eiken4_vocab8
+            elif selected_list == 'eiken4_vocab9':
+                instance.question_list = eiken4_vocab9
+            elif selected_list == 'eiken4_vocab10':
+                instance.question_list = eiken4_vocab10
+            elif selected_list == 'eiken4_vocab11':
+                instance.question_list = eiken4_vocab11
+            elif selected_list == 'eiken4_vocab12':
+                instance.question_list = eiken4_vocab12
+            elif selected_list == 'eiken4_vocab_practice':
+                instance.question_list = eiken4_vocab_practice
+            elif selected_list == 'eiken4_conversation_vocab_practice':
+                instance.question_list = eiken4_conversation_vocab_practice
+            elif selected_list == 'eiken4_grammar_practice':
+                instance.question_list = eiken4_grammar_practice
+            elif selected_list == 'eiken4_grammar_sentence_answers':
+                instance.question_list = eiken4_grammar_sentence_answers
+            elif selected_list == 'eiken4_sentence_order':
+                instance.question_list = eiken4_sentence_order
             elif selected_list == 'eiken5_vocab1':
                 instance.question_list = eiken5_vocab1
             elif selected_list == 'eiken5_vocab2':
@@ -264,14 +347,18 @@ class QuestionCreateForm(forms.ModelForm):
                 instance.question_list = eiken5_vocab16
             elif selected_list == 'eiken5_vocab':
                 instance.question_list = eiken5_vocab
+            elif selected_list == 'eiken5_grammar_vocab':
+                instance.question_list = eiken5_grammar_vocab
             elif selected_list == 'eiken5_vocab_practice':
                 instance.question_list = eiken5_vocab_practice
             elif selected_list == 'eiken5_grammar_practice':
                 instance.question_list = eiken5_grammar_practice
-            elif selected_list == 'eiken5_grammar_conversation':
-                instance.question_list = eiken5_grammar_conversation
+            elif selected_list == 'eiken5_grammar_sentence_answers':
+                instance.question_list = eiken5_grammar_sentence_answers
             elif selected_list == 'eiken5_conversation_vocab_practice':
                 instance.question_list = eiken5_conversation_vocab_practice
+            elif selected_list == 'eiken5_sentence_order':
+                instance.question_list = eiken5_sentence_order
 
         if commit:
             instance.save()

@@ -22,6 +22,8 @@ const TestCreate = () => {
   const [secondLetter, setSecondLetter] = useState(false);
   const [thirdLetter, setThirdLetter] = useState(false);
   const [lastLetter, setLastLetter] = useState(false);
+  const [displayAll, setDisplayAll] = useState(false);
+  const [sentenceOrder, setSentenceOrder] = useState(false);
   const [questionNoSound, setQuestionNoSound] = useState(false);
   const [questionSound2, setQuestionSound2] = useState(false);
   const [questionSound3, setQuestionSound3] = useState(false);
@@ -225,6 +227,14 @@ const TestCreate = () => {
     setLastLetter(e.target.checked);
   };
 
+  const handleDisplayAllChange = (e) => {
+    setDisplayAll(e.target.checked);
+  };
+
+  const handleSentenceOrderChange = (e) => {
+    setSentenceOrder(e.target.checked);
+  };
+
 
   const handleQuestionSubmit = async (testId, e) => {
     e.preventDefault();
@@ -245,6 +255,8 @@ const TestCreate = () => {
     data.append('second_letter', secondLetter);
     data.append('third_letter', thirdLetter);
     data.append('last_letter', lastLetter);
+    data.append('display_all', displayAll);
+    data.append('sentence_order', sentenceOrder);
     data.append('no_sound', questionNoSound)
     data.append('sound2', questionSound2)
     data.append('sound3', questionSound3)
@@ -479,9 +491,14 @@ const TestCreate = () => {
                 <option value="japanese">Japanese</option>
                 <option value="english_5">English_5</option>
                 <option value="english_6">English_6</option>
+                <option value="jr_1">Jr_1</option>
                 <option value="phonics">Phonics</option>
                 <option value="numbers">Numbers</option>
                 <option value="eiken">Eiken</option>
+                <option value="eiken4">Eiken4</option>
+                <option value="eiken3">Eiken3</option>
+                <option value="eiken_pre2">Eiken Pre2</option>
+                <option value="eiken2">Eiken2</option>
             </select>
             <button type="submit" style={{ border: '5px solid black' }} className="btn btn-primary submit_buttons">Submit</button>
           </form>
@@ -548,6 +565,16 @@ const TestCreate = () => {
                         <option value="grade_6_lesson_8">Grade6_lesson8</option>
                         </>
                         }
+                        {test.category === 'jr_1' &&
+                        <>
+                        <option value="jr_1_lesson_1_vocab">Lesson 1 Vocab</option>
+                        <option value="jr_1_lesson_1_conversation">Lesson 1 Conversation</option>
+                        <option value="jr_1_lesson_2_vocab">Lesson 2 Vocab</option>
+                        <option value="jr_1_lesson_2_conversation">Lesson 2 Conversation</option>
+                        <option value="jr_1_lesson_3_vocab">Lesson 3 Vocab</option>
+                        <option value="jr_1_lesson_3_sentence">Lesson 3 Sentence</option>
+                        </>
+                        }
                         {test.category === 'phonics' &&
                         <>
                         <option value="alphabet_sounds">Big Alphabet</option>
@@ -592,10 +619,40 @@ const TestCreate = () => {
                         <option value="eiken5_vocab15">Eiken5 Vocab15</option>
                         <option value="eiken5_vocab16">Eiken5 Vocab16</option>
                         <option value="eiken5_vocab">Eiken5 Vocab</option>
+                        <option value="eiken5_grammar_vocab">Eiken5 Grammar Vocab</option>
                         <option value="eiken5_vocab_practice">Eiken5 Vocab Practice</option>
                         <option value="eiken5_grammar_practice">Eiken5 Grammar Practice</option>
-                        <option value="eiken5_grammar_conversation">Eiken5 Grammar Conversation</option>
+                        <option value="eiken5_grammar_sentence_answers">Eiken5 Grammar Sentence Answers</option>
                         <option value="eiken5_conversation_vocab_practice">Eiken5 Conversation Vocab Practice</option>
+                        <option value="eiken5_sentence_order">Eiken5 Sentence Order</option>
+                        </>
+                        }
+                        {test.category === 'eiken4' &&
+                        <>
+                        <option value="eiken4_vocab1">Eiken4 Vocab1</option>
+                        <option value="eiken4_vocab2">Eiken4 Vocab2</option>
+                        <option value="eiken4_vocab3">Eiken4 Vocab3</option>
+                        <option value="eiken4_vocab4">Eiken4 Vocab4</option>
+                        <option value="eiken4_vocab5">Eiken4 Vocab5</option>
+                        <option value="eiken4_vocab6">Eiken4 Vocab6</option>
+                        <option value="eiken4_vocab7">Eiken4 Vocab7</option>
+                        <option value="eiken4_vocab8">Eiken4 Vocab8</option>
+                        <option value="eiken4_vocab9">Eiken4 Vocab9</option>
+                        <option value="eiken4_vocab10">Eiken4 Vocab10</option>
+                        <option value="eiken4_vocab11">Eiken4 Vocab11</option>
+                        <option value="eiken4_vocab12">Eiken4 Vocab12</option>
+                        <option value="eiken4_vocab">Eiken4 Vocab</option>
+                        <option value="eiken4_grammar_vocab">Eiken4 Grammar Vocab</option>
+                        <option value="eiken4_vocab_practice">Eiken4 Vocab Practice</option>
+                        <option value="eiken4_conversation_vocab_practice">Eiken4 Conversation Vocab Practice</option>
+                        <option value="eiken4_grammar_practice">Eiken4 Grammar Practice</option>
+                        <option value="eiken4_grammar_sentence_answers">Eiken4 Grammar Sentence Answers</option>
+                        <option value="eiken4_sentence_order">Eiken4 Sentence Order</option>
+                        </>
+                        }
+                        {test.category === 'eiken3' &&
+                        <>
+                        <option value="eiken3_vocab">Eiken3 Vocab</option>
                         </>
                         }
                     </select>
@@ -690,6 +747,26 @@ const TestCreate = () => {
                         className="form-check-input"
                       />
                       <label className="form-check-label">Last Letter</label>
+                    </div>
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        name="display_all"
+                        checked={displayAll}
+                        onChange={handleDisplayAllChange}
+                        className="form-check-input"
+                      />
+                      <label className="form-check-label">display all</label>
+                    </div>
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        name="sentence_order"
+                        checked={sentenceOrder}
+                        onChange={handleSentenceOrderChange}
+                        className="form-check-input"
+                      />
+                      <label className="form-check-label">sentence order</label>
                     </div>
                     <div className="form-check">
                       <input

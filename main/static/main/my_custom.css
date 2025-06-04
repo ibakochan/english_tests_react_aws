@@ -17,12 +17,48 @@
     font-size: 30px;
     margin-top: 5px;
 }
+
+.memory-button {
+    background: linear-gradient(135deg, #2b29c9, #222fdd);
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-family: 'Comic Neue', sans-serif;
+    font-size: 18px;
+    color: #2c3e50;
+    box-shadow: 0 4px 10px rgba(0, 255, 0, 0.4);
+    transition: all 0.3s ease;
+}
+  
+.memory-button:hover {
+    box-shadow: 0 6px 14px rgba(0, 255, 100, 0.6);
+    transform: scale(1.05);
+}
+
+.test_button_hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease-in-out;
+}
+
   
 .category_button {
     height: 100px;
     width: 220px;
-    border: 5px solid black !important;
+    border: 5px solid black;
+    padding: 10px 15px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: background 0.2s ease, transform 0.2s ease;
 }
+  
+.category_button:hover {
+    background: #2ecc71;
+    transform: scale(1.05);
+}
+  
+
 
 .return_buttons {
     height: 50px;
@@ -89,3 +125,55 @@
     font-size: 20px;
     margin-bottom: 10px;
 }
+
+
+.portfolio-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .portfolio-card {
+    flex: 1 1 300px; /* Grow/shrink and minimum width */
+    max-width: 400px;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .portfolio-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  }
+  
+  .portfolio-button {
+    display: inline-block;
+    margin: 10px 0;
+    font-size: 22px;
+    font-weight: bold;
+    border: 3px solid #e0ffff;
+    color: #e0ffff;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    padding: 14px 28px;
+    border-radius: 12px;
+    text-shadow: 1px 1px 2px #000;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  
+  .portfolio-button:hover {
+    background: linear-gradient(to right, #2575fc, #6a11cb); /* flip gradient on hover */
+    transform: scale(1.05);
+  }
+  
+  .portfolio-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    color: white;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  

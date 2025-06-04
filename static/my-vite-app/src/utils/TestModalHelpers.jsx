@@ -127,16 +127,33 @@ const SignupPromptModal = ({ signupModal, closeSignupModal }) => (
   <Modal show={signupModal} onHide={closeSignupModal}>
     <Modal.Body>
       <h4>登録してないかログインしていない</h4>
-      <a href="https://eibaru.jp/signup/student" className="btn btn-success mb-2" style={btnStyle} rel="noopener noreferrer">
-        生徒登録
+      <div>
+      <a href="https://eibaru.jp/accounts/signup/" className="btn btn-success mb-2" style={btnStyle} rel="noopener noreferrer">
+        登録
       </a>
-      <p>普通に練習だけするなら生徒登録がいい</p>
-      <a href="https://eibaru.jp/signup/teacher/" className="btn btn-success mb-2" style={btnStyle} rel="noopener noreferrer">
-        先生登録
-      </a>
-      <p>教室作って、そこに生徒を管理したいなら先生登録</p>
+      </div>
+      <div>
       <a href="https://eibaru.jp/accounts/login" className="btn btn-primary mb-2" style={btnStyle} rel="noopener noreferrer">
         ログイン
+      </a>
+      </div>
+      <a
+        href="/account/google/login/"
+        className="btn btn-light d-flex align-items-center mt-3 justify-content-center"
+        style={{
+          border: '1px solid #dadce0',
+          width: '200px',
+          height: '40px',
+          fontWeight: 500,
+          textDecoration: 'none',
+        }}
+      >
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google logo"
+          style={{ width: '20px', height: '20px', marginRight: '10px' }}
+        />
+        <span>Googleでログイン</span>
       </a>
       <h5>ログインしたら点数記録できるよ</h5>
     </Modal.Body>

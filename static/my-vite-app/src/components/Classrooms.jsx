@@ -32,7 +32,7 @@ const Classrooms = () => {
   const handleJoinSubmit = async (e) => {
     e.preventDefault();
 
-    if (currentUser?.student?.classrooms.some(c => c.name === joinedClassroomName) || currentUser?.teacher?.classrooms.some(c => c.name === joinedClassroomName) ) {
+    if (currentUser?.student?.classrooms.some(c => c.name === joinedClassroomName) || currentUser?.teacher?.classrooms.some(c => c.name === joinedClassroomName)) {
       alert("この教室はすでに入っている！");
       return;
     }
@@ -189,11 +189,12 @@ const Classrooms = () => {
           {message.text}
         </div>
       )}
-      {currentUser?.teacher && (
+      {(currentUser?.teacher || urlPath === '/portfolio/') && (
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <form onSubmit={handleClassroomCreateSubmit}>
           <input
             type="text"
-            placeholder="教室名入力して"
+            placeholder={isEnglish ? "Enter classroom name" : "教室名入力して"}
             value={createdClassroomName}
             onChange={(e) => setCreatedClassroomName(e.target.value)}
             required
@@ -203,15 +204,16 @@ const Classrooms = () => {
             className="btn btn-primary submit_buttons"
             style={{ marginLeft: "10px", border: "5px solid black" }}
           >
-            教室にを作る
+            {isEnglish ? "Create classroom" : "教室を作る"}
           </button>
         </form>
+      </div>
       )}
-  
+      <div style={{ display: "flex", justifyContent: "center" }}>
       <form onSubmit={handleJoinSubmit}>
         <input
           type="text"
-          placeholder="教室名入力して"
+          placeholder={isEnglish ? "Enter classroom name" : "教室名入力して"}
           value={joinedClassroomName}
           onChange={(e) => setJoinedClassroomName(e.target.value)}
           required
@@ -221,19 +223,16 @@ const Classrooms = () => {
           className="btn btn-primary submit_buttons"
           style={{ marginLeft: "10px", border: "5px solid black" }}
         >
-          教室に入る
+          {isEnglish ? "Enter classroom" : "教室に入る"}
         </button>
       </form>
+      </div>
   
       <div>
-        <span style={{ display: "flex", justifyContent: "center" }}>
-          <label style={{ width: "20px", height: "20px", whiteSpace: "nowrap" }}>
-            教室：
-          </label>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <select
-            style={{ width: "150px", height: "30px", marginLeft: "25px" }}
-            className="form-select"
             value={activeClassroomName}
+            style={{ width: "188px", height: "30px"}}
             onChange={(e) => {
               const selectedClassroom = userClassrooms.find(
                 (c) => c.name === e.target.value
@@ -244,34 +243,40 @@ const Classrooms = () => {
               }
             }}
           >
-            {userClassrooms.map((classroom) => (
+          {userClassrooms.length === 0 ? (
+            <option value="" disabled selected>
+              {isEnglish ? "No classrooms" : "教室まだない"}
+            </option>
+          ) : (
+            userClassrooms.map(classroom => (
               <option key={classroom.id} value={classroom.name}>
                 {classroom.name}
               </option>
-            ))}
+            ))
+          )}
           </select>
           <button
             className="btn btn-danger mb-3 submit_buttons"
             style={{ marginLeft: "10px", border: "5px solid black" }}
             onClick={openLeaveModal}
           >
-            <span className="text-center">教室から抜ける</span>
+            <span className="text-center">{isEnglish ? "Leave classroom" : "教室から抜ける"}</span>
           </button>
-        </span>
-        {urlPath === "/portfolio/" &&
+        </div>
+      </div>
+      {urlPath === "/portfolio/" &&
             <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
               <div>If you are a teacher you can create classrooms, leave classrooms and send requests to join other classrooms</div>
               <div>If you are a student you can join and leave classrooms</div>
             </div>
-        }
-      </div>
+      }
       <Modal show={leaveModal} onHide={closeLeaveModal}>
         <Modal.Body>
-          <p>この生徒を本当に教室から追い出すんですか？</p>
+          <p>{isEnglish ? "Are you sure you want to leave this classroom?" : "本当にこの教室から抜けるんですか？"}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeLeaveModal}>いいえ</Button>
-          <Button variant="primary" onClick={handleLeave}>はい</Button>
+          <Button variant="secondary" onClick={closeLeaveModal}>{isEnglish ? "No" : "いいえ"}</Button>
+          <Button variant="primary" onClick={handleLeave}>{isEnglish ? "Yes" : "はい"}</Button>
         </Modal.Footer>
       </Modal>
     </div>

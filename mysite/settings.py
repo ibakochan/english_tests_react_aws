@@ -64,12 +64,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 
     'django_extensions',
     'multiselectfield',
     'crispy_forms',
     'rest_framework',
-    'social_django',
     'taggit',
     'accounts.apps.AccountsConfig',
     'main.apps.MainConfig',
@@ -77,6 +78,10 @@ INSTALLED_APPS = [
     'django_redis',
     'channels',
     "corsheaders",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -93,6 +98,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #'mysite.settings.SSLRedirectMiddleware',
     'accounts.middleware.RedirectAuthenticatedUserMiddleware',
+    'accounts.middleware.RedirectSocialConnectionMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -142,12 +149,29 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+SOCIALACCOUNT_LOGIN_REDIRECT_URL = '/'
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
-
-
 
 
 LANGUAGE_CODE = 'en-us'
@@ -191,7 +215,14 @@ CACHES = {
     }
 }
 
-# Optional: This is to ensure Django sessions are stored in Redis
+PASSWORD_HASHERS = [
+    'accounts.hashers.CustomPBKDF2PasswordHasher',
+]
+
+
+
+
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 
@@ -212,7 +243,7 @@ CHANNEL_LAYERS = {
 }
 
 # Security settings
-SESSION_COOKIE_AGE = 1209600
+SESSION_COOKIE_AGE = 120960000
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True

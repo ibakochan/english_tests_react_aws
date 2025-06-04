@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { wrapTextSafe } from "../../utils/TestHelpers";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
+
 
 const TestRenderForm = ({
   timestamp,
@@ -23,6 +27,7 @@ const TestRenderForm = ({
   randomNumbers,
   questions,
   randomEikenUrl,
+  randomFifth,
   randomWrongThree,
   randomWrongOne,
   randomWrongTwo,
@@ -38,6 +43,60 @@ const TestRenderForm = ({
   youAnsweredWrong,
   setYouAnsweredWrong,
 }) => {
+  const [droppedItems, setDroppedItems] = useState(
+    randomFifth ? [null, null, null, null, null] : [null, null, null, null]
+  );
+  const [dragText, setDragText] = useState('');
+
+  const allDropped = droppedItems.every(item => item !== null);
+
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData('text/plain', dragText);
+  };
+
+  const handleDrop = (index) => (e) => {
+    e.preventDefault();
+    const data = e.dataTransfer.getData('text');
+    setDroppedItems(prev => {
+      const newDropped = [...prev];
+      newDropped[index] = data;
+      return newDropped;
+    });
+  };
+
+  useEffect(() => {
+  const expectedOrder = [randomWrongOne, randomWrongTwo, randomWrongThree, randomCorrect];
+
+  if (randomFifth) {
+      expectedOrder.push(randomFifth);
+  }
+
+  const isCorrect =
+    droppedItems.length === expectedOrder.length &&
+    droppedItems.every((item, index) => item === expectedOrder[index]);
+
+    if (isCorrect) {
+      setCorrectOption(true);
+    } else {
+      setCorrectOption(false);
+    }
+  }, [droppedItems, randomWrongOne, randomWrongTwo, randomWrongThree, randomCorrect, randomFifth]);
+
+  const handleReturnItem = (index) => () => {
+    setDroppedItems(prev => {
+      const newDropped = [...prev];
+      newDropped[index] = null;
+      return newDropped;
+    });
+  };
+
+
+
+  const handleDragOver = (e) => {
+    e.preventDefault(); // Required to allow dropping
+  };
+
+
   const options = randomizedOptions[question.duplicateId];
   if (!options) return null;
   const optionId = options.length === 1 ? options[0].id : null;
@@ -50,7 +109,7 @@ const TestRenderForm = ({
     <form
       className="test-form"
       onSubmit={(e) => {
-        if (selectedOption !== null || inputValue.trim() !== '') {
+        if (selectedOption !== null || inputValue.trim() !== '' || allDropped) {
           handleSubmit({
             e: e,
             questionId: question.id,
@@ -72,7 +131,7 @@ const TestRenderForm = ({
     >
       <div className="container-fluid">
         <div className="row">
-          {options.map(option => {
+          {!question.sentence_order && options.map(option => {
             return (
               <div key={option.id} className={!question.write_answer ? "col-md-6" : ""}>
                 {question.write_answer ? (
@@ -100,6 +159,8 @@ const TestRenderForm = ({
                         } else if (randomLabel && value === randomLabel) {
                           setCorrectOption(true);
                         } else if (question.word2 && value === randomWord2 ) {
+                          setCorrectOption(true);
+                        } else if (question.display_all && value === randomWord) {
                           setCorrectOption(true);
                         } else {
                           setCorrectOption(false);
@@ -129,7 +190,7 @@ const TestRenderForm = ({
                         }}
                         checked={selectedOption === option.id}
                       />
-                      <span
+                      <h4
                         style={{ flex: 1 }}
                         onClick={(e) => randomEikenUrl && !randomWrongThree && !question.no_sound ? handlePlay(option.is_correct ? randomEikenUrl : questions.question_list[option.randomOptionKey][1], e.target) : null}
                       >
@@ -140,16 +201,91 @@ const TestRenderForm = ({
                         {question.japanese_option && (
                           option.is_correct ? randomJapanese : question.question_list[option.randomOptionKey]?.japanese
                         )}
-                      </span>
+                      </h4>
+                      {question.question_list[option.randomOptionKey].word && randomPicture ? (
+                      <h4>
+                      {wrapTextSafe(
+                        question.label
+                          ? option.is_correct ? randomLabel : question.question_list[option.randomOptionKey].label === randomLabel ? "1000 Yen" : question.question_list[option.randomOptionKey].label
+                          : option.is_correct ? randomWord : question.question_list[option.randomOptionKey].word
+                      ).map((line, i) => <div key={i}>{line}</div>)}
+                      </h4>                    
+                      ): null}
                     </label>
-                    {question.question_list[option.randomOptionKey].word && randomPicture ? (
-                      <h4>{question.label ? (option.is_correct ? randomLabel : (question.question_list[option.randomOptionKey].label === randomLabel) ? "1000 Yen" : question.question_list[option.randomOptionKey].label) : option.is_correct ? randomWord : question.question_list[option.randomOptionKey].word}</h4>
-                    ): null}
                   </>
                 )}
               </div>
             );
           })}
+            {question.sentence_order && (
+              <div>
+                <div style={{ display: 'flex', gap: '20px', padding: '40px' }}>
+                {question.options.map((option, index) => {
+                  let textToDrag = option.is_correct
+                    ? randomCorrect
+                    : option.id === question.options[1].id
+                    ? randomWrongOne
+                    : option.id === question.options[2].id
+                    ? randomWrongTwo
+                    : option.id === question.options[3].id 
+                    ? randomWrongThree
+                    : randomFifth
+
+                  if (droppedItems.includes(textToDrag)) {
+                    textToDrag = null;
+                  }
+                  return (
+                    <div
+                      key={option.id}
+                      draggable
+                      onDragStart={(e) => {
+                        e.dataTransfer.setData('text/plain', textToDrag);
+                      }}
+                      className="btn btn-light border border-dark text-dark"
+                      style={{
+                        width: '120px',
+                        height: '60px',
+                        fontSize: '20px',
+                        cursor: 'grab',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '8px auto',
+                      }}
+                    >
+                      {textToDrag}
+                    </div>
+                  );
+                })}
+                </div>
+                <h4>下まで言葉全部引っ張ってから答えて</h4>
+                <h4>一回押せばもとに戻る</h4>
+                <div style={{ display: 'flex', gap: '20px', padding: '40px' }}>
+                {[...Array(randomFifth ? 5 : 4).keys()].map((i) => (
+                  <div
+                    key={i}
+                    onDrop={handleDrop(i)}
+                    onDragOver={handleDragOver}
+                    onClick={handleReturnItem(i)}
+                    className="btn btn-light border border-dark text-dark"
+                    style={{
+                      width: '120px',
+                      height: '60px',
+                      fontSize: '20px',
+                      cursor: 'grab',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '8px auto',
+                    }}
+                  >
+                    {droppedItems[i] && droppedItems[i]}
+                  </div>
+                ))}
+                </div>
+              </div>
+            )}
+
         </div>
       </div>
       <button

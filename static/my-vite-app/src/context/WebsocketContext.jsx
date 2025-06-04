@@ -7,7 +7,7 @@ import { useTest } from "./TestContext";
 const WebsocketContext = createContext();
 
 export function WebsocketProvider({ children }) {
-  const { currentUser } = useUser();
+  const { currentUser, activity } = useUser();
   const { maxScores, tests } = useTest();
   const [connected, setConnected] = useState(false);
   const [connectedUsers, setConnectedUsers] = useState([]);
@@ -15,7 +15,7 @@ export function WebsocketProvider({ children }) {
   const [opponentA, setOpponentA] = useState("");
   const [targetUsername, setTargetUsername] = useState('');
   const [inviter, setInviter] = useState(false);
-  const [volume, setVolume] = useState(0.3);
+  const [volume, setVolume] = useState(0.2);
   const [isPractice, setIsPractice] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showInvitationModal, setShowInvitationModal] = useState(false);
@@ -54,12 +54,14 @@ export function WebsocketProvider({ children }) {
       setConnectedUsers(users);
     });    
     setInvitationCallback(senderUsername => {
-      setInvitations(prev => [...prev, senderUsername]);
-      setInvitationModalPicture("https://storage.googleapis.com/battle_mode/invitation.png");
-      setShowInvitationModal(true);
+      if (opponentA === "" && activity === "") {
+        setInvitations(prev => [...prev, senderUsername]);
+        setInvitationModalPicture("https://storage.googleapis.com/battle_mode/invitation.png");
+        setShowInvitationModal(true);
+      };   
     });
     setInvitationResponseCallback(data => {
-      if (data.type === "invitation_accept") {
+      if (data.type === "invitation_accept" && opponentA === "") {
           setOpponentA(data.target_username);
           setShowInvitationModal(true);
           setInvitationModalPicture("https://storage.googleapis.com/battle_mode/battlepic.png");
@@ -68,7 +70,7 @@ export function WebsocketProvider({ children }) {
               setInviter(true);
           }
       }
-      if (data.type === "invitation_decline") {
+      if (data.type === "invitation_decline" && opponentA === "") {
         setShowInvitationModal(true);
         setInvitationModalPicture("https://storage.googleapis.com/battle_mode/runaway.png");
         setInvitationMessage("相手が君を恐れて逃げた。。。。");

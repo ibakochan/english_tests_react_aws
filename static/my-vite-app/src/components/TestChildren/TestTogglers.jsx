@@ -2,7 +2,7 @@ import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
 export const FinalsButton = ({ setActiveFinals }) => (
-  <button className="btn btn-success test_buttons" onClick={() => setActiveFinals(true)}>
+  <button className="btn btn-success test_buttons test_button_hover" onClick={() => setActiveFinals(true)}>
     <span className="text-center text-white text_shadow" style={{ fontSize: '15px' }}>
       まとめテスト
     </span>
@@ -17,7 +17,7 @@ export const FinalsButton = ({ setActiveFinals }) => (
 
 export const FinalsReturnButton = ({ openModal, gameState, isEnglish, audioRef }) => (
   <button
-    className="btn btn-warning"
+    className="btn btn-warning test_button_hover"
     style={{
       height: '50px',
       width: '400px',
@@ -45,7 +45,8 @@ export const FinalsReturnButton = ({ openModal, gameState, isEnglish, audioRef }
 
 export const TestReturnButton = ({ openModal, gameState, isEnglish, activeTestId, test, audioRef }) => (
     <button
-      className={`btn btn-warning ${activeTestId === test.id || activeTestId === null ? 'active' : 'd-none'}`}
+      translate="no"
+      className={`btn btn-warning test_button_hover ${activeTestId === test.id || activeTestId === null ? 'active' : 'd-none'}`}
       style={{ height: '50px', width: '400px', border: '5px solid black', marginBottom: '20px' }}
       onClick={() => {
         if (audioRef?.current) {
@@ -66,7 +67,7 @@ export const TestReturnButton = ({ openModal, gameState, isEnglish, activeTestId
 
 export const TestButtons = ({ test, activeCategory, activeTestId, toggleQuestionDetails, maxScores, isEnglish, audioRef }) => (
     <button
-      className={`btn btn-warning test_buttons ${activeCategory === test.category && activeTestId === null ? 'active' : 'd-none'}`}
+      className={`btn btn-warning test_buttons test_button_hover ${activeCategory === test.category && activeTestId === null ? 'active' : 'd-none'}`}
       onClick={() => toggleQuestionDetails({
         testId: test.id, testDescription: test.description, testDescriptionSound: test.sound_url,
         numberOfQuestions: test.number_of_questions, testName: test.name, category: undefined

@@ -9,7 +9,6 @@ import { useUser } from "../context/UserContext";
 const StudentProfile = () => {
   const { currentUser, setCurrentUser, lvl, setLvl, petLevel, setPetLevel, activeClassroomId, activeClassroomName, setActiveClassroomId, userClassrooms, setActiveClassroomName, activity, setActivity, isEnglish, setIsEnglish } = useUser();
   const [changedStudentNumber, setChangedStudentNumber] = useState("");
-  const [changedLastName, setChangedLastName] = useState("");
   const [message, setMessage] = useState("");
   const [cookies, setCookie, removeCookie] = useCookies(['csrftoken']);
 
@@ -18,8 +17,8 @@ const StudentProfile = () => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
-    if (changedStudentNumber === "" && changedLastName === "") {
-      alert("出席番号または名字を入力してください！");
+    if (changedStudentNumber === "") {
+      alert("出席番号を入れてください！");
       return;
     }
 
@@ -27,7 +26,7 @@ const StudentProfile = () => {
       const csrfToken = cookies.csrftoken;
       const response = await axios.post(
         "/update/profile/",
-        { studentNumber: changedStudentNumber, lastName: changedLastName },
+        { studentNumber: changedStudentNumber },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -37,15 +36,10 @@ const StudentProfile = () => {
       );
       if (response.data.status === "success") {
         const newStudentNumber = response.data.student_number;
-        const newLastName = response.data.last_name;
         setCurrentUser((prevUser) => {
           if (!prevUser) return prevUser;
 
           const updatedUser = { ...prevUser };
-
-          if (newLastName !== "") {
-            updatedUser.last_name = newLastName;
-          }
         
           if (newStudentNumber !== "" && prevUser.student) {
             updatedUser.student = { 
@@ -59,7 +53,6 @@ const StudentProfile = () => {
       }
 
       setMessage({ type: response.data.status, text: response.data.message });
-      setChangedLastName("");
       setChangedStudentNumber("");
     } catch (error) {
       setMessage({
@@ -80,29 +73,23 @@ const StudentProfile = () => {
             </div>
           )}
           <h2>{currentUser?.username}</h2>
-          <h4>名字：{currentUser?.last_name}</h4>
-          <h4>出席番号：{currentUser?.student?.student_number}</h4>
+          <h4>{isEnglish ? "User Name" : "ユーザーネーム"}：{currentUser?.username}</h4>
+          <h4>{isEnglish ? "Student number" : "出席番号"}：{currentUser?.student?.student_number}</h4>
           <form onSubmit={handleUpdateProfile}>
             <input
-              type="text"
-              placeholder="名字変更"
-              value={changedLastName}
-              onChange={(e) => setChangedLastName(e.target.value)}
-            />
-            <input
               type="number"
-              placeholder="出席番号変更"
+              placeholder={isEnglish ? "Change student ID" : "出席番号変更"}
               value={changedStudentNumber}
               onChange={(e) => setChangedStudentNumber(e.target.value)}
             />
-            <button type="submit" className="btn btn-primary submit_buttons" style={{ marginLeft: "10px", border: '5px solid black' }}>名字番号変更</button>
+            <button type="submit" className="btn btn-primary submit_buttons" style={{ border: '5px solid black' }}>{isEnglish ? "Change name and ID" : "名字番号変更"}</button>
           </form>
           </div>
           }
           {urlPath === "/portfolio/" &&
           <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <div>
-              Here you can update your student number and last name if you are a student
+              Here you can update your student number if you are a student
             </div>
             <div style={{ marginTop: '40px' }}>If you are a superuser you can create tests below. but since only I am currrently able to create tests and I have no plans on changing this anytime soon the test create section is pretty messy so no need to check that</div>
           </div>

@@ -3,7 +3,11 @@ export const filterTests = (tests, maxScores, opponentA, opponentATests) => {
       .flat()
       .sort((a, b) => a.lesson_number - b.lesson_number)
       .filter((test) => {
-        if ((test.category !== 'eiken' || test.lesson_number === 1) && opponentA === "") {
+        const isNonEikenCategory = !['eiken', 'eiken4', 'eiken3'].includes(test.category);
+        const isLesson1 = test.lesson_number === 1;
+        const isEikenWithLesson21 = test.category === 'eiken' && test.lesson_number === 21;
+        const isEiken4WithLesson17 = test.category === 'eiken4' && test.lesson_number === 17;
+        if ((isNonEikenCategory || isLesson1 || isEikenWithLesson21 || isEiken4WithLesson17) && opponentA === "") {
           return true;
         }
 
@@ -17,7 +21,7 @@ export const filterTests = (tests, maxScores, opponentA, opponentATests) => {
     
         const previousTest = Object.values(tests)
           .flat()
-          .find(t => t.category === "eiken" && t.lesson_number === test.lesson_number - 1);
+          .find(t => (t.category === "eiken" || t.category === "eiken4") && t.lesson_number === test.lesson_number - 1);
     
         if (!previousTest) {
           return false;

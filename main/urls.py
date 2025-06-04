@@ -23,10 +23,11 @@ def is_superuser(user):
 app_name='main'
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('signup/student/', views.StudentSignUpView.as_view(), name='student_signup'),
-    path('signup/teacher/', views.TeacherSignUpView.as_view(), name='teacher_signup'),
+    path('choose-role/', views.StudentTeacherChooseView.as_view(), name='choose_role'),
     path('', views.ProfilePageView.as_view(), name='profile'),
     path('portfolio/', views.PortfolioView.as_view(), name='portfolio'),
+    path('classrooms/<int:id>/toggle-battle/', views.ToggleBattlePermissionView.as_view(), name='toggle-battle-permission'),
+    path('classrooms/<int:id>/toggle-character-voice/', views.ToggleCharacterVoiceView.as_view(), name='toggle-character-voice'),
     path('classroom_accept/<int:pk>/', views.ClassroomAcceptView.as_view(), name='classroom_accept'),
     path('join_classroom/', views.ClassroomJoinView.as_view(), name='join_classroom'),
     path('update/profile/', views.UpdateProfileView.as_view(), name='update_profile'),
@@ -40,6 +41,5 @@ urlpatterns = [
     path('final/<str:category>/score/', views.FinalScoreView.as_view(), name='final_score'),
     path('question/<int:pk>/delete/', views.QuestionDeleteView.as_view(), name='question_delete'),
     path('option/<int:pk>/delete/', views.OptionDeleteView.as_view(), name='option_delete'),
-    path('test-classroom/<int:pk>/', views.TestClassroomView.as_view(), name='test-classroom'),
     path('character_silence/', views.ClassroomSilenceView.as_view(), name='character_voice'),
 ]

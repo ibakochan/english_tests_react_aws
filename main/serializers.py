@@ -55,7 +55,7 @@ class NestedCustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'last_name', 'id']
+        fields = ['username', 'id']
 
 class StudentInClassroomsSerializer(serializers.ModelSerializer):
     user = NestedCustomUserSerializer(read_only=True)
@@ -76,12 +76,12 @@ class ClassroomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Classroom
-        fields = ['id', 'name', 'students', 'character_voice', 'requests' ]
+        fields = ['id', 'name', 'students', 'character_voice', 'requests', 'battle_permission' ]
 
 class StudentClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'battle_permission']
 
 class StudentSerializer(serializers.ModelSerializer):
     classrooms = ClassroomSerializer(many=True, read_only=True)
