@@ -220,7 +220,7 @@ const TestRenderForm = ({
             {question.sentence_order && (
               <div>
                 <div style={{ display: 'flex', gap: '20px', padding: '40px' }}>
-                {question.options.map((option, index) => {
+                {options.map((option, index) => {
                   let textToDrag = option.is_correct
                     ? randomCorrect
                     : option.id === question.options[1].id

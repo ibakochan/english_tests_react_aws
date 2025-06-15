@@ -77,7 +77,7 @@ jr_1_lesson_1_conversation = {
     'word': 'Markさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Sayuri_Mark.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_15_03_37_1.mp3',
-    'label': 'is good at Tennis.'
+    'label': 'is good at table tennis.'
   }
 }
 

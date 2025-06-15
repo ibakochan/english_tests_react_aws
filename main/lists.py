@@ -611,7 +611,7 @@ grade_6_lesson_5 = {
         'sound2': 'https://storage.googleapis.com/6-grade-countries/2024_10_16_10_21_30_1.mp3'
     },
     'k': {
-        'word': 'The USA',
+        'word': 'the U.S.A.',
         'picture': 'https://storage.googleapis.com/6-grade-countries/OIG3.jpeg',
         'sound': 'https://storage.googleapis.com/6-grade-countries/2024_10_16_10_21_58_1.mp3',
         'sound2': 'https://storage.googleapis.com/6-grade-countries/2024_10_16_10_22_26_1.mp3'
@@ -635,7 +635,7 @@ grade_6_lesson_5 = {
         'sound2': 'https://storage.googleapis.com/6-grade-countries/2024_10_16_10_25_14_1.mp3'
     },
     'o': {
-        'word': 'The UK',
+        'word': 'the U.K.',
         'picture': 'https://storage.googleapis.com/6-grade-countries/OIG4%20(4).jpeg',
         'sound': 'https://storage.googleapis.com/6-grade-countries/2024_10_16_10_25_41_1.mp3',
         'sound2': 'https://storage.googleapis.com/6-grade-countries/2024_10_16_10_25_51_1.mp3'
@@ -695,7 +695,7 @@ grade5_lesson1_words = {
         'sound': 'https://storage.googleapis.com/grade5_lesson1/2024_12_04_14_20_24_1.mp3'
     },
     'g': {
-        'word': 'e-sports',
+        'word': 'esports',
         'picture': 'https://storage.googleapis.com/grade5_lesson1/e-sports.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson1/2024_12_04_14_20_28_1.mp3'
     },
@@ -771,6 +771,14 @@ grade5_lesson1_words = {
     }
 }
 
+import pykakasi
+
+kks = pykakasi.kakasi()
+
+def add_furigana(text):
+    result = kks.convert(text)
+    return ''.join([f"<ruby>{item['orig']}<rt>{item['hira']}</rt></ruby>" if '\u4e00' <= item['orig'] <= '\u9fff' else item['orig'] for item in result])
+
 grade5_lesson1_sentence = {
     '黒、スマホ': 'https://storage.googleapis.com/grade5_lesson1/2024_12_05_14_56_20_1.mp3',
     'サッカー、新しい靴': 'https://storage.googleapis.com/grade5_lesson1/2024_12_05_14_56_44_1.mp3',
@@ -783,7 +791,6 @@ grade5_lesson1_sentence = {
     '青、青い色の車': 'https://storage.googleapis.com/grade5_lesson1/2024_12_05_15_01_31_1.mp3',
     'パイナップル、パイナップルピザ': 'https://storage.googleapis.com/grade5_lesson1/2024_12_05_15_02_18_1.mp3'
 }
-
 
 grade5_lesson2 = {
     '1/21': 'https://storage.googleapis.com/grade5_lesson1/2024_12_05_16_07_40_1.mp3',
@@ -800,17 +807,17 @@ grade5_lesson2 = {
 
 grade5_lesson3 = {
     1: {
-        'word': 'PE',
+        'word': 'P.E.',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/PE.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_31_52_1.mp3'
     },
     2: {
-        'word': 'arts',
+        'word': 'arts and crafts',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/arts.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_31_55_1.mp3'
     },
     3: {
-        'word': 'caligraphy',
+        'word': 'calligraphy',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/caligraphy.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_00_1.mp3'
     },
@@ -820,7 +827,7 @@ grade5_lesson3 = {
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_08_1.mp3'
     },
     5: {
-        'word': 'english',
+        'word': 'English',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/english.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_13_1.mp3'
     },
@@ -830,36 +837,31 @@ grade5_lesson3 = {
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_17_1.mp3'
     },
     7: {
-        'word': 'integrated',
-        'picture': 'https://storage.googleapis.com/grade5_lesson3/integrated.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_24_1.mp3'
-    },
-    8: {
-        'word': 'japanese',
+        'word': 'Japanese',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/japanese.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_02_1.mp3'
     },
-    9: {
+    8: {
         'word': 'math',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/matth.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_07_1.mp3'
     },
-    10: {
+    9: {
         'word': 'moral education',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/moral_education.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_11_1.mp3'
     },
-    11: {
+    10: {
         'word': 'music',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/music.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_15_1.mp3'
     },
-    12: {
+    11: {
         'word': 'science',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/science.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_20_1.mp3'
     },
-    13: {
+    12: {
         'word': 'social studies',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/social_studies.png',
         'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_25_1.mp3'
@@ -960,7 +962,7 @@ grade_5_lesson_5 = {
         'sound': 'https://storage.googleapis.com/5th-grade-places/2024_10_16_09_46_12_1.mp3'
     },
     'f': {
-        'word': 'super market',
+        'word': 'supermarket',
         'picture': 'https://storage.googleapis.com/5th-grade-places/OIG2 (4).jpeg',
         'sound': 'https://storage.googleapis.com/5th-grade-places/2024_10_16_09_46_36_1.mp3'
     },
@@ -1782,7 +1784,7 @@ grade_6_lesson_8 = {
         'sound2': 'https://storage.googleapis.com/6grade_lesson8/2024_11_18_14_14_03_1.mp3'
     },
     'e': {
-        'word': 'kendo club',
+        'word': 'kendo team',
         'picture': 'https://storage.googleapis.com/6grade_lesson8/kendo_club.png',
         'sound': 'https://storage.googleapis.com/6grade_lesson8/2024_11_18_13_58_35_1.mp3',
         'sound2': 'https://storage.googleapis.com/6grade_lesson8/2024_11_18_14_14_34_1.mp3'
@@ -1800,7 +1802,7 @@ grade_6_lesson_8 = {
         'sound2': 'https://storage.googleapis.com/6grade_lesson8/2024_11_18_14_17_29_1.mp3'
     },
     'h': {
-        'word': 'tennis club',
+        'word': 'tennis team',
         'picture': 'https://storage.googleapis.com/6grade_lesson8/tennis_club.png',
         'sound': 'https://storage.googleapis.com/6grade_lesson8/2024_11_18_13_58_55_1.mp3',
         'sound2': 'https://storage.googleapis.com/6grade_lesson8/2024_11_18_14_18_32_1.mp3'

@@ -129,6 +129,9 @@ def get_total_questions():
         "total_numbers_questions": Test.objects.filter(category='numbers').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
         "total_eiken_questions": Test.objects.filter(category='eiken').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
         "total_eiken4_questions": Test.objects.filter(category='eiken4').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
+        "total_eiken3_questions": Test.objects.filter(category='eiken3').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
+        "total_eiken_pre2_questions": Test.objects.filter(category='eiken_pre2').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
+        "total_eiken2_questions": Test.objects.filter(category='eiken2').aggregate(total_score=Sum('total_score'))['total_score'] or 0,
     }
     return question_counts
 

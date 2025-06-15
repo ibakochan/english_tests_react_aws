@@ -1,4 +1,7 @@
-eiken4_vocab = {
+import pykakasi
+
+kks = pykakasi.kakasi()
+raw_eiken4_vocab = {
     'another': ['別の', 'https://storage.googleapis.com/eiken5/2025_03_15_18_19_34_1.mp3'],
     'around': ['周りに', 'https://storage.googleapis.com/eiken5/2025_03_15_18_19_38_1.mp3'],
     'able': ['できる', 'https://storage.googleapis.com/eiken5/2025_03_15_18_19_42_1.mp3'],
@@ -300,7 +303,7 @@ eiken4_vocab = {
     'you': ['あなた', 'https://storage.googleapis.com/eiken5/2024_12_17_14_48_35_1.mp3'],
 }
 
-eiken4_grammar_vocab = {
+raw_eiken4_grammar_vocab = {
     'must/have to/has to': ['〜しなければならない', 'https://storage.googleapis.com/eiken4_grammar/2025_05_21_12_52_18_1.mp3'],
     'may': ['〜かもしれない／〜してもよい', 'https://storage.googleapis.com/eiken4_grammar/2025_05_21_12_52_24_1.mp3'],
     'might': ['〜かもしれない　例：明日は雪が降るかもしれません。', 'https://storage.googleapis.com/eiken4_grammar/2025_05_21_12_52_27_1.mp3'],
@@ -349,7 +352,16 @@ eiken4_grammar_vocab = {
 }
 
 
+def add_furigana(text):
+    result = kks.convert(text)
+    return ''.join([f"<ruby>{item['orig']}<rt>{item['hira']}</rt></ruby>" if '\u4e00' <= item['orig'] <= '\u9fff' else item['orig'] for item in result])
 
+eiken4_vocab = {
+    key: [add_furigana(value[0]), value[1]] for key, value in raw_eiken4_vocab.items()
+}
+eiken4_grammar_vocab = {
+    key: [add_furigana(value[0]), value[1]] for key, value in raw_eiken4_grammar_vocab.items()
+}
 
 eiken4_vocab1 = dict(list(eiken4_vocab.items())[:25])
 eiken4_vocab2 = dict(list(eiken4_vocab.items())[25:50])
@@ -810,7 +822,7 @@ eiken4_grammar_sentence_answers = {
     "A: Who likes math more, you or Ken? B: (         )": ["Do your best.", "It's cold today.", "No way.", "He does."],
 }
 
-eiken4_sentence_order = {
+raw_eiken4_sentence_order = {
     "教室は休憩の間とてもさわがしかったです。(         ) the break.": ["the classroom", "was", "very", "noisy", "during"],
     "彼は週末にバイクで買い物へ行くのが好きです。(         ) to go shopping.": ["he", "likes", "to", "ride", "his bike"],
     "私の父は病院で働いています。(         ) at the hospital.": ["my", "father", "works", "as", "a doctor"],
@@ -961,4 +973,9 @@ eiken4_sentence_order = {
     "そのレストランはおいしい料理で有名です。(         ) its food.": ["the", "restaurant", "is", "famous", "for"],
     "彼女はその本で有名になりました。(         ).": ["she", "became", "famous", "for", "that book"],
     "日本はアニメで有名です。(         ).": ["Japan", "is", "famous", "for", "anime"],
+}
+
+
+eiken4_sentence_order = {
+    add_furigana(key): value for key, value in raw_eiken4_sentence_order.items()
 }

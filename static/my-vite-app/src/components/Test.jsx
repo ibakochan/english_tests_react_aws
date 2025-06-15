@@ -10,7 +10,7 @@ import { useWebsocket } from "../context/WebsocketContext";
 import { useTest } from "../context/TestContext";
 import { gameReducer, initialGameState } from "../context/GameReducer";
 
-import { formatText, wrapTextSafe, shuffleArray, getRandomizedValues, getRandomizedOptions, handlePlay, useAutoPlay } from "../utils/TestHelpers";
+import { formatTextAsHtml, wrapTextSafe, shuffleArray, getRandomizedValues, getRandomizedOptions, handlePlay, useAutoPlay } from "../utils/TestHelpers";
 import { useScoreHelpers } from '../utils/TestRecordHelpers';
 import { TestModal, ReturnConfirmModal, SignupPromptModal, InvitationModal } from '../utils/TestModalHelpers';
 import { filterTests } from '../utils/filtering';
@@ -560,9 +560,10 @@ const Test = () => {
                             }
 
                             {randomCorrect ? (
-                              <h4 style={{ whiteSpace: 'pre-wrap' }}>
-                                {formatText(wrapTextSafe(randomAlphabet, 50).join(' '))}
-                              </h4>
+                              <h4
+                                style={{ whiteSpace: 'pre-wrap' }}
+                                dangerouslySetInnerHTML={{ __html: formatTextAsHtml(randomAlphabet) }}
+                              />
                             ) : (
                               <h4 style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: randomTranslation }} />
                             )}

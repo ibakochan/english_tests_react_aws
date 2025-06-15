@@ -6,7 +6,14 @@ from main.humanize import naturalsize
 from django.forms import DateInput
 from django.core.exceptions import ValidationError
 from django.forms import CharField
-from .eiken3_lists import eiken3_vocab
+from .eiken3_lists import (
+    eiken3_vocab1, eiken3_vocab2, eiken3_vocab3, eiken3_vocab4,
+    eiken3_vocab5, eiken3_vocab6, eiken3_vocab7, eiken3_vocab8,
+    eiken3_vocab9, eiken3_vocab10, eiken3_vocab11, eiken3_vocab12,
+    eiken3_vocab13, eiken3_vocab14, eiken3_vocab15, eiken3_vocab16,
+    eiken3_vocab, eiken3_grammar_vocab, eiken3_vocab_practice, eiken3_conversation_vocab_practice,
+    eiken3_grammar_practice
+)
 from .eiken4_lists import eiken4_sentence_order, eiken4_grammar_sentence_answers, eiken4_grammar_practice, eiken4_conversation_vocab_practice, eiken4_grammar_vocab, eiken4_vocab_practice, eiken4_vocab, eiken4_vocab1, eiken4_vocab2, eiken4_vocab3, eiken4_vocab4, eiken4_vocab5, eiken4_vocab6, eiken4_vocab7, eiken4_vocab8, eiken4_vocab9, eiken4_vocab10, eiken4_vocab11, eiken4_vocab12
 from .lists_eiken import eiken5_sentence_order, eiken5_grammar_sentence_answers, eiken5_grammar_vocab, eiken5_vocab1, eiken5_vocab2, eiken5_vocab3, eiken5_vocab4, eiken5_vocab5, eiken5_vocab6, eiken5_vocab7, eiken5_vocab8, eiken5_vocab9, eiken5_vocab10, eiken5_vocab11, eiken5_vocab12, eiken5_vocab13, eiken5_vocab14, eiken5_vocab15, eiken5_vocab16, eiken5_vocab, eiken5_vocab_practice, eiken5_grammar_practice, eiken5_conversation_vocab_practice
 from .lists import alphabet_sounds3, grade5_lesson8, grade5_lesson7, grade5_lesson1_names, grade5_lesson1_words, grade5_lesson1_sentence, grade5_lesson2, grade5_lesson3, grade5_lesson4_sentence, dates, months, days, grade6_lesson1, grade6_lesson2, grade6_lesson3, grade_6_lesson_8, grade_6_lesson_7, phonics3, alphabet_sounds2, japanese_numbers, grade_6_lesson_6, alphabet_sounds, one_twenty, one_hundred, eleven_ninety, one_thousand, one_quadrillion, thousand_quadrillion, grade_6_lesson_5, grade_5_lesson_5, grade_5_lesson_6, small_alphabet_sounds, alphabet_phonics, jlpt_n5_vocabulary, phonics1, phonics_2, lesson4_list, lesson4_grade6_dict
@@ -123,7 +130,27 @@ class QuestionCreateForm(forms.ModelForm):
         ('japanese_numbers', 'Japanese_Numbers'),
         ('alphabet_sounds2', 'Alphabet Sounds2'),
         ('alphabet_sounds3', 'Alphabet Sounds3'),
+        ('eiken3_vocab1', 'Eiken3_vocab1'),
+        ('eiken3_vocab2', 'Eiken3_vocab2'),
+        ('eiken3_vocab3', 'Eiken3_vocab3'),
+        ('eiken3_vocab4', 'Eiken3_vocab4'),
+        ('eiken3_vocab5', 'Eiken3_vocab5'),
+        ('eiken3_vocab6', 'Eiken3_vocab6'),
+        ('eiken3_vocab7', 'Eiken3_vocab7'),
+        ('eiken3_vocab8', 'Eiken3_vocab8'),
+        ('eiken3_vocab9', 'Eiken3_vocab9'),
+        ('eiken3_vocab10', 'Eiken3_vocab10'),
+        ('eiken3_vocab11', 'Eiken3_vocab11'),
+        ('eiken3_vocab12', 'Eiken3_vocab12'),
+        ('eiken3_vocab13', 'Eiken3_vocab13'),
+        ('eiken3_vocab14', 'Eiken3_vocab14'),
+        ('eiken3_vocab15', 'Eiken3_vocab15'),
+        ('eiken3_vocab16', 'Eiken3_vocab16'),
         ('eiken3_vocab', 'Eiken3_vocab'),
+        ('eiken3_grammar_vocab', 'Eiken3_grammar_vocab'),
+        ('eiken3_vocab_practice', 'eiken3_vocab_practice'),
+        ('eiken3_conversation_vocab_practice', 'eiken3_conversation_vocab_practice'),
+        ('eiken3_grammar_practice', 'eiken3_grammar_practice'),
         ('eiken4_vocab', 'Eiken4_vocab'),
         ('eiken4_grammar_vocab', 'Eiken4_grammar_vocab'),
         ('eiken4_vocab1', 'Eiken4_vocab1'),
@@ -273,8 +300,48 @@ class QuestionCreateForm(forms.ModelForm):
                 instance.question_list = alphabet_sounds2
             elif selected_list == 'alphabet_sounds3':
                 instance.question_list = alphabet_sounds3
+            elif selected_list == 'eiken3_vocab1':
+                instance.question_list = eiken3_vocab1
+            elif selected_list == 'eiken3_vocab2':
+                instance.question_list = eiken3_vocab2
+            elif selected_list == 'eiken3_vocab3':
+                instance.question_list = eiken3_vocab3
+            elif selected_list == 'eiken3_vocab4':
+                instance.question_list = eiken3_vocab4
+            elif selected_list == 'eiken3_vocab5':
+                instance.question_list = eiken3_vocab5
+            elif selected_list == 'eiken3_vocab6':
+                instance.question_list = eiken3_vocab6
+            elif selected_list == 'eiken3_vocab7':
+                instance.question_list = eiken3_vocab7
+            elif selected_list == 'eiken3_vocab8':
+                instance.question_list = eiken3_vocab8
+            elif selected_list == 'eiken3_vocab9':
+                instance.question_list = eiken3_vocab9
+            elif selected_list == 'eiken3_vocab10':
+                instance.question_list = eiken3_vocab10
+            elif selected_list == 'eiken3_vocab11':
+                instance.question_list = eiken3_vocab11
+            elif selected_list == 'eiken3_vocab12':
+                instance.question_list = eiken3_vocab12
+            elif selected_list == 'eiken3_vocab13':
+                instance.question_list = eiken3_vocab13
+            elif selected_list == 'eiken3_vocab14':
+                instance.question_list = eiken3_vocab14
+            elif selected_list == 'eiken3_vocab15':
+                instance.question_list = eiken3_vocab15
+            elif selected_list == 'eiken3_vocab16':
+                instance.question_list = eiken3_vocab16
             elif selected_list == 'eiken3_vocab':
                 instance.question_list = eiken3_vocab
+            elif selected_list == 'eiken3_grammar_vocab':
+                instance.question_list = eiken3_grammar_vocab
+            elif selected_list == 'eiken3_vocab_practice':
+                instance.question_list = eiken3_vocab_practice
+            elif selected_list == 'eiken3_conversation_vocab_practice':
+                instance.question_list = eiken3_conversation_vocab_practice
+            elif selected_list == 'eiken3_grammar_practice':
+                instance.question_list = eiken3_grammar_practice
             elif selected_list == 'eiken4_vocab':
                 instance.question_list = eiken4_vocab
             elif selected_list == 'eiken4_grammar_vocab':

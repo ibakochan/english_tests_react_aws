@@ -3,11 +3,13 @@ import React from "react";
 const Practice = ({ questions, handlePlay, isPlayDisabled, activeTestDescription, activeTestDescriptionSound }) => (
   <>
     <div>
-      {activeTestDescription.split('\n').map((line, index) => (
-        <React.Fragment key={index}>
-          {line}<br />
-        </React.Fragment>
-      ))}
+      {activeTestDescription !== "" ? (
+        activeTestDescription.split('\n').map((line, index) => (
+          <React.Fragment key={index}>
+            {line}<br />
+          </React.Fragment>
+        ))
+      ) : null}
       {activeTestDescriptionSound ? (
         <audio controls>
           <source src={activeTestDescriptionSound} type="audio/mpeg" />
@@ -33,7 +35,10 @@ const Practice = ({ questions, handlePlay, isPlayDisabled, activeTestDescription
               >
                 {((value.picture && value.word) || (!value.picture && !value.word)) && (
                   <span className={`${value.picture ? 'text-center text-with-picture' : 'text-without-picture'} text-white`}>
-                    {value.numbers ? value.numbers : value.label ? value.label : value.word ? value.word : key}{value[0] !== undefined && value[0] !== 'h' ? ` = ${value[0]}` : ""}
+                    {value.numbers ? value.numbers : value.label ? value.label : value.word ? value.word : key}
+                    {value[0] !== undefined && value[0] !== 'h' ? (
+                      <span dangerouslySetInnerHTML={{ __html: ` = ${value[0]}` }} />
+                    ) : null}
                   </span>
                 )}
                 {!value.picture && value.word && (

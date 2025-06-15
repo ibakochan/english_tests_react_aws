@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { CategoryButtons, CategoryReturnButton } from "./TestChildren/CategoryTogglers";
+import { useUser } from "../context/UserContext";
 
 const TestCreate = () => {
+  const { currentUser, setCurrentUser, lvl, setLvl, petLevel, setPetLevel, activeClassroomId, activeClassroomName, setActiveClassroomId, userClassrooms, setActiveClassroomName, activity, setActivity, isEnglish, setIsEnglish } = useUser();
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [tests, setTests] = useState([]);
@@ -31,6 +34,8 @@ const TestCreate = () => {
   const [questionLabel, setQuestionLabel] = useState(false);
   const [questionPicture2, setQuestionPicture2] = useState(false);
   const [questionWord2, setQuestionWord2] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(null);
+
 
   useEffect(() => {
   }, [options]);
@@ -62,6 +67,14 @@ const TestCreate = () => {
       .catch(error => {
         console.error(`Error fetching questions for test ${testId}:`, error);
       });
+  };
+
+  const toggleCategories = async (category) => {
+    if (activeCategory === category) {
+      setActiveCategory(null);
+    } else {
+      setActiveCategory(category);
+    }
   };
 
   const fetchOptionsByQuestion = (questionId) => {
@@ -312,7 +325,6 @@ const TestCreate = () => {
 
       const result = await response.json();
 
-      // Update the testQuestions state to remove the deleted question
       setTestQuestions(prevTestQuestions => {
         const newTestQuestions = {...prevTestQuestions};
         for (let testId in newTestQuestions) {
@@ -391,7 +403,6 @@ const TestCreate = () => {
 
       const result = await response.json();
 
-      // Update the options state to remove the deleted option
       setOptions(prevOptions => {
         const newOptions = {...prevOptions};
         for (let questionId in newOptions) {
@@ -504,7 +515,15 @@ const TestCreate = () => {
           </form>
           {responseMessage && <p>{responseMessage}</p>}
           <div className="test-buttons-container">
-            {tests.map(test => (
+            <div style={{ justifyContent: 'center' }}>
+              <CategoryButtons isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} currentUser={currentUser} />
+              {!activeTestId &&
+                <CategoryReturnButton isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} activeTestId={activeTestId} />
+              }
+            </div>
+            {tests
+            .filter(test => test.category === activeCategory)
+            .map(test => (
               <span key={test.id}>
                 {activeTestId === null || activeTestId === test.id ? (
                 <span>
@@ -653,6 +672,26 @@ const TestCreate = () => {
                         {test.category === 'eiken3' &&
                         <>
                         <option value="eiken3_vocab">Eiken3 Vocab</option>
+                        <option value="eiken3_vocab1">Eiken3 Vocab1</option>
+                        <option value="eiken3_vocab2">Eiken3 Vocab2</option>
+                        <option value="eiken3_vocab3">Eiken3 Vocab3</option>
+                        <option value="eiken3_vocab4">Eiken3 Vocab4</option>
+                        <option value="eiken3_vocab5">Eiken3 Vocab5</option>
+                        <option value="eiken3_vocab6">Eiken3 Vocab6</option>
+                        <option value="eiken3_vocab7">Eiken3 Vocab7</option>
+                        <option value="eiken3_vocab8">Eiken3 Vocab8</option>
+                        <option value="eiken3_vocab9">Eiken3 Vocab9</option>
+                        <option value="eiken3_vocab10">Eiken3 Vocab10</option>
+                        <option value="eiken3_vocab11">Eiken3 Vocab11</option>
+                        <option value="eiken3_vocab12">Eiken3 Vocab12</option>
+                        <option value="eiken3_vocab13">Eiken3 Vocab13</option>
+                        <option value="eiken3_vocab14">Eiken3 Vocab14</option>
+                        <option value="eiken3_vocab15">Eiken3 Vocab15</option>
+                        <option value="eiken3_vocab16">Eiken3 Vocab16</option>
+                        <option value="eiken3_grammar_vocab">Eiken3 Grammar Vocab</option>
+                        <option value="eiken3_vocab_practice">Eiken3 Vocab Practice</option>
+                        <option value="eiken3_conversation_vocab_practice">Eiken3 Conversation Vocab Practice</option>
+                        <option value="eiken3_grammar_practice">Eiken3 Grammar Practice</option>
                         </>
                         }
                     </select>

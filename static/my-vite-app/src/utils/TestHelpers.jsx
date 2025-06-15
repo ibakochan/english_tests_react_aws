@@ -1,26 +1,19 @@
 import React from "react";
 
-export const formatText = (text) => {
-    if (text.includes("B:")) {
-        const parts = text.split("B:");
-        return (
-            <>
-                <p>{parts[0]}</p>
-                <p>B:{parts[1]}</p>
-            </>
-        );
-    } else if (text.includes("。")) {
-        const parts = text.split("。");
-        return (
-            <>
-                <p>{parts[0]}。</p>
-                <p>{parts[1]}</p>
-            </>
-        );
-    } else {
-        return <p>{text}</p>;
-    }
+export const formatTextAsHtml = (text) => {
+  if (!text) return "";
+
+  if (text.includes("B:")) {
+    const parts = text.split("B:");
+    return `<p>${parts[0]}</p><p>B:${parts[1]}</p>`;
+  } else if (text.includes("。")) {
+    const parts = text.split("。");
+    return `<p>${parts[0]}。</p><p>${parts.slice(1).join("。")}</p>`;
+  } else {
+    return `<p>${text}</p>`;
+  }
 };
+
 
 
 export const wrapTextSafe = (text, limit = 15) => {

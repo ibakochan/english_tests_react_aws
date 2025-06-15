@@ -21,7 +21,7 @@ export const filterTests = (tests, maxScores, opponentA, opponentATests) => {
     
         const previousTest = Object.values(tests)
           .flat()
-          .find(t => (t.category === "eiken" || t.category === "eiken4") && t.lesson_number === test.lesson_number - 1);
+          .find(t => (t.category === "eiken" || t.category === "eiken4" || t.category === "eiken3") && t.lesson_number === test.lesson_number - 1);
     
         if (!previousTest) {
           return false;

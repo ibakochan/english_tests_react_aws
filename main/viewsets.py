@@ -257,7 +257,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         question_counts = get_total_questions()
         total_category_scores = get_total_category_scores(user)
         total_max_scores = user.total_max_scores
-        total_eiken_scores = user.total_eiken_score + user.total_4eiken_score + user.total_numbers_score + user.total_phonics_score
+        total_eiken_scores = user.total_eiken_score + user.total_4eiken_score + user.total_eiken3_score + user.total_eiken_pre2_score + user.total_eiken2_score + user.total_numbers_score + user.total_phonics_score
         memories = get_memories(total_max_scores)
         asset = get_profile_assets(total_max_scores)
         pets = get_eiken_pet(total_eiken_scores)
