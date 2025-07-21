@@ -89,9 +89,17 @@ const StudentProfile = () => {
           {urlPath === "/portfolio/" &&
           <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <div>
-              Here you can update your student number if you are a student
+              {isEnglish
+                ? 'Here you can update your student number if you are a student'
+                : 'ここで、生徒の場合は出席番号を変更できます'
+              }
             </div>
-            <div style={{ marginTop: '40px' }}>If you are a superuser you can create tests below. but since only I am currrently able to create tests and I have no plans on changing this anytime soon the test create section is pretty messy so no need to check that</div>
+            <div style={{ marginTop: '40px' }}>
+              {isEnglish
+                ? "If you are a superuser you can create tests below. But since only I can create tests currently and have no plans to change this soon, the test creation section is a bit messy, so no need to check that."
+                : "スーパーユーザーの場合、以下でテストを作成できます。ただし、現在は私だけがテスト作成可能で、近いうちに変更する予定もないため、テスト作成セクションは少し雑ですので、私以外は見れません"
+              }
+            </div>
           </div>
           }
         </div>

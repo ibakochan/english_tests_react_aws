@@ -11,10 +11,14 @@ let answerEchoSubmitCallback = null;
 let runAwayCallback = null;
 let battleTestsCallback = null;
 
-export const connect = (currentUser) => {
-    if (!currentUser) return;
+export const connect = (currentUser, activeClassroomId) => {
+    if (!currentUser || !activeClassroomId) return;
+    const classrooms = currentUser.teacher?.classrooms || currentUser.student?.classrooms || [];
 
-    if (!ws) {
+    const activeClassroom = classrooms.find(c => c.id === activeClassroomId);
+
+    const hasBattlePermission = activeClassroom?.battle_permission === true;
+    if (!ws && hasBattlePermission) {
         ws = new WebSocket("wss://eibaru.jp/ws/test/");
 
         ws.onopen = () => {
@@ -27,9 +31,9 @@ export const connect = (currentUser) => {
             if (data.type === "shared_user_list" && connectedUsersCallback) {
                 connectedUsersCallback(data.users);
             } else if (data.type === "user_joined" && connectedUsersCallback) {
-                connectedUsersCallback(prev => [...prev, data.username]);
+                connectedUsersCallback(prev => prev.some(u => u.username === data.username) ? prev : [...prev, { username: data.username, student_number: data.student_number }]);
             } else if (data.type === "user_left" && connectedUsersCallback) {
-                connectedUsersCallback(prev => prev.filter(u => u !== data.username));
+                connectedUsersCallback(prev => prev.filter(u => u.username !== data.username));
             } else if (data.type === "invitation" && invitationCallback) {
                 invitationCallback(data.sender_username);
             } else if ((data.type === "invitation_accept" || data.type === "invitation_decline") && invitationResponseCallback) {

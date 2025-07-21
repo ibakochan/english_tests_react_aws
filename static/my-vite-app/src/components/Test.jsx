@@ -23,7 +23,7 @@ import TestRenderForm from './TestChildren/TestRenderForm';
 import DisplayAllVocab from './TestChildren/DisplayAllVocab';
 import Login from './TestChildren/Login';
 import { CategoryButtons, CategoryReturnButton } from "./TestChildren/CategoryTogglers";
-import { FinalsButton, FinalsReturnButton, TestReturnButton, TestButtons } from './TestChildren/TestTogglers';
+import { MusicVideoButton, FinalsButton, FinalsReturnButton, TestReturnButton, TestButtons } from './TestChildren/TestTogglers';
 
 
 import { useToggleQuestionDetails, useToggleCategories } from '../hooks/testTogglers';
@@ -35,13 +35,14 @@ const Test = () => {
   const [accessToken, setAccessToken] = useState(localStorage.getItem('access_token'));
   const { showInvitationModal, setShowInvitationModal, battleScore, setBattleScore, opponentScore, setOpponentScore, connected, connectedUsers, invitations, targetUsername, setTargetUsername, inviter, handleAcceptInvitation, handleDeclineInvitation, handleSendInvitation, opponentA, volume, setVolume, isPractice, setIsPractice, showModal, setShowModal, battleModalPicture, setBattleModalPicture, battleModalText, setBattleModalText, battleFinishMessage, setBattleFinishMessage } = useWebsocket();
   const { currentUser, setCurrentUser, activeTestId, setActiveTestId, lvl, setLvl, petLevel, setPetLevel, activeClassroomId, activeClassroomName, setActiveClassroomId, userClassrooms, setActiveClassroomName, activity, setActivity, isEnglish, setIsEnglish } = useUser();
-  const { maxScores, setMaxScores, tests, setTests, testQuestions, setTestQuestions, totalQuestions, setTotalQuestions, questions, setQuestions } = useTest();
+  const { maxScores, setMaxScores, tests, setTests, testQuestions, setTestQuestions, totalQuestions, setTotalQuestions, questions, setQuestions, maximumScore, setMaximumScore, scoreMultiplier, setScoreMultiplier, activeTestMaxScore, setActiveTestMaxScore } = useTest();
   const { recordFinalsScores, recordScore, declareWinner } = useScoreHelpers();
   const [gameState, dispatchGame] = useReducer(gameReducer, initialGameState);
   const [inputValue, setInputValue] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [activeMusicVideos, setActiveMusicVideos] = useState(false);
   const [activeFinals, setActiveFinals] = useState(false);
   const [activeTestName, setActiveTestName] = useState('');
   const [activeTestDescription, setActiveTestDescription] = useState('');
@@ -105,7 +106,11 @@ const Test = () => {
   const isEikenCategory = activeCategory === 'eiken' || activeCategory === 'eiken4';
   const isGrammarOrLongDashTest = (activeTestName || '').includes('ー') || (activeTestName || '').includes('文法的語彙');
   const shouldShowEikenPracticeSection = isEikenCategory && isGrammarOrLongDashTest;
-
+  const yourScore = gameState.scoreCounter * scoreMultiplier;
+  const isEiken = activeCategory?.includes("eiken");
+  const isAboveMaxScore = yourScore > activeTestMaxScore;
+  const isValidScore = gameState.scoreCounter > 0;
+  const isBelowEikenThreshold = isEiken && yourScore < 0.7 * maximumScore;
 
   const activeQuestion = testQuestions.questions
   .filter(question => 
@@ -148,7 +153,7 @@ const Test = () => {
     testQuestions, setQuestions, setRandomizedValues, setRandomizedOptions,
     setActiveTestId, setActiveTestName, setActiveTestDescription, setActiveTestDescriptionSound,
     activeTestId, activeTestDescription, activeTestDescriptionSound, isPractice, activeFinals, activeCategory,
-    fetchQuestionsByTest, setTotalQuestions, fetchTestQuestionsAndOptions, inviter, opponentA, setError, dispatchGame, setBattleScore, setOpponentScore,
+    fetchQuestionsByTest, setTotalQuestions, fetchTestQuestionsAndOptions, inviter, opponentA, setError, dispatchGame, setBattleScore, setOpponentScore, setMaximumScore, setScoreMultiplier, setActiveTestMaxScore,
   });
 
   const handleSubmit = useHandleSubmit({ws, sendData, timestamp, youAnsweredCorrect, setYouAnsweredCorrect, setCorrectWord, setCorrectSound, setCorrectPicture, setCorrectLabel, setCorrectEikenWord,
@@ -233,9 +238,17 @@ const Test = () => {
     setIsCorrect(false);
     setBattleFinishMessage("");
     if (gameState.activeQuestionIndex === (totalQuestions -1) && activeTestId !== null && !activeFinals && opponentA === "") {
+      if (isAboveMaxScore && isValidScore && !isBelowEikenThreshold) {
         recordScore(gameState, activeTestId, setRecordMessage, setShowModal, setMaxScores, setError, setSignupModal);
-        setActiveTestId(null);
-        dispatchGame({ type: 'RESET_GAME' });
+      } else if (isBelowEikenThreshold) {
+        setRecordMessage(`点数: ${yourScore}/${maximumScore}（７０％以下）記録されなかった！`);
+        setShowModal(true);
+      } else {
+        setRecordMessage(`今のスコア ${yourScore} は最高記録 ${activeTestMaxScore} より少なかった`);
+        setShowModal(true);
+      }
+      setActiveTestId(null);
+      dispatchGame({ type: 'RESET_GAME' });
     }
     if (gameState.activeQuestionIndex === (totalQuestions -1) && activeFinals) {
       recordFinalsScores(gameState, activeCategory, setRecordMessage, setShowModal, setError, setSignupModal)
@@ -257,12 +270,25 @@ const Test = () => {
   const handleBackClick = () => {
     closeReturnModal();
     if (activeTestId !== undefined) {
-      recordScore(gameState, activeTestId, setRecordMessage, setShowModal, setMaxScores, setError, setSignupModal);
+      if (isAboveMaxScore && isValidScore && !isBelowEikenThreshold) {
+        recordScore(gameState, activeTestId, setRecordMessage, setShowModal, setMaxScores, setError, setSignupModal);
+      } else if (isBelowEikenThreshold) {
+        setRecordMessage(`点数: ${yourScore}/${maximumScore}（７０％以下）記録されなかった！`);
+        setShowModal(true);
+      } else {
+        setRecordMessage(`今のスコア ${yourScore} は最高記録 ${activeTestMaxScore} より少なかった`);
+        setShowModal(true);
+      }
       toggleQuestionDetails({testId: activeTestId});
-    } else {
+    } else if (gameState.activeQuestionIndex === (totalQuestions -1) && activeFinals) {
       setActiveFinals(false);
       setActiveTestId(null);
       recordFinalsScores(gameState, activeCategory, setRecordMessage, setShowModal, setError, setSignupModal);
+    } else {
+      setActiveFinals(false);
+      setActiveTestId(null);
+      setRecordMessage("まとめてストは最後までしないと記録されない");
+      setShowModal(true);
     }
   };
 
@@ -286,7 +312,7 @@ const Test = () => {
     if (activeFinals) {
       toggleQuestionDetails({
         testId: undefined, testDescription: undefined, testDescriptionSound: undefined,
-        numberOfQuestions: undefined, testName: undefined, category: activeCategory
+        numberOfQuestions: undefined, testName: undefined, category: activeCategory, maxPossibleScore: undefined,
       });      
     }
   }, [activeFinals]);
@@ -488,15 +514,21 @@ const Test = () => {
           {activity !== "memories" && (opponentA === "" || inviter) &&
           <div ref={testSectionRef}>
           <CategoryButtons isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} currentUser={currentUser} />
-          {!activeTestId && !activeFinals &&
+          {!activeTestId && !activeMusicVideos && !activeFinals &&
             <CategoryReturnButton isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} activeTestId={activeTestId} />
           }
           </div>
           }
           {urlPath === "/portfolio/" && !activeCategory &&
-              <div>Here we have the category buttons. Click on them, choose a test and then play</div>
+              <div>
+                {isEnglish
+                  ? 'Here we have the category buttons. Click on them, choose a test and then play'
+                  : 'ここにカテゴリーボタンがあります。クリックでテストを選び、プレイしてみてください'
+                }
+              </div>
           }
-          {activeCategory === 'eiken' ? <h4>７割以上とれたら次のテストが現れる</h4> : ''}
+          {(activeCategory?.includes('eiken') && !activeFinals) ? <h4>７割以上とらないと点数は記録されない</h4> : ''}
+          {activeFinals && <h4>最後までやるのと、８割以上とらないと点数は記録されない</h4>}
           </>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
@@ -504,13 +536,16 @@ const Test = () => {
                 {inviter &&
                   <div>自分と{opponentA}がどちらも点数７割以上とっているテスト以外はバトルで使えない！</div>
                 }
-                {activeCategory && !activeFinals && activeTestId === null && activeCategory !== "eiken" && (opponentA === "") &&
+                {activeCategory && currentUser?.teacher && !activeFinals && activeTestId === null && (opponentA === "") &&
+                  <MusicVideoButton setActiveMusicVideos={setActiveMusicVideos} activeMusicVideos={activeMusicVideos} />
+                }
+                {activeCategory && !activeMusicVideos && !activeFinals && activeTestId === null && (opponentA === "") &&
                   <FinalsButton setActiveFinals={setActiveFinals} />
                 }
                 {activeFinals && (opponentA === "" || inviter) &&
                   <FinalsReturnButton openModal={openModal} gameState={gameState} isEnglish={isEnglish} audioRef={audioRef} />
                 }
-                {(opponentA === "" || inviter) && filteredTests.map(test => (
+                {(opponentA === "" || inviter) && !activeMusicVideos && filteredTests.map(test => (
                     <span key={test.id}>
                     {activeTestId !== null ? (
                         <TestReturnButton openModal={openModal} gameState={gameState} isEnglish={isEnglish} activeTestId={activeTestId} test={test} audioRef={audioRef} />
@@ -519,6 +554,80 @@ const Test = () => {
                     )}
                     </span>
                 ))}
+                {activeMusicVideos && activeCategory === "numbers" && (
+                  <div className="d-flex flex-wrap gap-3 my-3 justify-content-center">
+                    <iframe
+                      width="480"
+                      height="280"
+                      src="https://www.youtube.com/embed/e0dJWfQHF8Y?si=AM1T2_MK86lVHdHH"
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin"
+                      allowfullscreen="true"
+                    ></iframe>
+                    <iframe
+                      title="Counting 1‑20 – Super Simple Songs"
+                      width="480"
+                      height="280"
+                      src="https://www.youtube.com/embed/mXMofxtDPUQ"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                    <iframe
+                      title="Count 1‑100 – KidsTV123"
+                      width="480"
+                      height="280"
+                      src="https://www.youtube.com/embed/EUu96La3OlM"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                )}
+                {activeMusicVideos && activeCategory === "phonics" && (
+                  <div className="d-flex flex-wrap gap-3 my-3 justify-content-center">
+                    <iframe
+                      width="360"
+                      height="210"
+                      src="https://www.youtube.com/embed/75p-N9YKqNo"
+                      title="ABC Song – Kidsongs"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    />
+                    <iframe
+                      width="360"
+                      height="210"
+                      src="https://www.youtube.com/embed/w_-lz2BI2Co?si=16QU0oVjBxjEDaS2" 
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin"
+                      allowfullscreen="true"
+                    ></iframe>
+                    <iframe
+                      width="360"
+                      height="210"
+                      src="https://www.youtube.com/embed/BELlZKpi1Zs?si=8dvXi7hTvET4s8CW" 
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin"
+                      allowfullscreen="true"
+                    ></iframe>
+                    <iframe
+                      width="360"
+                      height="210"
+                      src="https://www.youtube.com/embed/ffeZXPtTGC4?si=ntFk92UFAwXg_hJH" 
+                      title="YouTube video player"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin"
+                      allowfullscreen="true"
+                    ></iframe>
+                  </div>
+                )}
                 {activeTestId !== null && (
                   <>
                   <div className="test-details flex-center-column" >
@@ -553,7 +662,7 @@ const Test = () => {
                                 </>
                               ) : randomSound ? null : null
                             ) : null}
-                            {!isEikenAudio && !randomWrongThree &&
+                            {!isEikenAudio && !randomWrongThree && question.name !== "かっこの中のひらがなをヘボン式で書きましょう" &&
                             <button className="play_buttons btn btn-success mb-3" style={{ border: '5px solid black' }} onClick={(e) => handleAutoPlay()} disabled={isPlayDisabled}>
                                   {isEnglish ? "Play sound" : "音声"} <FaPlay style={{ marginLeft: '10px' }} />
                             </button>    
@@ -564,9 +673,13 @@ const Test = () => {
                                 style={{ whiteSpace: 'pre-wrap' }}
                                 dangerouslySetInnerHTML={{ __html: formatTextAsHtml(randomAlphabet) }}
                               />
-                            ) : (
+                            ) : randomTranslation ? (
                               <h4 style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: randomTranslation }} />
-                            )}
+                            ) : (!isAudio && typeof randomUrl === 'string' && randomUrl.trim() !== '') ? (
+                              <h4>
+                                （{randomUrl}）
+                              </h4>
+                            ) : null}
                             {randomNumbers && (
                             <h4 style={{ whiteSpace: 'pre-wrap' }}>{wrapTextSafe(randomWord, 50).join('\n')}</h4>
                             )}
@@ -602,7 +715,10 @@ const Test = () => {
                 </div>
         </div>
           {activeTestId !== null &&
+            <>
             <h1 translate="no">{opponentA === "" ? "質問ナンバー" : "ラウンド"}{gameState.activeQuestionIndex + 1}/{totalQuestions}</h1>
+            <h1 translate="no">満点＝{maximumScore}</h1>
+            </>
           }
             <div>
             {opponentA !== '' &&
@@ -615,7 +731,7 @@ const Test = () => {
       showModal={showModal} closeModal={closeModal} currentCorrectAudioIndex={currentCorrectAudioIndex} recordMessage={recordMessage} isCorrect={isCorrect}
       correctSound={correctSound} handlePlay={handlePlay} isPlayDisabled={isPlayDisabled} isEnglish={isEnglish} correctLabel={correctLabel}
       correctWord={correctWord} correctEikenWord={correctEikenWord} correctAnswerKey={correctAnswerKey} currentWrongAudioIndex={currentWrongAudioIndex} gameState={gameState} opponentA={opponentA} countdown={countdown}
-      battleModalPicture={battleModalPicture} battleModalText={battleModalText} battleFinishMessage={battleFinishMessage} battleScore={battleScore} opponentScore={opponentScore} timestamp={timestamp} opponentATimestamp={opponentATimestamp}
+      battleModalPicture={battleModalPicture} battleModalText={battleModalText} battleFinishMessage={battleFinishMessage} battleScore={battleScore} opponentScore={opponentScore} timestamp={timestamp} opponentATimestamp={opponentATimestamp} scoreMultiplier={scoreMultiplier} activeTestMaxScore={activeTestMaxScore} activeFinals={activeFinals}
     />
     <ReturnConfirmModal modalIsOpen={modalIsOpen} closeReturnModal={closeReturnModal} handleBackClick={handleBackClick} />
     <SignupPromptModal signupModal={signupModal} closeSignupModal={closeSignupModal} />

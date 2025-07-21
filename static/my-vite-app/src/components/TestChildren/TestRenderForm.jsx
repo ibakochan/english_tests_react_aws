@@ -139,7 +139,7 @@ const TestRenderForm = ({
                     {(question.first_letter || question.second_letter || question.third_letter || question.last_letter) ? (
                       <div>
                         <span style={{ fontSize: '50px' }}>{randomAlphabetSliced}</span>
-                        <p>書いてある文字と足りない文字を全部書いて上の言葉を完成させてください</p>
+                        <h4>書いてある文字と足りない文字を全部書いて上の言葉を完成させてください</h4>
                       </div>
                     ) : null}
                     {question.description && (
@@ -191,7 +191,7 @@ const TestRenderForm = ({
                         checked={selectedOption === option.id}
                       />
                       <h4
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, userSelect: 'none' }}
                         onClick={(e) => randomEikenUrl && !randomWrongThree && !question.no_sound ? handlePlay(option.is_correct ? randomEikenUrl : questions.question_list[option.randomOptionKey][1], e.target) : null}
                       >
                         {(question.question_list[option.randomOptionKey]?.word === undefined && !randomPicture) ? (
@@ -203,7 +203,7 @@ const TestRenderForm = ({
                         )}
                       </h4>
                       {question.question_list[option.randomOptionKey].word && randomPicture ? (
-                      <h4>
+                      <h4 style={{ userSelect: 'none' }}>
                       {wrapTextSafe(
                         question.label
                           ? option.is_correct ? randomLabel : question.question_list[option.randomOptionKey].label === randomLabel ? "1000 Yen" : question.question_list[option.randomOptionKey].label

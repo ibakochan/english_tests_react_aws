@@ -9,11 +9,14 @@ export function TestProvider({ children }) {
   const [testQuestions, setTestQuestions] = useState({ questions: [] });
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [questions, setQuestions] = useState(null);
+  const [maximumScore, setMaximumScore] = useState(0);
+  const [scoreMultiplier, setScoreMultiplier] = useState(0);
+  const [activeTestMaxScore, setActiveTestMaxScore] = useState(0);
 
   return (
     <TestContext.Provider       
       value={{
-        maxScores, setMaxScores, tests, setTests, testQuestions, setTestQuestions, totalQuestions, setTotalQuestions, questions, setQuestions
+        maxScores, setMaxScores, tests, setTests, testQuestions, setTestQuestions, totalQuestions, setTotalQuestions, questions, setQuestions, maximumScore, setMaximumScore, scoreMultiplier, setScoreMultiplier, activeTestMaxScore, setActiveTestMaxScore
       }}
     >
       {children}

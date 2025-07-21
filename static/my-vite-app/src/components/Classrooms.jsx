@@ -266,8 +266,16 @@ const Classrooms = () => {
       </div>
       {urlPath === "/portfolio/" &&
             <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-              <div>If you are a teacher you can create classrooms, leave classrooms and send requests to join other classrooms</div>
-              <div>If you are a student you can join and leave classrooms</div>
+              <div>
+                {isEnglish
+                  ? 'If you are a teacher you can create classrooms, leave classrooms and send requests to join other classrooms'
+                  : '教師の場合は教室を作成、退室、と他の先生の教室入室依頼を送れます'}
+              </div>
+              <div>
+                {isEnglish
+                  ? 'If you are a student you can join and leave classrooms'
+                  : '生徒の場合は教室入室と退室できます'}
+              </div>
             </div>
       }
       <Modal show={leaveModal} onHide={closeLeaveModal}>

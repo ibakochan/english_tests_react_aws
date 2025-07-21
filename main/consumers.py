@@ -4,10 +4,12 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Student, Teacher, Classroom
 from django.contrib.auth import get_user_model
 from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
+
 
 User = get_user_model()
 
-@sync_to_async
+@database_sync_to_async
 def get_shared_users(current_user):
     try:
         if Student.objects.filter(user=current_user).exists():
@@ -17,16 +19,20 @@ def get_shared_users(current_user):
         else:
             return []
 
-        student_usernames = User.objects.filter(
-            student__classrooms__id__in=classroom_ids
-        ).values_list("username", flat=True).distinct()
+        qs = (
+            User.objects.filter(student__classrooms__id__in=classroom_ids)
+            | User.objects.filter(teacher__classrooms__id__in=classroom_ids)
+        ).distinct().select_related("student")
 
-        teacher_usernames = User.objects.filter(
-            teacher__classrooms__id__in=classroom_ids
-        ).values_list("username", flat=True).distinct()
-
-        shared_usernames = set(student_usernames) | set(teacher_usernames)
-        return list(shared_usernames & set(SimpleConsumer.connected_users.keys()))
+        data = []
+        connected = SimpleConsumer.connected_users.keys()
+        for u in qs:
+            if u.username in connected:
+                data.append({
+                    "username": u.username,
+                    "student_number": getattr(getattr(u, "student", None), "student_number", None),
+                })
+        return data
 
     except Exception as e:
         print(f"Error in get_shared_usernames: {e}")
@@ -48,55 +54,65 @@ class SimpleConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.room_name, self.channel_name)
         await self.accept()
 
+
         shared_users = await get_shared_users(self.user)
+
+        my_student_number = next(
+            (u["student_number"] for u in shared_users if u["username"] == self.username),
+            None,
+        )
+
         await self.send(text_data=json.dumps({
             "type": "shared_user_list",
             "users": shared_users,
         }))
 
-        for username in shared_users:
-            if username == self.username:
+        for u in shared_users:
+            if u["username"] == self.username:
                 continue
-            channel = SimpleConsumer.connected_users.get(username)
+            channel = SimpleConsumer.connected_users.get(u["username"])
             if channel:
                 await self.channel_layer.send(
                     channel,
                     {
                         "type": "user_joined",
                         "username": self.username,
+                        "student_number": my_student_number,
                     }
                 )
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
+        SimpleConsumer.connected_users.pop(self.username, None)
 
-        if self.username in SimpleConsumer.connected_users:
-            del SimpleConsumer.connected_users[self.username]
-
+        my_student_number = getattr(getattr(self.user, "student", None), "student_number", None)
         shared_users = await get_shared_users(self.user)
-        for username in shared_users:
-            if username == self.username:
-                continue
-            channel = SimpleConsumer.connected_users.get(username)
+
+        for u in shared_users:
+            channel = SimpleConsumer.connected_users.get(u["username"])
             if channel:
                 await self.channel_layer.send(
                     channel,
                     {
                         "type": "user_left",
                         "username": self.username,
+                        "student_number": my_student_number,
                     }
                 )
+
 
     async def user_joined(self, event):
         await self.send(text_data=json.dumps({
             "type": "user_joined",
             "username": event["username"],
+            "student_number": event.get("student_number"),  # include student_number if present
         }))
-
+    
     async def user_left(self, event):
         await self.send(text_data=json.dumps({
             "type": "user_left",
             "username": event["username"],
+            "student_number": event.get("student_number"),  # include student_number if you send it on leave events
         }))
 
     async def receive(self, text_data):

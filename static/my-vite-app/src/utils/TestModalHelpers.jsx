@@ -30,6 +30,9 @@ const TestModal = ({
   opponentScore,
   timestamp,
   opponentATimestamp,
+  scoreMultiplier,
+  activeTestMaxScore,
+  activeFinals,
 }) => (
   <Modal show={showModal} onHide={closeModal} centered backdrop={opponentA !== "" && battleFinishMessage === "" ? "static" : true} keyboard={opponentA !== ""}>
     <Modal.Header
@@ -95,7 +98,7 @@ const TestModal = ({
             ) : null}
           </div>
           <h1>{isEnglish ? "Correct streak: " : "連続正解："}{currentCorrectAudioIndex}</h1>
-          {isCorrect && opponentA === "" && <h1>{isEnglish ? "Points: " : "点数："}{gameState.scoreCounter}</h1>}
+          {isCorrect && opponentA === "" && <h1>{isEnglish ? "Points: " : "点数："}{gameState.scoreCounter * scoreMultiplier} 今の最高記録＝{activeTestMaxScore}</h1>}
           {opponentA !== "" && <h1>自分の点数：{battleScore}</h1>}
           {opponentA !== "" && <h1>相手の点数：{opponentScore}</h1>}
         </>
@@ -114,7 +117,9 @@ const TestModal = ({
 const ReturnConfirmModal = ({ modalIsOpen, closeReturnModal, handleBackClick }) => (
   <Modal show={modalIsOpen} onHide={closeReturnModal}>
     <Modal.Body>
-      <p>まだテスト終わっていない。終わっていないまま戻ったら今までの点数しか記録されない。それでももどる？</p>
+      <p>
+       まだテスト終わっていない。終わっていないまま戻ったら今までの点数しか記録されない。それでももどる？
+      </p>
     </Modal.Body>
     <Modal.Footer>
       <Button variant="secondary" onClick={closeReturnModal}>いいえ</Button>

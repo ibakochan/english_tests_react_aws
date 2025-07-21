@@ -30,8 +30,15 @@ class QuestionSerializer(serializers.ModelSerializer):
         serializer = OptionSerializer(options, many=True)
         return serializer.data
 
+class TestNumberOfQuestions(serializers.ModelSerializer):
+
+    class Meta:
+        model = Test
+        fields = ['number_of_questions']
+
 class TestQuestionSerializer(serializers.ModelSerializer):
     options = serializers.SerializerMethodField()
+    number_of_questions = serializers.IntegerField(source='test.number_of_questions', read_only=True)
 
     class Meta:
         model = Question
@@ -104,7 +111,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        exclude = ['password', 'last_name', 'first_name']
 
 class ClassroomRequestSerializer(serializers.ModelSerializer):
     teacher = TeacherSerializer()

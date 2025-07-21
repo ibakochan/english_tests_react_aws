@@ -460,9 +460,24 @@ class FinalScoreView(View):
         user = request.user
         
         total_category_score = 0
+        total_final_score = 0
+        for test in tests:
+            test_score = score_data.get(str(test.id), 0) * test.score_multiplier * 5
+            total_final_score += test_score
+
+        total_possible_score = tests.aggregate(total_score=Sum('total_score'))['total_score'] or 0
+        passed_threshold = total_final_score >= 0.8 * total_possible_score
+
+        if not passed_threshold:
+            return JsonResponse({
+                'success': False,
+                'message': f'点数: {total_final_score}/{total_possible_score}（８０％以下）記録されなかった！',
+                'total_final_score': total_final_score,
+                'total_possible_score': total_possible_score
+            })
 
         for test in tests:
-            test_score = score_data.get(str(test.id), 0) * test.score_multiplier * 2
+            test_score = score_data.get(str(test.id), 0) * test.score_multiplier * 5
             total_score = test.total_score
             
             try:
@@ -490,6 +505,8 @@ class FinalScoreView(View):
             user.total_numbers_score = total_category_score
         elif category == 'eiken':
             user.total_eiken_score = total_category_score
+        elif test.category == 'eiken4':
+            user.total_4eiken_score = total_category_score
         elif category == 'eiken3':
             user.total_eiken3_score = total_category_score
         elif category == 'eiken_pre2':
@@ -516,13 +533,20 @@ class FinalScoreView(View):
             'total_phonics_score': user.total_phonics_score,
             'total_numbers_score': user.total_numbers_score,
             'total_eiken_score': user.total_eiken_score,
+            'total_4eiken_score': user.total_4eiken_score,
             'total_max_scores': user.total_max_scores,
             'total_eiken3_score': user.total_eiken3_score,
             'total_eiken_pre2_score': user.total_eiken_pre2_score,
             'total_eiken2_score': user.total_eiken2_score,
         }
 
-        return JsonResponse({'success': True, 'message': 'Scores recorded successfully!', 'user_data': user_data})
+        return JsonResponse({
+            'success': True,
+            'message': f'点数: {total_final_score}/{total_possible_score}（８０％以上）記録された！',
+            'user_data': user_data,
+            'total_final_score': total_final_score,
+            'total_possible_score': total_possible_score
+        })
 
 
 class ScoreRecordView(View):
@@ -536,14 +560,17 @@ class ScoreRecordView(View):
             score = score * 18
 
         total_score = test.total_score
+        score_increase = 0
         try:
             maxscore = MaxScore.objects.get(user=user, test=test)
             if maxscore.score < score:
+                score_increase = score - maxscore.score
                 maxscore.score = score
                 maxscore.total_questions = total_score
                 maxscore.save()
         except ObjectDoesNotExist:
             maxscore = MaxScore.objects.create(user=user, test=test, score=score, total_questions=total_score)
+            score_increase = score
 
         maxscore_data = model_to_dict(maxscore)
         total_max_scores = MaxScore.objects.filter(user=user).aggregate(total_score=Sum('score'))['total_score'] or 0
@@ -574,7 +601,6 @@ class ScoreRecordView(View):
         elif test.category == 'eiken2':
             user.total_eiken2_score = total_category_score
 
-        user.save()
         eiken_total = (
             user.total_eiken_score +
             user.total_4eiken_score +

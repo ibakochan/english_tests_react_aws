@@ -38,6 +38,7 @@ export const CategoryButtons = ({ isEnglish, toggleCategories, activeCategory, c
       {getCategoryButton('eiken', isEnglish ? 'Eiken5' : '英検（えいけん）５級', 'total_eiken_score', 'total_eiken_questions')}
       {getCategoryButton('eiken4', isEnglish ? 'Eiken4' : '英検（えいけん）４級', 'total_4eiken_score', 'total_eiken4_questions')}
       {getCategoryButton('eiken3', isEnglish ? 'Eiken3' : '英検（えいけん）３級', 'total_eiken3_score', 'total_eiken3_questions')}
+      {getCategoryButton('eiken_pre2', isEnglish ? 'Eiken Pre2' : '英検（えいけん）準２級', 'total_eiken_pre2_score', 'total_eiken_pre2_questions')}
       {getCategoryButton('english_5', isEnglish ? '5th grade English' : '（小）５年英語', 'total_english_5_score', 'total_english_5_questions')}
       {getCategoryButton('english_6', isEnglish ? '6th grade English' : '（小）６年英語', 'total_english_6_score', 'total_english_6_questions')}
       {getCategoryButton('jr_1', isEnglish ? 'Junior High English 1' : '（中）１英語', 'total_jr_1_score', 'total_jr_1_questions')}

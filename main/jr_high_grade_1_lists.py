@@ -23,61 +23,61 @@ jr_1_lesson_1_conversation = {
     'word': 'Junpeiさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Ahsley_Junpei.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_14_39_01_1.mp3',
-    'label': 'is from Osaka.'
+    'label': 'Is from Osaka.'
   },
   'b': {
     'word': 'Britneyさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Britney_Aika.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_14_43_26_1.mp3',
-    'label': 'is in 1-A.'
+    'label': 'Is in 1-A.'
   },
   'c': {
     'word': 'Genryusaiさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Cathy_Genryusai.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_14_46_23_1.mp3',
-    'label': 'is from Tokyo.'
+    'label': 'Is from Tokyo.'
   },
   'd': {
     'word': 'Emilyさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Emily_Kento.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_14_49_13_1.mp3',
-    'label': 'is a fan of Ivar.'
+    'label': 'Is a fan of Ivar.'
   },
   'e': {
     'word': 'Kaitoさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Jennifer_Kaito.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_14_54_59_1.mp3',
-    'label': 'is cheerful.'
+    'label': 'Is cheerful.'
   },
   'f': {
     'word': 'Kenさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Ken_Alice.jpeg',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_14_55_59_1.mp3',
-    'label': 'is a samurai.'
+    'label': 'Is a samurai.'
   },
   'g': {
     'word': 'Raitoさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Raito_Json.jpeg',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_14_58_40_1.mp3',
-    'label': 'is shy.'
+    'label': 'Is shy.'
   },
   'h': {
     'word': 'Jonさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Risa_Jon.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_15_00_00_1.mp3',
-    'label': 'is from the U.S.'
+    'label': 'Is from the U.S.'
   },
   'i': {
     'word': 'Sarahさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Sarah_Riko.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_15_01_27_1.mp3',
-    'label': 'is from Egypt.'
+    'label': 'Is from Egypt.'
   },
   'j': {
     'word': 'Markさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Sayuri_Mark.png',
     'sound2': 'https://storage.googleapis.com/jr_high_1/2025_05_05_15_03_37_1.mp3',
-    'label': 'is good at table tennis.'
+    'label': 'Is good at table tennis.'
   }
 }
 
@@ -104,61 +104,61 @@ jr_1_lesson_2_conversation = {
     'word': 'Junpeiさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Ahsley_Junpei.png',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_20_34_59_1.mp3',
-    'label': 'has 5 dogs and 2 cats'
+    'label': 'Has 5 dogs and 2 cats'
   },
   'b': {
     'word': 'Britneyさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Britney_Aika.png',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_20_36_26_1.mp3',
-    'label': 'has no pets'
+    'label': 'Has no pets'
   },
   'c': {
     'word': 'Genryusaiさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Cathy_Genryusai.png',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_20_39_16_1.mp3',
-    'label': 'walks his dog on Mondays'
+    'label': 'Walks his dog on Mondays'
   },
   'd': {
     'word': 'Emilyさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Emily_Kento.png',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_20_43_34_1.mp3',
-    'label': 'plays computer games every day'
+    'label': 'Plays computer games every day'
   },
   'e': {
     'word': 'Kaitoさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Jennifer_Kaito.png',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_21_12_22_1.mp3',
-    'label': 'eats candy on weekends'
+    'label': 'Eats candy on weekends'
   },
   'f': {
     'word': 'Kenさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Ken_Alice.jpeg',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_21_14_07_1.mp3',
-    'label': 'has 2 bears'
+    'label': 'Has 2 bears'
   },
   'g': {
     'word': 'Jasonさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Raito_Json.jpeg',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_21_18_22_1.mp3',
-    'label': 'walks his tiger on Mondays and Fridays'
+    'label': 'Walks his tiger on Mondays and Fridays'
   },
   'h': {
     'word': 'Jonさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Risa_Jon.png',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_21_23_12_1.mp3',
-    'label': 'plays Ibaru Eigo everyday'
+    'label': 'Plays Ibaru Eigo everyday'
   },
   'i': {
     'word': 'Sarahさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Sarah_Riko.png',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_21_25_47_1.mp3',
-    'label': 'eats potato chips everyday.'
+    'label': 'Eats potato chips everyday.'
   },
   'j': {
     'word': 'Markさんに合っているものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_1/Sayuri_Mark.png',
     'sound2': 'https://storage.googleapis.com/jr_high_2/2025_05_05_21_28_42_1.mp3',
-    'label': 'has 5 computers'
+    'label': 'Has 5 computers'
   }
 }
 
@@ -219,60 +219,60 @@ jr_1_lesson_3_sentence = {
     'word': '鳥ロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/bird_robot.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_10_26_14_1.mp3',
-    'label': 'can fly, eat peanuts and speak English'
+    'label': 'Can fly, eat peanuts and speak English'
   },
   'b': {
     'word': 'チェフロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/chef_robot.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_10_27_09_1.mp3',
-    'label': 'can cook, speak Japanese and wash the dishes'
+    'label': 'Can cook, speak Japanese and wash the dishes'
   },
   'c': {
     'word': '掃除ロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/cleaner_robot.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_11_43_41_1.mp3',
-    'label': 'can cook, clean and speak English'
+    'label': 'Can cook, clean and speak English'
   },
   'd': {
     'word': 'かえるロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/frog_robo.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_11_45_49_1.mp3',
-    'label': "can jump, do kung fu but can't speak English"
+    'label': "Can jump, do kung fu but can't speak English"
   },
   'e': {
     'word': 'ごりロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/gorilla_robot.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_11_47_09_1.mp3',
-    'label': 'often eats ice cream. Can bench press 2000kg and speak Japanese'
+    'label': 'Often eats ice cream. Can bench press 2000kg and speak Japanese'
   },
   'f': {
     'word': 'ライオンロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/lion_robot.jpeg',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_11_48_14_1.mp3',
-    'label': "can fight, but can't speak English and Japanese"
+    'label': "Can fight, but can't speak English and Japanese"
   },
   'g': {
     'word': '筋肉ロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/muscular_robot.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_11_49_29_1.mp3',
-    'label': 'can fight, bench press 5000kg and drink protein'
+    'label': 'Can fight, bench press 5000kg and drink protein'
   },
   'h': {
     'word': '猫ロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/robot_cat.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_11_49_55_1.mp3',
-    'label': "eats fish everyday. Can't swim"
+    'label': "Eats fish everyday. Can't swim"
   },
   'i': {
     'word': 'マッドサイエンティストロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/scientist_robot.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_11_50_36_1.mp3',
-    'label': "can do math, make bombs but can't make a black hole"
+    'label': "Can do math, make bombs but can't make a black hole"
   },
   'j': {
     'word': '反抗期中二病ロボットさんに当てはまるものを選んでください',
     'picture': 'https://storage.googleapis.com/jr_high_3/teen_robot.png',
     'sound2': 'https://storage.googleapis.com/jr_high_3/2025_05_07_11_52_03_1.mp3',
-    'label': "can't do his homework, clean his room, but can play with the smartphone"
+    'label': "Can't do his homework, clean his room, but can play with the smartphone"
   }
 }

@@ -3,16 +3,24 @@ import React from "react";
 export const formatTextAsHtml = (text) => {
   if (!text) return "";
 
-  if (text.includes("B:")) {
-    const parts = text.split("B:");
-    return `<p>${parts[0]}</p><p>B:${parts[1]}</p>`;
-  } else if (text.includes("。")) {
-    const parts = text.split("。");
-    return `<p>${parts[0]}。</p><p>${parts.slice(1).join("。")}</p>`;
-  } else {
-    return `<p>${text}</p>`;
-  }
+  let html = text;
+
+  html = html.replace(/\s*A:\s*/g, "</p><p>A: ");
+  html = html.replace(/\s*B:\s*/g, "</p><p>B: ");
+
+  if (!html.startsWith("<p>")) html = "<p>" + html;
+  if (!html.endsWith("</p>")) html += "</p>";
+
+  html = html.replace(/。/g, "。</p><p>");
+
+  html = html.replace(/<p><\/p>/g, "");
+  html = html.replace(/<\/p><\/p>/g, "</p>");
+  html = html.replace(/<p><p>/g, "<p>");
+
+  return html;
 };
+
+
 
 
 
@@ -79,12 +87,18 @@ export const getRandomizedValues = (questions) => {
       const isArray = Array.isArray(randomValue);
       const isArrayfour = isArray && randomValue.length >= 4;
       const isArrayfive = isArray && randomValue.length >= 5;
+      const alphabetArray = Array.isArray(randomKey);
+      const isArrayArray = Array.isArray(randomValue[0])
   
       acc[question.duplicateId] = {
         randomAlphabetSliced,
         randomAlphabet: randomKey || null,
         randomUrl: !isArray ? randomValue : null,
-        randomTranslation: isArray ? randomValue[0] : null,
+        randomTranslation: isArrayArray
+          ? randomValue[0][Math.floor(Math.random() * randomValue[0].length)]
+          : isArray
+          ? randomValue[0]
+          : null,
         randomEikenUrl: isArray ? randomValue[1] : null,
         randomWrongOne: isArrayfour ? randomValue[0] : null,
         randomWrongTwo: isArrayfour ? randomValue[1] : null,

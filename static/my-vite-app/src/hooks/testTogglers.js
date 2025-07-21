@@ -1,13 +1,14 @@
 import { shuffleArray, getRandomizedValues, getRandomizedOptions } from "../utils/TestHelpers";
 
+
 export const useToggleQuestionDetails = ({
     testQuestions, setQuestions, setRandomizedValues, setRandomizedOptions,
     setActiveTestId, setActiveTestName, setActiveTestDescription, setActiveTestDescriptionSound,
     activeTestId, activeTestDescription, activeTestDescriptionSound, isPractice, activeFinals, activeCategory,
-    fetchQuestionsByTest, fetchTestQuestionsAndOptions, setTotalQuestions, inviter, opponentA, setError, dispatchGame, setBattleScore, setOpponentScore,
+    fetchQuestionsByTest, fetchTestQuestionsAndOptions, setTotalQuestions, inviter, opponentA, setError, dispatchGame, setBattleScore, setOpponentScore, setMaximumScore, setScoreMultiplier, setActiveTestMaxScore,
   }) => {
-    
-    const toggleQuestionDetails = async ({testId, testDescription, testDescriptionSound, numberOfQuestions, testName, category}) => {
+
+    const toggleQuestionDetails = async ({testId, testDescription, testDescriptionSound, numberOfQuestions, testName, category, maxPossibleScore, multiplier, currentMaxScore}) => {
       dispatchGame({ type: "RESET_GAME" });
       setBattleScore(0);
       setOpponentScore(0);
@@ -53,6 +54,9 @@ export const useToggleQuestionDetails = ({
         try {
           setActiveTestId(testId);
           setActiveTestName(testName);
+          setMaximumScore(maxPossibleScore);
+          setScoreMultiplier(multiplier);
+          setActiveTestMaxScore(currentMaxScore);
   
           if (isPractice) {
             await fetchQuestionsByTest(testId);

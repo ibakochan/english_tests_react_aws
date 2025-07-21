@@ -57,7 +57,7 @@ export const useTestQuestionsAndOptions = (setQuestions, setTestQuestions, setTo
     if (!fetchedQuestions) return;
 
     let questions = fetchedQuestions.flatMap((question) =>
-      Array(category ? 5 : numberOfQuestions).fill(null).map((_, index) => ({
+      Array(category ? Math.floor(question.number_of_questions / 5) : numberOfQuestions).fill(null).map((_, index) => ({
         ...question,
         duplicateId: `${question.id}-${index}`
       }))

@@ -30,7 +30,7 @@ export const useScoreHelpers = () => {
         ...rd.user_data,
       }));
 
-      const level = Math.floor((rd.user_data.total_eiken_score + rd.user_data.total_numbers_score + rd.user_data.total_phonics_score) / 50);
+      const level = Math.floor((rd.user_data.total_eiken_score + rd.user_data.total_4eiken_score + rd.user_data.total_eiken3_score + rd.user_data.total_eiken_pre2_score + rd.user_data.total_eiken2_score + rd.user_data.total_numbers_score + rd.user_data.total_phonics_score) / 100);
       const userLevel = Math.floor(rd.user_data.total_max_scores / 50);
 
       setPetLevel(level);
@@ -68,16 +68,29 @@ export const useScoreHelpers = () => {
         );
       });
 
-      setCurrentUser(prev => ({
-        ...prev,
-        ...rd.user_data,
-      }));
+      if (rd.user_data) {
+        setCurrentUser(prev => ({
+          ...prev,
+          ...rd.user_data,
+        }));
+      
+        const level = Math.floor(
+          (rd.user_data.total_eiken_score +
+            rd.user_data.total_4eiken_score +
+            rd.user_data.total_eiken3_score +
+            rd.user_data.total_eiken_pre2_score +
+            rd.user_data.total_eiken2_score +
+            rd.user_data.total_numbers_score +
+            rd.user_data.total_phonics_score) / 100
+        );
+      
+        const userLevel = Math.floor(rd.user_data.total_max_scores / 50);
+      
+        setPetLevel(level);
+        setLvl(userLevel);
+      }
 
-      const level = Math.floor((rd.user_data.total_eiken_score + rd.user_data.total_numbers_score + rd.user_data.total_phonics_score) / 50);
-      const userLevel = Math.floor(rd.user_data.total_max_scores / 50);
 
-      setPetLevel(level);
-      setLvl(userLevel);
 
     } catch (error) {
       console.error('Error recording score:', error);

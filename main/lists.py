@@ -1,3 +1,600 @@
+hebonshiki1 = {
+    'ame': 'あめ',
+    'inu': 'いぬ',
+    'hana': 'はな',
+    'yama': 'やま',
+    'kumo': 'くも',
+    'umi': 'うみ',
+    'ike': 'いけ',
+    'eki': 'えき',
+    'oni': 'おに',
+    'asa': 'あさ',
+    'kami': 'かみ',
+    'nami': 'なみ',
+    'mori': 'もり',
+    'sora': 'そら',
+    'yuki': 'ゆき',
+    'mimi': 'みみ',
+    'tera': 'てら',
+    'uta': 'うた',
+    'kaze': 'かぜ',
+    'iro': 'いろ',
+    'take': 'たけ',
+    'koe': 'こえ',
+    'kao': 'かお',
+    'yume': 'ゆめ',
+    'oto': 'おと',
+    'hato': 'はと',
+    'mado': 'まど',
+    'hiru': 'ひる',
+    'fune': 'ふね',
+    'yane': 'やね',
+    'tega': 'てが',
+    'kado': 'かど',
+    'ude': 'うで',
+    'nori': 'のり',
+    'ayu': 'あゆ',
+    'ori': 'おり',
+    'tani': 'たに',
+    'iwa': 'いわ',
+    'mizu': 'みず',
+    'nabe': 'なべ',
+    'yuka': 'ゆか',
+    'ura': 'うら',
+    'momo': 'もも',
+    'ai': 'あい',
+    'eno': 'えの',
+    'maru': 'まる',
+    'heta': 'へた',
+    'hae': 'はえ',
+    'oya': 'おや',
+    'aki': 'あき'
+}
+
+hebonshiki2 = {
+    'amai': 'あまい',
+    'yamano': 'やまの',
+    'hanaya': 'はなや',
+    'umibe': 'うみべ',
+    'tamago': 'たまご',
+    'yukiya': 'ゆきや',
+    'marui': 'まるい',
+    'koyama': 'こやま',
+    'hinode': 'ひので',
+    'aoi': 'あおい',
+    'iwaba': 'いわば',
+    'tegami': 'てがみ',
+    'sorani': 'そらに',
+    'yamabe': 'やまべ',
+    'monaka': 'もなか',
+    'kaori': 'かおり',
+    'minato': 'みなと',
+    'namida': 'なみだ',
+    'kumono': 'くもの',
+    'hinoe': 'ひのえ',
+    'makura': 'まくら',
+    'okane': 'おかね',
+    'ikeda': 'いけだ',
+    'yumemi': 'ゆめみ',
+    'otoko': 'おとこ',
+    'utagoe': 'うたごえ',
+    'yamaie': 'やまいえ',
+    'yukasu': 'ゆかす',
+    'iwanori': 'いわのり',
+    'ozora': 'おおぞら',
+    'himawari': 'ひまわり',
+    'kumoiro': 'くもいろ',
+    'soramame': 'そらまめ',
+    'yamaneko': 'やまねこ',
+    'iekado': 'いえかど',
+    'yumenoha': 'ゆめのは',
+    'otoyama': 'おとやま',
+    'mizumi': 'みずうみ',
+    'mamenome': 'まめのめ',
+    'harukaze': 'はるかぜ',
+    'urayama': 'うらやま',
+    'moriue': 'もりうえ',
+    'iwakage': 'いわかげ',
+    'aoiro': 'あおいろ',
+    'hanami': 'はなみ',
+    'takeyama': 'たけやま',
+    'funenori': 'ふねのり',
+    'temaemi': 'てまえみ',
+    'mimihana': 'みみはな',
+    'akinohi': 'あきのひ',
+    'yumenona': 'ゆめのな',
+    'kazeno': 'かぜのう'
+}
+
+
+hebonshiki3 = {
+    'shio': 'しお',
+    'shiro': 'しろ',
+    'shitsu': 'しつ',
+    'shita': 'した',
+
+    'shashin': 'しゃしん',
+    'shaku': 'しゃく',
+    'shabon': 'しゃぼん',
+    'shamisen': 'しゃみせん',
+
+    'shu': 'しゅう',
+    'shurui': 'しゅるい',
+    'shujin': 'しゅじん',
+    'shuku': 'しゅく',
+
+    'shoku': 'しょく',
+    'sho': 'しょう',
+    'shokuba': 'しょくば',
+    'shoten': 'しょてん',
+
+    'chika': 'ちか',
+    'chizu': 'ちず',
+    'chikoku': 'ちこく',
+    'chi': 'ちい',
+
+    'tsuki': 'つき',
+    'tsuchi': 'つち',
+    'tsume': 'つめ',
+    'tsuba': 'つば',
+
+    'cha': 'ちゃ',
+    'chaku': 'ちゃく',
+    'chawan': 'ちゃわん',
+    'chairo': 'ちゃいろ',
+
+    'chu': 'ちゅう',
+    'chusha': 'ちゅうしゃ',
+    'chugaku': 'ちゅうがく',
+    'chui': 'ちゅうい',
+
+    'choku': 'ちょく',
+    'cho': 'ちょう',
+    'chokin': 'ちょきん',
+    'chokusetsu': 'ちょくせつ',
+
+    'nyan': 'にゃん',
+    'nyaku': 'にゃく',
+    'nyakuniku': 'にゃくにく',
+    'nyanko': 'にゃんこ',
+
+    'nyu': 'にゅう',
+    'nyugaku': 'にゅうがく',
+    'nyuin': 'にゅういん',
+    'nyuseki': 'にゅうせき',
+
+    'nyoki': 'にょき',
+    'nyoro': 'にょろ',
+    'nyoku': 'にょく',
+    'nyoron': 'にょろん',
+
+    'hyaku': 'ひゃく',
+    'hyada': 'ひゃだ',
+    'hyan': 'ひゃん',
+    'hya': 'ひゃあ',
+
+    'hyu': 'ひゅう',
+    'hyun': 'ひゅん',
+    'hyuga': 'ひゅうが',
+    'hyua': 'ひゅあ',
+
+    'hyo': 'ひょお',  # note: both 'ひょい' and 'ひょお' mapped to 'hyo', last one kept
+    'hyoku': 'ひょく',
+    'hyon': 'ひょん',
+
+    'myaku': 'みゃく',
+    'mya': 'みゃあ',
+    'myan': 'みゃん',
+    'myanko': 'みゃんこ',
+
+    'myu': 'みゅう',
+    'myun': 'みゅん',
+    'myuzu': 'みゅうず',
+    'myua': 'みゅあ',
+
+    'myon': 'みょん',
+    'myoku': 'みょく',
+    'myoa': 'みょあ',
+    'myonko': 'みょんこ',
+
+    'ryaku': 'りゃく',
+    'ryan': 'りゃん',
+    'rya': 'りゃあ',
+    'ryanko': 'りゃんこ',
+
+    'ryu': 'りゅう',
+    'ryun': 'りゅん',
+    'ryuga': 'りゅうが',
+    'ryua': 'りゅあ',
+
+    'ryoku': 'りょく',
+    'ryon': 'りょん',
+    'ryoa': 'りょあ',
+    'ryoko': 'りょこ',
+
+    'gyaku': 'ぎゃく',
+    'gyan': 'ぎゃん',
+    'gya': 'ぎゃあ',
+    'gyanko': 'ぎゃんこ',
+
+    'gyu': 'ぎゅう',
+    'gyun': 'ぎゅん',
+    'gyuniku': 'ぎゅうにく',
+
+    'gyoku': 'ぎょく',
+    'gyon': 'ぎょん',
+    'gyoa': 'ぎょあ',
+    'gyoko': 'ぎょこ',
+
+    'jan': 'じゃん',
+    'ja': 'じゃあ',
+    'jaku': 'じゃく',
+    'jama': 'じゃま',
+
+    'ju': 'じゅう',
+    'jun': 'じゅん',
+    'jusho': 'じゅうしょ',
+    'jukai': 'じゅかい',
+
+    'joshi': 'じょし',
+    'jo': 'じょおう',
+    'jogen': 'じょげん',
+    'jokyo': 'じょきょう',
+
+    'ji': 'じ',
+    'jikan': 'じかん',
+    'jisho': 'じしょ',
+    'jido': 'じどう',
+
+    'byaku': 'びゃく',
+    'bya': 'びゃあ',
+    'byan': 'びゃん',
+    'byako': 'びゃこ',
+
+    'byu': 'びゅう',
+    'byun': 'びゅん',
+    'byugaku': 'びゅうがく',
+    'byua': 'びゅあ',
+
+    'byoku': 'びょく',
+    'byon': 'びょん',
+    'byo': 'びょお',
+    'byoko': 'びょこ',
+
+    'pyaku': 'ぴゃく',
+    'pya': 'ぴゃあ',
+    'pyan': 'ぴゃん',
+    'pyako': 'ぴゃこ',
+
+    'pyu': 'ぴゅう',
+    'pyun': 'ぴゅん',
+    'pyua': 'ぴゅあ',
+    'pyuko': 'ぴゅこ',
+
+    'pyon': 'ぴょん',
+    'pyoa': 'ぴょあ',
+    'pyonko': 'ぴょんこ',
+    'pyoku': 'ぴょく',
+
+    'fune': 'ふね',
+    'fuyu': 'ふゆ',
+    'fuku': 'ふく',
+    'fushi': 'ふし',
+
+    'kyo': 'きょう',
+    'to': 'とう',
+    'ko': 'こう',
+    'nyo': 'にょう',
+    'ryo': 'りょう',
+    'byo': 'びょう'
+}
+
+
+
+
+hebonshiki4 = {
+    # shi (し)
+    'shinsei': 'しんせい',
+    'shinpai': 'しんぱい',
+    'shokunin': 'しょくにん',
+    'shukudai': 'しゅくだい',
+
+    # sha (しゃ)
+    'shakai': 'しゃかい',
+    'shashin': 'しゃしん',
+    'shakkin': 'しゃっきん',
+
+    # shu (しゅ)
+    'shukan': 'しゅかん',
+    'shujin': 'しゅじん',
+    'shupatsu': 'しゅぱつ',
+    'shuri': 'しゅり',
+
+    # sho (しょ)
+    'shogatsu': 'しょうがつ',
+    'shokuji': 'しょくじ',
+    'shosetsu': 'しょうせつ',
+    'shokuba': 'しょくば',
+
+    # chi (ち)
+    'chui': 'ちゅうい',
+    'chikatetsu': 'ちかてつ',
+    'chusha': 'ちゅうしゃ',
+    'chosei': 'ちょうせい',
+
+    # tsu (つ)
+    'tsuyaku': 'つやく',
+    'tsushin': 'つうしん',
+    'tsuzuku': 'つづく',
+    'tsuko': 'つうこう',
+
+    # cha (ちゃ)
+    'chawan': 'ちゃわん',
+    'chakuseki': 'ちゃくせき',
+    'chamen': 'ちゃめん',
+    'chairo': 'ちゃいろ',
+
+    # chu (ちゅ)
+    'chusha': 'ちゅうしゃ',
+    'chugaku': 'ちゅうがく',
+    'chui': 'ちゅうい',
+    'chushin': 'ちゅうしん',
+
+    # cho (ちょ)
+    'chokin': 'ちょきん',
+    'chosei': 'ちょうせい',
+    'chokusetsu': 'ちょくせつ',
+    'chodo': 'ちょうど',
+
+    # nya (にゃ)
+    'nyanko': 'にゃんこ',
+    'nyakuniku': 'にゃくにく',
+    'nyannyan': 'にゃんにゃん',
+    'nyanya': 'にゃあにゃあ',
+
+    # nyu (にゅ)
+    'nyuin': 'にゅういん',
+    'nyugaku': 'にゅうがく',
+    'nyuseki': 'にゅうせき',
+    'nyuryoku': 'にゅうりょく',
+
+    # nyo (にょ)
+    'nyokinyoki': 'にょきにょき',
+    'nyoronyoro': 'にょろにょろ',
+    'nyoronyon': 'にょろにょん',
+    'nyokin': 'にょきん',
+
+    # hya (ひゃ)
+    'hyakka': 'ひゃっか',
+    'hyakuman': 'ひゃくまん',
+    'hyakunichi': 'ひゃくにち',
+    'hyakuten': 'ひゃくてん',
+
+    # hyu (ひゅ)
+    'hyugaku': 'ひゅうがく',
+    'hyuryoku': 'ひゅうりょく',
+    'hyusho': 'ひゅうしょう',
+    'hyusen': 'ひゅうせん',
+
+    # hyo (ひょ)
+    'hyoka': 'ひょうか',
+    'hyoban': 'ひょうばん',
+    'hyoji': 'ひょうじ',
+    'hyomen': 'ひょうめん',
+
+    # mya (みゃ)
+    'myakuhaku': 'みゃくはく',
+    'myakudo': 'みゃくどう',
+    'myakuhatsu': 'みゃくはつ',
+    'myakuchu': 'みゃくちゅう',
+
+    # myu (みゅ)
+    'myu': 'みゅう',
+    'myumen': 'みゅめん',
+    'myujin': 'みゅじん',
+    'myuzui': 'みゅずい',
+
+    # myo (みょ)
+    'myoji': 'みょうじ',
+    'myoryoku': 'みょうりょく',
+    'myojin': 'みょうじん',
+    'myoban': 'みょうばん',
+
+    # rya (りゃ)
+    'ryakugo': 'りゃくご',
+    'ryakusho': 'りゃくしょ',
+    'ryakujyo': 'りゃくじょ',
+    'ryakudatsu': 'りゃくだつ',
+
+    # ryu (りゅ)
+    'ryugaku': 'りゅうがく',
+    'ryuko': 'りゅうこう',
+    'ryusei': 'りゅうせい',
+    'ryutsu': 'りゅうつう',
+
+    # ryo (りょ)
+    'ryokin': 'りょうきん',
+    'ryoko': 'りょこう',
+    'ryori': 'りょうり',
+    'ryogae': 'りょうがえ',
+
+    # gya (ぎゃ)
+    'gyakukai': 'ぎゃくかい',
+    'gyakuko': 'ぎゃくこう',
+    'gyakusei': 'ぎゃくせい',
+    'gyakuso': 'ぎゃくそう',
+
+    # gyu (ぎゅ)
+    'gyunyu': 'ぎゅうにゅう',
+    'gyuniku': 'ぎゅうにく',
+    'gyudon': 'ぎゅうどん',
+    'gyusei': 'ぎゅうせい',
+
+    # gyo (ぎょ)
+    'gyokai': 'ぎょかい',
+    'gyosei': 'ぎょせい',
+    'gyodan': 'ぎょだん',
+    'gyoren': 'ぎょれん',
+
+    # ja (じゃ)
+    'jamamono': 'じゃまもの',
+    'jakkan': 'じゃっかん',
+    'jako': 'じゃこう',
+
+    # ju (じゅ)
+    'jugyo': 'じゅうぎょう',
+    'jutan': 'じゅうたん',
+    'junban': 'じゅんばん',
+    'juyo': 'じゅうよう',
+
+    # jo (じょ)
+    'josei': 'じょせい',
+    'joshu': 'じょしゅ',
+    'jogen': 'じょげん',
+    'joyo': 'じょよう',
+
+    # ji (じ)
+    'jidosha': 'じどうしゃ',
+    'jishoku': 'じしょく',
+    'jiken': 'じけん',
+    'jikoku': 'じこく',
+
+    # bya (びゃ)
+    'byakko': 'びゃっこう',
+    'byakugo': 'びゃくごう',
+    'byakudan': 'びゃくだん',
+    'byakuyaku': 'びゃくやく',
+
+    # byu (びゅ)
+    'byuin': 'びゅういん',
+    'byudo': 'びゅうどう',
+    'byuso': 'びゅうそう',
+    'byusha': 'びゅうしゃ',
+
+    # byo (びょ)
+    'byoin': 'びょういん',
+    'byodo': 'びょうどう',
+    'byoki': 'びょうき',
+    'byosha': 'びょうしゃ',
+
+    # pya (ぴゃ)
+    'pyakuyaku': 'ぴゃくやく',
+    'pyakusha': 'ぴゃくしゃ',
+    'pyakudan': 'ぴゃくだん',
+    'pyakugo': 'ぴゃくごう',
+
+    # pyu (ぴゅ)
+    'pyudo': 'ぴゅうどう',
+    'pyusha': 'ぴゅうしゃ',
+    'pyuso': 'ぴゅうそう',
+    'pyuin': 'ぴゅういん',
+
+    # pyo (ぴょ)
+    'pyoki': 'ぴょうき',
+    'pyodo': 'ぴょうどう',
+    'pyosha': 'ぴょうしゃ',
+    'pyoin': 'ぴょういん',
+
+    # fu (ふ)
+    'fusen': 'ふうせん',
+    'furyoku': 'ふうりょく',
+    'fusha': 'ふうしゃ',
+    'fukei': 'ふうけい',
+    
+    'tempura': 'てんぷら',
+    'sampo': 'さんぽ',
+    'shimbun': 'しんぶん',
+    'empitsu': 'えんぴつ',
+    'kampai': 'かんぱい',
+    'kemmaku': 'けんまく',
+    'tombo': 'とんぼ',
+    'kombu': 'こんぶ',
+    'samma': 'さんま',
+    'jimmashin': 'じんましん'
+}
+
+hebonshiki5 = {
+    'Shisaido': 'しさいどう',
+    'Asabi': 'あさび',
+    'mainichi': 'まいにち',
+    'Fushitsu': 'ふしつう',
+    'Nassan': 'なっさん',
+    'Sazuki': 'さずき',
+    'Henda': 'へんだ',
+    'Nontendo': 'のんてんどう',
+    'Saiko': 'さいこ',
+    'Toyata': 'とやた',
+    'Yomiura': 'よみうら',
+    'Sonyo': 'そんよう',
+    'Kawasaki': 'かわそき',
+    'judo': 'じゅうどう',
+    'karate': 'からて',
+    'kendo': 'けんどう',
+    'jishin': 'じしん',
+    'shinkansen': 'しんかんせん',
+    'hiragana': 'ひらがな',
+    'romaji': 'ローマじ',
+    'katakana': 'かたかな',
+    'kanji': 'かんじ',
+    'tsunami': 'つなみ',
+    'mottainai': 'もったいない',
+    'zangyo': 'ざんぎょう',
+    'ninja': 'にんじゃ',
+    'kaizen': 'かいぜん',
+    'kamikaze': 'かみかぜ',
+    'chawan': 'ちゃわん',
+    'sakura': 'さくら',
+    'samurai': 'さむらい',
+    'sayonara': 'さよなら',
+    'kawaii': 'かわいい',
+    'tofu': 'とうふ',
+    'tempura': 'てんぷら',
+    'shabu shabu': 'しゃぶしゃぶ',
+    'shoyu': 'しょうゆ',
+    'udon': 'うどん',
+    'soba': 'そば',
+    'sashimi': 'さしみ',
+    'sukiyaki': 'すきやき',
+    'takoyaki': 'たこやき',
+    'okonomiyaki': 'おこのみやき',
+    'somen': 'そーめん',
+    'yakitori': 'やきとり',
+    'Namba': 'なんば',
+    'Hokkaido': 'ほっかいどう',
+    'Mikkaichi': 'みっかいち',
+    'Nippon': 'にっぽん',
+    'Kyoto': 'きょうと',
+    'Umeda': 'うめだ',
+    'Kansai': 'かんさい',
+    'Nankadai': 'なんかだい',
+    'Osaka': 'おおさか',
+    'Wakayama': 'わかやま',
+    'Tokyo': 'とうきょう',
+    'yokohama': 'よこはま',
+    'manga': 'まんが',
+    'anime': 'あにめ',
+    'Doroemon': 'どろえもん',
+    'Noruto': 'のると',
+    'Kamatsu no Yoiba': 'かまつのよいば',
+    'Jajatsukoisen': 'じゃじゃつこいせん',
+    'pachinko': 'ぱちんこ',
+    'futon': 'ふうとん',
+    'origami': 'おりがみ',
+    'geisha': 'げいしゃ',
+    'ikebana': 'いけばな',
+    'shamisen': 'しゃみせん',
+    'kabuki': 'かぶき',
+    'bonsai': 'ぼんさい',
+    'karaoke': 'からおけ',
+    'kimono': 'きもの',
+    'tatami': 'たたみ',
+    'haiku': 'はいく',
+    'enka': 'えんか',
+    'otaku': 'おたく',
+}
+
+
+
 alphabet_sounds = {
     'A': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(36).mp3',
     'B': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(37).mp3',
@@ -809,64 +1406,102 @@ grade5_lesson3 = {
     1: {
         'word': 'P.E.',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/PE.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_31_52_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_31_52_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_27_33_2.mp3'
     },
     2: {
         'word': 'arts and crafts',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/arts.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_31_55_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_31_55_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_28_35_2.mp3'
     },
     3: {
         'word': 'calligraphy',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/caligraphy.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_00_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_00_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_28_56_2.mp3'
     },
     4: {
         'word': 'class activities',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/class_activities.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_08_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_08_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_29_21_2.mp3'
     },
     5: {
         'word': 'English',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/english.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_13_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_13_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_30_08_2.mp3'
     },
     6: {
         'word': 'home economics',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/home_economics.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_17_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_09_32_17_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_30_38_2.mp3'
     },
     7: {
         'word': 'Japanese',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/japanese.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_02_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_02_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_30_59_2.mp3'
     },
     8: {
         'word': 'math',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/matth.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_07_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_07_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_31_29_2.mp3'
     },
     9: {
         'word': 'moral education',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/moral_education.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_11_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_11_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_32_01_2.mp3'
     },
     10: {
         'word': 'music',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/music.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_15_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_15_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_32_22_2.mp3'
     },
     11: {
         'word': 'science',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/science.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_20_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_20_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_32_34_2.mp3'
     },
     12: {
         'word': 'social studies',
         'picture': 'https://storage.googleapis.com/grade5_lesson3/social_studies.png',
-        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_25_1.mp3'
+        'sound': 'https://storage.googleapis.com/grade5_lesson3/2024_12_06_13_29_25_1.mp3',
+        'sound2': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_32_56_2.mp3'
     }
 }
+
+
+grade5_lesson3_sentence = {
+    '図工、算数、英語、日本語、理科': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_46_16_2.mp3',
+    '体育、図工、英語、家庭科、社会': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_46_30_2.mp3',
+    '書写、日本語、道徳、理科、音楽': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_46_46_2.mp3',
+    '算数、社会、英語、図工、学活': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_47_01_2.mp3',
+    '道徳、理科、日本語、算数、家庭科': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_47_17_2.mp3',
+    '英語、音楽、学活、図工、体育': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_48_03_2.mp3',
+    '日本語、書写、理科、算数、社会': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_48_17_2.mp3',
+    '図工、家庭科、道徳、音楽、英語': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_48_33_2.mp3',
+    '社会、日本語、体育、学活、理科': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_48_48_2.mp3',
+    '算数、英語、音楽、道徳、図工': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_50_15_2.mp3',
+    '学活、社会、算数、家庭科、書写': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_51_40_2.mp3',
+    '体育、音楽、日本語、道徳、図工': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_51_59_2.mp3',
+    '英語、学活、家庭科、日本語、理科': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_52_17_2.mp3',
+    '理科、図工、社会、音楽、算数': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_52_43_2.mp3',
+    '書写、日本語、家庭科、体育、英語': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_53_01_2.mp3',
+    '学活、道徳、図工、算数、社会': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_53_37_2.mp3',
+    '音楽、英語、理科、体育、家庭科': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_53_59_2.mp3',
+    '社会、算数、書写、日本語、図工': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_54_18_2.mp3',
+    '理科、学活、英語、音楽、書写': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_54_39_2.mp3',
+    '図工、家庭科、道徳、社会、日本語': 'https://storage.googleapis.com/grade5_lesson3/2025_06_20_15_55_52_2.mp3'
+}
+
+
 
 grade5_lesson3_occupations = {
     1: {
@@ -1595,6 +2230,19 @@ grade6_lesson3 = {
         'sound2': 'https://storage.googleapis.com/grade6_lesson3/2024_11_27_14_32_50_1.mp3',
         'label': '06:50'
     }
+}
+
+grade6_lesson3_frequency = {
+    'いつも朝ごはんにピザを食べる': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_45_16_2.mp3',
+    'たまに朝ごはんにピザを食べる': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_47_32_2.mp3',
+    '朝ごはんにピザ食べることがない': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_47_56_2.mp3',
+    'たいてい朝ごはんに焼肉を食べる': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_49_02_2.mp3',
+    'たまに朝ごはんに寿司を食べる': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_49_24_2.mp3',
+    'たまに朝ごはんを０８：１５に食べる': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_49_48_2.mp3',
+    'たいてい朝ごはんを０７：００に食べる': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_50_10_2.mp3',
+    'いつも朝ごはんを０６：４５に食べる': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_51_54_2.mp3',
+    'たいてい朝ごはんを食べない': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_52_42_2.mp3',
+    'たまに朝ごはん食べない': 'https://storage.googleapis.com/grade6_lesson3/2025_06_24_11_53_00_2.mp3'
 }
 
 

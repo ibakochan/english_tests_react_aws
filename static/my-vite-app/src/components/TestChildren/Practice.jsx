@@ -35,10 +35,26 @@ const Practice = ({ questions, handlePlay, isPlayDisabled, activeTestDescription
               >
                 {((value.picture && value.word) || (!value.picture && !value.word)) && (
                   <span className={`${value.picture ? 'text-center text-with-picture' : 'text-without-picture'} text-white`}>
-                    {value.numbers ? value.numbers : value.label ? value.label : value.word ? value.word : key}
-                    {value[0] !== undefined && value[0] !== 'h' ? (
-                      <span dangerouslySetInnerHTML={{ __html: ` = ${value[0]}` }} />
-                    ) : null}
+                    {value.numbers ?? value.label ?? value.word ?? key}
+                    {
+                      Array.isArray(value[0])
+                        ? (
+                            value[0].length > 0 && (
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: ` = ${value[0][0]}`,
+                                }}
+                              />
+                            )
+                          )
+                        : value[0] !== undefined && value[0] !== 'h'
+                          ? (
+                              <span
+                                dangerouslySetInnerHTML={{ __html: ` = ${value[0]}` }}
+                              />
+                            )
+                          : null
+                    }
                   </span>
                 )}
                 {!value.picture && value.word && (

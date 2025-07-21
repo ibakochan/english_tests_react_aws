@@ -506,11 +506,23 @@ const UserTestRecords = () => {
                 }
                 {urlPath === "/portfolio/" &&
                 <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                  <div>This section is only available to teachers</div>
-                  <div>You can manage students in your active classroom</div>
-                  <div>You can check their test scores</div>
-                  <div>You can remove them from your active classroom</div>
-                  <div>you can accept teacher requests to join your active classroom</div>
+                {isEnglish ? (
+                  <>
+                    <div>This section is only available to teachers</div>
+                    <div>You can manage students in your active classroom</div>
+                    <div>You can check their test scores</div>
+                    <div>You can remove them from your active classroom</div>
+                    <div>You can accept teacher requests to join your active classroom</div>
+                  </>
+                ) : (
+                  <>
+                    <div>このセクションは教師のみ利用できます</div>
+                    <div>選択した教室の生徒を管理できます</div>
+                    <div>生徒らのテスト結果を確認できます</div>
+                    <div>選択した教室から生徒を除けます</div>
+                    <div>選択した教室に他の教師入室依頼を承認できます</div>
+                  </>
+                )}
                 </div>
                 }
             </span>

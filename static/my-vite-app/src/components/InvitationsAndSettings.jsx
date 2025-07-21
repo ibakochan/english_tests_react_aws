@@ -131,7 +131,7 @@ const InvitationsAndSettings = () => {
             </button>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: urlPath === "/portfolio/" ? '0' : '20px' }}>
-            {opponentA === "" && activeNakama && connectedUsers.filter(username => username !== currentUser.username).map((username) => {
+            {opponentA === "" && activeNakama && connectedUsers.filter(u => u.username !== currentUser.username).map(({ username, student_number }) => {
               let matchedStudent = null;
 
               for (const cls of (currentUser.teacher ? currentUser.teacher.classrooms : currentUser.student.classrooms)) {
@@ -159,22 +159,44 @@ const InvitationsAndSettings = () => {
                   handleSendInvitation(username); 
                 }}
               >
-                {displayName}
+                {displayName}{student_number}
               </button>
               );
             })}
-            {urlPath === "/portfolio/" &&
-              <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                <div>Here you can invite another user to a battle of who can answer fastest</div>
-                <div>The battle comes down to a milliesecond to decide win, lose, or draw</div>
-                <div>You can invite them either by writing username and then click send</div>
-                <div>Or click on "Battle comrades!" button and click on an online users last name</div>
-                <div>Only online users that shares atleast on classroom with you are displayed here</div>
-              </div>
-            }
             </div>
             </>
-            };
+            }
+            <div>
+              {isEnglish ? (
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                You can only invite someone if they share a classroom with you and the classroom has battle permission on
+                </div> 
+              ) : (
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px'}}>
+                  共通教室がある上に、その教室のバトル許可があればバトルできる
+                </div>
+              )
+              }
+            </div>
+            {urlPath === "/portfolio/" && (
+              isEnglish ? (
+                <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                  <div>Here you can invite another user to a battle of who can answer fastest</div>
+                  <div>The battle comes down to a millisecond to decide win, lose, or draw</div>
+                  <div>You can invite them either by writing username and then click send</div>
+                  <div>Or click on "Battle comrades!" button and click on an online users last name</div>
+                  <div>Only online users that shares at least one classroom with you are displayed here</div>
+                </div>
+              ) : (
+                <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                  <div>こちらは、他のユーザーを招待して早押し対戦ができる機能です。</div>
+                  <div>対戦はミリ秒単位のスピードで勝敗が決まります。</div>
+                  <div>ユーザー名を入力して「送信」ボタンを押すか、</div>
+                  <div>「仲間と戦う！」ボタンを押して、オンラインで同じ教室にいるユーザーの名前を選んで招待できます。</div>
+                  <div>表示されるのは、あなたと教室が少なくとも1つ共通しているオンラインユーザーのみです。</div>
+                </div>
+              )
+            )}
           </div>
           }
           {opponentA !== "" &&

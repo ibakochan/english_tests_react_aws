@@ -7,7 +7,7 @@ import { useTest } from "./TestContext";
 const WebsocketContext = createContext();
 
 export function WebsocketProvider({ children }) {
-  const { currentUser, activity } = useUser();
+  const { currentUser, activity, activeClassroomId } = useUser();
   const { maxScores, tests } = useTest();
   const [connected, setConnected] = useState(false);
   const [connectedUsers, setConnectedUsers] = useState([]);
@@ -35,7 +35,7 @@ export function WebsocketProvider({ children }) {
   });
 
   useEffect(() => {
-    if (opponentA && !connectedUsers.includes(opponentA)) {
+    if (opponentA && !connectedUsers.some(u => u.username === opponentA)) {
       setOpponentA("");
       setInviter(false);
       setShowInvitationModal(true);
@@ -46,7 +46,7 @@ export function WebsocketProvider({ children }) {
 
   useEffect(() => {
     if (currentUser && !connected) {
-        connect(currentUser);
+        connect(currentUser, activeClassroomId);
         setConnected(true);
     }
 

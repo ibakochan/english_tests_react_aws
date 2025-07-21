@@ -18,6 +18,7 @@ const DisplayAllVocab = ({ questions }) => {
                       alignItems: 'center',
                       justifyContent: 'center',
                       height: '100%',
+                      userSelect: 'none',
                     }
                   : {
                       background: 'rgba(0, 0, 0, 0.5)',
@@ -26,6 +27,7 @@ const DisplayAllVocab = ({ questions }) => {
                       justifyContent: 'center',
                       fontSize: '15px',
                       lineHeight: '1',
+                      userSelect: 'none',
                     }
               }
             >

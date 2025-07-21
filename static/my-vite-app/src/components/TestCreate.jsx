@@ -564,6 +564,7 @@ const TestCreate = () => {
                         <option value="grade5_lesson1_sentence">Grade5_lesson1_sentence</option>
                         <option value="grade5_lesson2">Grade5_lesson2</option>
                         <option value="grade5_lesson3">Grade5_lesson3</option>
+                        <option value="grade5_lesson3_sentence">Grade5_lesson3_sentence</option>
                         <option value="grade5_lesson4_sentence">grade5_lesson4_sentence</option>
                         <option value="lesson4_list">Grade5_lesson4</option>
                         <option value="grade_5_lesson_5">Grade5_lesson5</option>
@@ -577,6 +578,7 @@ const TestCreate = () => {
                         <option value="grade6_lesson1">Grade6_lesson1</option>
                         <option value="grade6_lesson2">Grade6_lesson2</option>
                         <option value="grade6_lesson3">Grade6_lesson3</option>
+                        <option value="grade6_lesson3_frequency">Grade6_lesson3_frequency</option>
                         <option value="lesson4_grade6_dict">Grade6_lesson4</option>
                         <option value="grade_6_lesson_5">Grade6_lesson5</option>
                         <option value="grade_6_lesson_6">Grade6_lesson6</option>
@@ -597,6 +599,11 @@ const TestCreate = () => {
                         {test.category === 'phonics' &&
                         <>
                         <option value="alphabet_sounds">Big Alphabet</option>
+                        <option value="hebonshiki1">Hebonshiki1</option>
+                        <option value="hebonshiki2">Hebonshiki2</option>
+                        <option value="hebonshiki3">Hebonshiki3</option>
+                        <option value="hebonshiki4">Hebonshiki4</option>
+                        <option value="hebonshiki5">Hebonshiki5</option>
                         <option value="small_alphabet_sounds">Small Alphabet</option>
                         <option value="alphabet_phonics">alphabet Phonics</option>
                         <option value="alphabet_sounds2">Alphabet Phonics2</option>
@@ -692,6 +699,29 @@ const TestCreate = () => {
                         <option value="eiken3_vocab_practice">Eiken3 Vocab Practice</option>
                         <option value="eiken3_conversation_vocab_practice">Eiken3 Conversation Vocab Practice</option>
                         <option value="eiken3_grammar_practice">Eiken3 Grammar Practice</option>
+                        <option value="eiken3_conversation_grammar_practice">Eiken3 Conversation Grammar Practice</option>
+                        <option value="eiken3_grammar_sentence_answers">Eiken3 Grammar Sentence Answers</option>
+                        </>
+                        }
+                        {test.category === 'eiken_pre2' &&
+                        <>
+                        <option value="eiken_pre2_vocab">Eiken_pre2 Vocab</option>
+                        <option value="eiken_pre2_vocab1">Eiken_pre2 Vocab1</option>
+                        <option value="eiken_pre2_vocab2">Eiken_pre2 Vocab2</option>
+                        <option value="eiken_pre2_vocab3">Eiken_pre2 Vocab3</option>
+                        <option value="eiken_pre2_vocab4">Eiken_pre2 Vocab4</option>
+                        <option value="eiken_pre2_vocab5">Eiken_pre2 Vocab5</option>
+                        <option value="eiken_pre2_vocab6">Eiken_pre2 Vocab6</option>
+                        <option value="eiken_pre2_vocab7">Eiken_pre2 Vocab7</option>
+                        <option value="eiken_pre2_vocab8">Eiken_pre2 Vocab8</option>
+                        <option value="eiken_pre2_vocab9">Eiken_pre2 Vocab9</option>
+                        <option value="eiken_pre2_vocab10">Eiken_pre2 Vocab10</option>
+                        <option value="eiken_pre2_vocab11">Eiken_pre2 Vocab11</option>
+                        <option value="eiken_pre2_vocab12">Eiken_pre2 Vocab12</option>
+                        <option value="eiken_pre2_vocab13">Eiken_pre2 Vocab13</option>
+                        <option value="eiken_pre2_vocab14">Eiken_pre2 Vocab14</option>
+                        <option value="eiken_pre2_vocab15">Eiken_pre2 Vocab15</option>
+                        <option value="eiken_pre2_vocab16">Eiken_pre2 Vocab16</option>
                         </>
                         }
                     </select>

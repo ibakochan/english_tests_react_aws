@@ -105,7 +105,7 @@ const UserProfile = () => {
                         <span>）最大記録トータル＝</span>
                       </>
                     )}
-                    {currentUser ? currentUser?.total_max_scores : 0}    {isEnglish ? 'points untill growth=' : '成長まで＝'} {50 - (currentUser ? currentUser?.total_max_scores % 50 : 0)}{isEnglish ? 'points' : '点'}</strong>
+                    {currentUser ? currentUser?.total_max_scores : 0}    {isEnglish ? 'points untill growth=' : '自分成長まで＝'} {50 - (currentUser ? currentUser?.total_max_scores % 50 : 0)}{isEnglish ? 'points' : '点'}</strong>
         </figcaption>
         <figcaption className="profile-text-style">
                   <strong>
@@ -117,7 +117,7 @@ const UserProfile = () => {
                         <span>）最大記録トータル＝</span>
                       </>
                     )}
-                    {currentUser ? (currentUser?.total_eiken_score + currentUser.total_4eiken_score + currentUser?.total_numbers_score + currentUser.total_phonics_score) : 0}    {isEnglish ? 'points untill evolution=' : '進化まで＝'} {100 - (currentUser ? (currentUser?.total_eiken_score +  currentUser?.total_4eiken_score + currentUser?.total_numbers_score + currentUser?.total_phonics_score) % 100 : 0)}{isEnglish ? 'points' : '点'}</strong>
+                    {currentUser ? (currentUser?.total_eiken_score + currentUser.total_4eiken_score + currentUser.total_eiken3_score + currentUser.total_eiken_pre2_score + currentUser.total_eiken2_score +  currentUser?.total_numbers_score + currentUser.total_phonics_score) : 0}    {isEnglish ? 'points untill evolution=' : 'ペット進化まで＝'} {100 - (currentUser ? (currentUser?.total_eiken_score +  currentUser?.total_4eiken_score + currentUser?.total_numbers_score + currentUser?.total_phonics_score) % 100 : 0)}{isEnglish ? 'points' : '点'}</strong>
         </figcaption>
         {currentUser?.teacher &&
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
@@ -132,7 +132,10 @@ const UserProfile = () => {
         ) : (
         <>
         <div style={{ marginBottom: '20px' }}>
-          Here is your character and pet that evolves as you gather English test points
+          {isEnglish
+            ? 'Here is your character and pet that evolves as you gather English test points'
+            : 'ここは英語のテストポイントを集めることで成長や進化するキャラクターとペットです'
+          }
         </div>
         <button
         className="btn btn-primary shadow-lg transition-transform hover:scale-105"
@@ -178,9 +181,19 @@ const UserProfile = () => {
         </a>
         </div>
           <ul>
-            <li><strong>Currently used by multiple schools and hundreds of students</strong></li>
-            <li><strong>Been working on it for 9 month. Now I would make all of this from scratch in less than 3months.</strong></li>
-            <li><strong>Introduction of content is on this page</strong></li>
+            {isEnglish ? (
+              <>
+                <li><strong>Currently used by multiple schools and hundreds of students</strong></li>
+                <li><strong>I have been working on and off on this website tweaking and adding English test content for a year. A site with similar level of function and code would take me maybe 500 hours to make today.</strong></li>
+                <li><strong>Introduction of content is on this page</strong></li>
+              </>
+            ) : (
+              <>
+                <li><strong>現在、複数の学校で利用されており、数百人の生徒が実際に使用しています。</strong></li>
+                <li><strong>この英語テストサイトは、1年ほどかけて断続的に改良やコンテンツ追加を行ってきました。同じレベルの機能とコードを持つサイトを、現在のスキルで新たに制作するにはおよそ500時間かかる見込みです。</strong></li>
+                <li><strong>コンテンツの紹介もこのページ内に記載しています。</strong></li>
+              </>
+            )}
           </ul>
         </div>
         <div>
@@ -203,22 +216,47 @@ const UserProfile = () => {
         </a>
         </div>
           <ul style={{ marginTop: '0.5rem' }}>
-            <li><strong>Currently in use by Triforce Kix</strong></li>
-            <li><strong>Took me 3 months to make. Would take me a week now.</strong></li>
-            <li style={{ marginTop: '4rem' }}><strong>Contents and functionality of this site:</strong></li>
-            <li>Manage gym members information</li>
-            <li>Take attendance by lesson</li>
-            <li>Timestamps for participations</li>
-            <li>Monthly participation records</li>
-            <li>Create schedules within 2 separate schools</li>
-            <li>Binary data picture uploads</li>
+            {isEnglish ? (
+              <>
+                <li><strong>Currently in use by Triforce Kix</strong></li>
+                <li><strong>I can make something of similar level within 40 hours. If you want to add react to make it smoother but still similar level of functionality then maybe 80 hours.</strong></li>
 
-            <li style={{ marginTop: '4rem' }}><strong>My very first usable website, so unfortunately:</strong></li>
-            <li>No React</li>
-            <li>Very little JavaScript to avoid page refreshes</li>
-            <li>Very little pagination and inefficient loops</li>
-            <li>excessive backend hits</li>
-            <li>No cloud uploads for pictures</li>
+                <li style={{ marginTop: '4rem' }}><strong>Contents and functionality of this site:</strong></li>
+                <li>Manage gym members information</li>
+                <li>Take attendance by lesson</li>
+                <li>Timestamps for participations</li>
+                <li>Monthly participation records</li>
+                <li>Create schedules within 2 separate schools</li>
+                <li>Binary data picture uploads</li>
+
+                <li style={{ marginTop: '4rem' }}><strong>My very first usable website, so unfortunately:</strong></li>
+                <li>No React</li>
+                <li>Very little JavaScript to avoid page refreshes</li>
+                <li>Very little pagination and inefficient loops</li>
+                <li>excessive backend hits</li>
+                <li>No cloud uploads for pictures</li>
+              </>
+            ) : (
+              <>
+                <li><strong>現在、Triforce Kix（柔術道場）で実際に利用されています。</strong></li>
+                <li><strong>同程度の機能のサイトなら約40時間で制作可能です。Reactを使って操作性を向上させつつ、同じレベルの機能を実装する場合は、約80時間かかります。</strong></li>
+            
+                <li style={{ marginTop: '4rem' }}><strong>このサイトの主な機能:</strong></li>
+                <li>ジム会員情報の管理</li>
+                <li>レッスンごとの出席管理</li>
+                <li>参加記録のタイムスタンプ取得</li>
+                <li>月ごとの参加履歴の確認</li>
+                <li>2つの異なるスクールごとのスケジュール作成</li>
+                <li>バイナリ形式での写真アップロード機能</li>
+            
+                <li style={{ marginTop: '4rem' }}><strong>初めて作った実用的なWebサイトだったため、以下の点が未熟でした:</strong></li>
+                <li>React未使用</li>
+                <li>ページリロードを避けるためのJavaScriptは最小限</li>
+                <li>Paginationがほとんどなく、ループ処理が非効率</li>
+                <li>バックエンドへのアクセスが多すぎる</li>
+                <li>画像のクラウドアップロード未対応</li>
+              </>
+            )}
           </ul>
         </div>
         <div>
@@ -241,23 +279,49 @@ const UserProfile = () => {
         </a>
         </div>
           <ul>
-            <li><strong>Currently not in use</strong></li>
-            <li><strong>took me a month to make. would take me a week now.</strong></li>
-            <li style={{ marginTop: '4rem' }}><strong>Contents and functionality of this site:</strong></li>
-            <li>Manage students information</li>
-            <li>Attendance by lesson and lesson category</li>
-            <li>Timestamps for participations</li>
-            <li>Create both schools and schedules</li>
-            <li>Student grading and submitting of work</li>
-            <li>Binary data picture uploads</li>
-            <li>todo list dynamically updated with javascript</li>
+            {isEnglish ? (
+              <>
+                <li><strong>Currently not in use</strong></li>
+                <li><strong>I can make something of similar level within 40 hours. If you want to add react to make it smoother but still similar level of functionality then maybe 80 hours.</strong></li>
 
-            <li style={{ marginTop: '4rem' }}><strong>My second usable website, so unfortunately:</strong></li>
-            <li>No react</li>
-            <li>Only some javascript to avoid page refreshes</li>
-            <li>very litte pagination and inefficient loops</li>
-            <li>excessive backend hits</li>
-            <li>no cloud uploads for pictures</li>
+                <li style={{ marginTop: '4rem' }}><strong>Contents and functionality of this site:</strong></li>
+                <li>Manage students information</li>
+                <li>Attendance by lesson and lesson category</li>
+                <li>Timestamps for participations</li>
+                <li>Create both schools and schedules</li>
+                <li>Student grading and submitting of work</li>
+                <li>Binary data picture uploads</li>
+                <li>todo list dynamically updated with javascript</li>
+
+                <li style={{ marginTop: '4rem' }}><strong>My second usable website, so unfortunately:</strong></li>
+                <li>No react</li>
+                <li>Only some javascript to avoid page refreshes</li>
+                <li>very little pagination and inefficient loops</li>
+                <li>excessive backend hits</li>
+                <li>no cloud uploads for pictures</li>
+              </>
+            ) : (
+              <>
+                <li><strong>現在は使用されていません</strong></li>
+                <li><strong>同程度の機能のサイトなら約40時間で制作可能です。Reactを使って操作性を向上させつつ、同じレベルの機能を実装する場合は、約80時間かかります。。</strong></li>
+
+                <li style={{ marginTop: '4rem' }}><strong>このサイトの主な機能:</strong></li>
+                <li>生徒情報の管理</li>
+                <li>レッスンおよびカテゴリ別の出席管理</li>
+                <li>参加記録のタイムスタンプ取得</li>
+                <li>学校とスケジュールの作成</li>
+                <li>成績管理および課題提出機能</li>
+                <li>バイナリ形式での写真アップロード</li>
+                <li>JavaScriptによる動的なToDoリスト更新</li>
+
+                <li style={{ marginTop: '4rem' }}><strong>2作目の実用的なサイトだったため、以下の点が未熟でした:</strong></li>
+                <li>React未使用</li>
+                <li>ページリロードを避けるためのJavaScriptは一部だけ使用</li>
+                <li>paginationがほとんどなく、ループが非効率</li>
+                <li>バックエンドへのリクエストが過剰</li>
+                <li>画像のクラウドアップロード未対応</li>
+              </>
+            )}
           </ul>
         </div>
         </div>
@@ -284,7 +348,12 @@ const UserProfile = () => {
     )}
     </div>
     {urlPath === "/portfolio/" &&
-      <div style={{ marginTop: '20px' }}>Here we have a collection of all the stages your character and pet has grown</div>
+      <div style={{ marginTop: '20px' }}>
+        {isEnglish
+          ? 'Here we have a collection of all the stages your character and pet has grown'
+          : 'ここは自分のキャラクターとペットの今までの成長や進化過程を確認できます'
+        }
+      </div>
     }
     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
     {activeMemories && (
