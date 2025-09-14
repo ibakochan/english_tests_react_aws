@@ -18,7 +18,7 @@ class CustomLoginView(View):
 
     def get(self, request, *args, **kwargs):
         form = AuthenticationForm(request)
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'path': request.path})
 
     def post(self, request, *args, **kwargs):
         form = AuthenticationForm(request, data=request.POST)
@@ -31,12 +31,15 @@ class CustomLoginView(View):
 
             if user is not None:
                 login(request, user)
-                return redirect('main:profile')
+                if '/login/ar/' in request.path:
+                    return redirect('main:profile_ar')
+                else:
+                    return redirect('main:profile')
             else:
                 form.add_error(None, "ユーザーネームまたはパスワードが間違っています。")
-                return render(request, self.template_name, {'form': form})
+                return render(request, self.template_name, {'form': form, 'path': request.path})
 
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'path': request.path})
 
 
 
@@ -47,7 +50,7 @@ class SignUpView(View):
 
     def get(self, request):
         form = SignUpForm()
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'path': request.path})
 
     def post(self, request):
         form = SignUpForm(request.POST)
@@ -55,23 +58,35 @@ class SignUpView(View):
         username = request.POST.get('username')
         password = request.POST.get('password')
         if CustomUser.objects.filter(username=username).exists():
-            error_message = "このユーザネームはすでに使われている"
-            return render(request, self.template_name, {'form': form, 'error_message': error_message})
+            if '/ar/' in request.path:
+                error_message = "اسم المستخدم هذا مستخدم بالفعل"
+            else:
+                error_message = "このユーザネームはすでに使われている"
+            return render(request, self.template_name, {'form': form, 'error_message': error_message, 'path': request.path})
 
         if len(username) > 10:
-            error_message = "ユーザーネームは最大１０文字"
-            return render(request, self.template_name, {'form': form, 'error_message': error_message})
+            if '/ar/' in request.path:
+                error_message = "اسم المستخدم يجب أن لا يتجاوز 10 أحرف"
+            else:
+                error_message = "ユーザーネームは最大１０文字"
+            return render(request, self.template_name, {'form': form, 'error_message': error_message, 'path': request.path})
 
 
         if form.is_valid():
             user = form.save()
             user = authenticate(request, username=username, password=password)
             login(request, user)
-            return redirect('/')
+            if '/ar/' in request.path:
+                return redirect('main:profile_ar')
+            else:
+                return redirect('main:profile')
         else:
-            error_message = "ユーザーネームにスペースや記号などは入れません"
-            return render(request, self.template_name, {'form': form, 'error_message': error_message})
-        return render(request, self.template_name, {'form': form})
+            if '/ar/' in request.path:
+                error_message = "لا يمكن أن يحتوي اسم المستخدم على مسافات أو رموز"
+            else:
+                error_message = "ユーザーネームにスペースや記号などは入れません"
+            return render(request, self.template_name, {'form': form, 'error_message': error_message, 'path': request.path})
+        return render(request, self.template_name, {'form': form, 'path': request.path})
 
 class StudentUpdateView(View):
     def post(self, request, pk):

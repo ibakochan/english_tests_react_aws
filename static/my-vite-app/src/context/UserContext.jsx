@@ -10,7 +10,7 @@ export function UserProvider({ children }) {
   const [activeClassroomName, setActiveClassroomName] = useState("");
   const [activity, setActivity] = useState("");
   const urlPath = window.urlPath;
-  const [isEnglish, setIsEnglish] = useState(null);
+  const [isEnglish, setIsEnglish] = useState(urlPath === "/ar/" || urlPath === "/portfolio/");
   const [activeTestId, setActiveTestId] = useState(null);
   const userClassrooms = currentUser?.student?.classrooms || currentUser?.teacher?.classrooms || [];
   const [activeClassroomId, setActiveClassroomId] = useState(userClassrooms[0]?.id || null);

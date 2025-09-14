@@ -146,6 +146,7 @@ class ProfilePageView(View):
 
     template_name = 'main/test.html'
 
+
     def get(self, request):
         user = ""
         has_google = False
@@ -153,9 +154,9 @@ class ProfilePageView(View):
             user=request.user
             has_google = SocialAccount.objects.filter(user=user, provider='google').exists()
 
+        lang = "ar" if request.path.startswith("/ar/") else "ja"
 
-
-        return render(request, self.template_name, {'user': user, 'has_google': has_google})
+        return render(request, self.template_name, {'user': user, 'has_google': has_google, 'lang': lang, 'path': request.path })
 
 
 
@@ -292,16 +293,42 @@ class UpdateProfileView(View):
         try:
             data = json.loads(request.body)
             student_number = data.get("studentNumber")
-        
+            last_name = data.get("lastName")
+
             student = Student.objects.get(user=user)
-            if student_number != "":
+
+            updated_fields = []
+
+            if student_number is not None and student_number != "":
                 student.student_number = student_number
-                student.save()
+                updated_fields.append(f"出席番号を {student_number} に変更")
             
-            message_response = f"出席番号を {student_number} に変更できた"
-            return JsonResponse({'status': 'success', 'message': message_response, 'student_number': student_number})
+            if last_name is not None and last_name != "":
+                user.last_name = last_name
+                user.save()
+                updated_fields.append(f"名字を {last_name} に変更")
+
+            # Only save student if we changed it
+            if "出席番号" in "".join(updated_fields):
+                student.save()
+
+            if updated_fields:
+                message_response = "、".join(updated_fields) + "しました"
+                return JsonResponse({
+                    'status': 'success',
+                    'message': message_response,
+                    'student_number': student.student_number,
+                    'last_name': user.last_name
+                })
+            else:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': '変更が入力されていません'
+                }, status=400)
+
         except ObjectDoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)        
+            return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+   
 
 class AccountRemoveView(LoginRequiredMixin, View):
     def post(self, request, pk):
@@ -499,6 +526,10 @@ class FinalScoreView(View):
             user.total_english_6_score = total_category_score
         elif category == 'jr_1':
             user.total_jr_1_score = total_category_score
+        elif category == 'jr_2':
+            user.total_jr_2_score = total_category_score
+        elif category == 'jr_3':
+            user.total_jr_3_score = total_category_score
         elif category == 'phonics':
             user.total_phonics_score = total_category_score
         elif category == 'numbers':
@@ -530,6 +561,8 @@ class FinalScoreView(View):
             'total_english_5_score': user.total_english_5_score,
             'total_english_6_score': user.total_english_6_score,
             'total_jr_1_score': user.total_jr_1_score,
+            'total_jr_2_score': user.total_jr_2_score,
+            'total_jr_3_score': user.total_jr_3_score,
             'total_phonics_score': user.total_phonics_score,
             'total_numbers_score': user.total_numbers_score,
             'total_eiken_score': user.total_eiken_score,
@@ -586,6 +619,10 @@ class ScoreRecordView(View):
             user.total_english_6_score = total_category_score
         elif test.category == 'jr_1':
             user.total_jr_1_score = total_category_score
+        elif test.category == 'jr_2':
+            user.total_jr_2_score = total_category_score
+        elif test.category == 'jr_3':
+            user.total_jr_3_score = total_category_score
         elif test.category == 'phonics':
             user.total_phonics_score = total_category_score
         elif test.category == 'numbers':
@@ -615,6 +652,8 @@ class ScoreRecordView(View):
             'total_english_5_score': user.total_english_5_score,
             'total_english_6_score': user.total_english_6_score,
             'total_jr_1_score': user.total_jr_1_score,
+            'total_jr_2_score': user.total_jr_2_score,
+            'total_jr_3_score': user.total_jr_3_score,
             'total_phonics_score': user.total_phonics_score,
             'total_numbers_score': user.total_numbers_score,
             'total_eiken_score': user.total_eiken_score,

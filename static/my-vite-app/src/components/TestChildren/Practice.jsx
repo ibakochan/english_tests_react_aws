@@ -3,7 +3,7 @@ import React from "react";
 const Practice = ({ questions, handlePlay, isPlayDisabled, activeTestDescription, activeTestDescriptionSound }) => (
   <>
     <div>
-      {activeTestDescription !== "" ? (
+      {activeTestDescription !== "undefined" ? (
         activeTestDescription.split('\n').map((line, index) => (
           <React.Fragment key={index}>
             {line}<br />

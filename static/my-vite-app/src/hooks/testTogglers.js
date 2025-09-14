@@ -15,8 +15,8 @@ export const useToggleQuestionDetails = ({
   
       const filteredQuestions = testQuestions.questions.filter(
         (question) =>
-          (question.test === testId && !question.category) ||
-          (activeFinals && question.category === category)
+          (question.test === testId && !question.category_on) ||
+          (activeFinals && question.category_on === category)
       );
   
       const oneQuestion = filteredQuestions.find((q) => q.sound3) || filteredQuestions[0];
@@ -63,16 +63,16 @@ export const useToggleQuestionDetails = ({
           } else {
             const questionArray = Object.values(testQuestions).flat();
   
-            const testExists = questionArray.some((question) => question.test === testId && !question.category);
-            const finalTestExists = questionArray.some((question) => question.category === category);
+            const testExists = questionArray.some((question) => question.test === testId && !question.category_on);
+            const finalTestExists = questionArray.some((question) => question.category_on === category);
   
             if (inviter || opponentA === "") {
               if ((!testExists && !category) || (!finalTestExists && category)) {
                 await fetchTestQuestionsAndOptions(testId, numberOfQuestions, category);
               } else if (category === activeCategory) {
-                setTotalQuestions(testQuestions.questions.filter((question) => question.category === category).length);
+                setTotalQuestions(testQuestions.questions.filter((question) => question.category_on === category).length);
               } else {
-                setTotalQuestions(testQuestions.questions.filter((question) => question.test === testId && !question.category).length);
+                setTotalQuestions(testQuestions.questions.filter((question) => question.test === testId && !question.category_on).length);
               }
             }
           }

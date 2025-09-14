@@ -11,6 +11,8 @@ class CustomUser(AbstractUser):
     total_english_5_score = models.FloatField(default=0.0)
     total_english_6_score = models.FloatField(default=0.0)
     total_jr_1_score = models.FloatField(default=0.0)
+    total_jr_2_score = models.FloatField(default=0.0)
+    total_jr_3_score = models.FloatField(default=0.0)
     total_phonics_score = models.FloatField(default=0.0)
     total_numbers_score = models.FloatField(default=0.0)
     total_eiken_score = models.FloatField(default=0.0)

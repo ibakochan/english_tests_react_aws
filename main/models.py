@@ -59,6 +59,9 @@ class Test(models.Model):
         ('eiken2', 'Eiken2'),
     ]
     name = models.CharField(max_length=200)
+    name_b = models.CharField(max_length=200, blank=True, null=True)
+    name_c = models.CharField(max_length=200, blank=True, null=True)
+    name_ar = models.CharField(max_length=200, blank=True, null=True)
     creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=12)
     picture_url = models.URLField(max_length=500, null=True, blank=True)
     sound_url = models.URLField(max_length=500, null=True, blank=True)
@@ -86,6 +89,13 @@ class MaxScore(models.Model):
 
 
 class Question(models.Model):
+    CATEGORY_CHOICES = [
+        ('a', 'A'),
+        ('b', 'B'),
+        ('c', 'C'),
+        ('ar', 'Ar'),
+    ]
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='a')
     test = models.ForeignKey(Test, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=500)
     description = models.BooleanField(default=False)
@@ -106,6 +116,11 @@ class Question(models.Model):
     japanese_option = models.BooleanField(default=False)
     display_all = models.BooleanField(default=False)
     sentence_order = models.BooleanField(default=False)
+    story_picture_url = models.URLField(max_length=500, null=True, blank=True)
+    story_sound_url = models.URLField(max_length=500, null=True, blank=True)
+    full_story_sound_url = models.URLField(max_length=500, null=True, blank=True)
+    story = models.TextField(null=True, blank=True)
+    full_story = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name

@@ -813,7 +813,7 @@ eiken5_vocab12 = dict(list(eiken5_vocab.items())[275:300])
 eiken5_vocab13 = dict(list(eiken5_vocab.items())[300:325])
 eiken5_vocab14 = dict(list(eiken5_vocab.items())[325:350])
 eiken5_vocab15 = dict(list(eiken5_vocab.items())[350:375])
-eiken5_vocab16 = dict(list(eiken5_vocab.items())[375:390])
+eiken5_vocab16 = dict(list(eiken5_vocab.items())[375:387])
 
 
 

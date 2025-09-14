@@ -1,4 +1,6 @@
-raw_eiken5_vocab = {
+from .lists_eiken import eiken5_vocab_examples
+
+eiken5_vocab_arabic_translation = {
     'apple': ['تفاحة', 'https://storage.googleapis.com/eiken5/2024_12_18_14_17_18_1.mp3'],
     'angry': ['غاضب', 'https://storage.googleapis.com/eiken5/2024_12_18_13_58_52_1.mp3'],
     'afternoon': ['بعد الظهر', 'https://storage.googleapis.com/eiken5/2024_12_18_14_31_50_1.mp3'],
@@ -131,7 +133,7 @@ raw_eiken5_vocab = {
     'evening': ['المساء', 'https://storage.googleapis.com/eiken5/2024_12_24_13_50_20_1.mp3'],
     'every': ['كل', 'https://storage.googleapis.com/eiken5/2024_12_24_13_50_59_1.mp3'],
     'everybody': ['الجميع', 'https://storage.googleapis.com/eiken5/2024_12_24_13_51_05_1.mp3'],
-    'everyone': [الجميع/أكثر رسمية）', 'https://storage.googleapis.com/eiken5/2024_12_24_13_51_09_1.mp3'],
+    'everyone': ["الجميع/أكثر رسمية", 'https://storage.googleapis.com/eiken5/2024_12_24_13_51_09_1.mp3'],
     'everything': ['كل شيئ', 'https://storage.googleapis.com/eiken5/2024_12_24_13_51_17_1.mp3'],
     'everywhere': ['في كل مكان', 'https://storage.googleapis.com/eiken5/2024_12_24_13_51_21_1.mp3'],
     'exact': ['بالضبط', 'https://storage.googleapis.com/eiken5/2024_12_24_13_51_25_1.mp3'],
@@ -390,3 +392,30 @@ raw_eiken5_vocab = {
     'zero': ['صفر', 'https://storage.googleapis.com/eiken5/2025_01_07_02_58_07_1.mp3'],
     'zoo': ['حديقة حيوانات', 'https://storage.googleapis.com/eiken5/2025_01_07_02_58_10_1.mp3'],
 }
+
+arabic_eiken5_vocab = {}
+
+for word in eiken5_vocab_arabic_translation:
+    if word in eiken5_vocab_examples:
+        arabic = eiken5_vocab_arabic_translation[word][0]
+        english_example = eiken5_vocab_examples[word][0]
+        audio_url = eiken5_vocab_arabic_translation[word][1]
+
+        arabic_eiken5_vocab[word] = [[arabic, english_example], audio_url]
+
+arabic_eiken5_vocab1 = dict(list(arabic_eiken5_vocab.items())[:25])
+arabic_eiken5_vocab2 = dict(list(arabic_eiken5_vocab.items())[25:50])
+arabic_eiken5_vocab3 = dict(list(arabic_eiken5_vocab.items())[50:75])
+arabic_eiken5_vocab4 = dict(list(arabic_eiken5_vocab.items())[75:100])
+arabic_eiken5_vocab5 = dict(list(arabic_eiken5_vocab.items())[100:125])
+arabic_eiken5_vocab6 = dict(list(arabic_eiken5_vocab.items())[125:150])
+arabic_eiken5_vocab7 = dict(list(arabic_eiken5_vocab.items())[150:175])
+arabic_eiken5_vocab8 = dict(list(arabic_eiken5_vocab.items())[175:200])
+arabic_eiken5_vocab9 = dict(list(arabic_eiken5_vocab.items())[200:225])
+arabic_eiken5_vocab10 = dict(list(arabic_eiken5_vocab.items())[225:250])
+arabic_eiken5_vocab11 = dict(list(arabic_eiken5_vocab.items())[250:275])
+arabic_eiken5_vocab12 = dict(list(arabic_eiken5_vocab.items())[275:300])
+arabic_eiken5_vocab13 = dict(list(arabic_eiken5_vocab.items())[300:325])
+arabic_eiken5_vocab14 = dict(list(arabic_eiken5_vocab.items())[325:350])
+arabic_eiken5_vocab15 = dict(list(arabic_eiken5_vocab.items())[350:375])
+arabic_eiken5_vocab16 = dict(list(arabic_eiken5_vocab.items())[375:387])

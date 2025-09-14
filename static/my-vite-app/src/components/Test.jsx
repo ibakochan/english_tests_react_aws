@@ -22,8 +22,9 @@ import Practice from './TestChildren/Practice';
 import TestRenderForm from './TestChildren/TestRenderForm';
 import DisplayAllVocab from './TestChildren/DisplayAllVocab';
 import Login from './TestChildren/Login';
+import IbaruCharacters from './TestChildren/IbaruCharacters'
 import { CategoryButtons, CategoryReturnButton } from "./TestChildren/CategoryTogglers";
-import { MusicVideoButton, FinalsButton, FinalsReturnButton, TestReturnButton, TestButtons } from './TestChildren/TestTogglers';
+import { IbaruCharactersButton, MusicVideoButton, FinalsButton, FinalsReturnButton, TestReturnButton, TestButtons } from './TestChildren/TestTogglers';
 
 
 import { useToggleQuestionDetails, useToggleCategories } from '../hooks/testTogglers';
@@ -43,6 +44,7 @@ const Test = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeMusicVideos, setActiveMusicVideos] = useState(false);
+  const [activeIbaruCharacters, setActiveIbaruCharacters] = useState(false);
   const [activeFinals, setActiveFinals] = useState(false);
   const [activeTestName, setActiveTestName] = useState('');
   const [activeTestDescription, setActiveTestDescription] = useState('');
@@ -76,12 +78,25 @@ const Test = () => {
   const [opponentATimestamp, setOpponentATimestamp] = useState(null);
   const [opponentATests, setOpponentATests] = useState([]);
   
-  
+  const [story, setStory] = useState('');
+  const [storyPicture, setStoryPicture] = useState('');
+
+
+
+
+
+
   const correctAudioUrls = window.correctAudioUrls;
   const wrongAudioUrls = window.wrongAudioUrls;
   const correctEnglishAudioUrls = window.correctEnglishAudioUrls;
   const wrongEnglishAudioUrls = window.wrongEnglishAudioUrls;
   const urlPath = window.urlPath
+
+  let testType = "a";
+
+  if (urlPath === "/ar/") {
+    testType = "ar";
+  }
 
   const audioRef = useRef(null);
   const testSectionRef = useRef(null);
@@ -107,15 +122,15 @@ const Test = () => {
   const isGrammarOrLongDashTest = (activeTestName || '').includes('ー') || (activeTestName || '').includes('文法的語彙');
   const shouldShowEikenPracticeSection = isEikenCategory && isGrammarOrLongDashTest;
   const yourScore = gameState.scoreCounter * scoreMultiplier;
-  const isEiken = activeCategory?.includes("eiken");
+  const isEikenOrPhonics = activeCategory?.includes("eiken") || activeCategory?.includes("phonics");
   const isAboveMaxScore = yourScore > activeTestMaxScore;
-  const isValidScore = gameState.scoreCounter > 0;
-  const isBelowEikenThreshold = isEiken && yourScore < 0.7 * maximumScore;
+  const isValidScore = yourScore >= 0.5 * maximumScore;
+  const isBelowEikenThreshold = isEikenOrPhonics && yourScore < 0.7 * maximumScore;
 
   const activeQuestion = testQuestions.questions
   .filter(question => 
-    (question.test === activeTestId && !question.category) || 
-    (activeFinals && question.category === activeCategory)
+    (question.test === activeTestId && !question.category_on) || 
+    (activeFinals && question.category_on === activeCategory)
   )
   .sort((a, b) => (b.sound3 ? 1 : 0) - (a.sound3 ? 1 : 0))
   [gameState.activeQuestionIndex];
@@ -144,8 +159,8 @@ const Test = () => {
   
   const fetchMaxScores = useMaxScores(currentUser, setMaxScores, setLoading, setError);
   const fetchTestsByCategory = useTestsByCategory(setTests, setLoading, setError);
-  const fetchQuestionsByTest = useQuestionsByTest(setQuestions, setLoading, setError);
-  const fetchTestQuestionsAndOptions = useTestQuestionsAndOptions(setQuestions, setTestQuestions, setTotalQuestions, setRandomizedOptions, setRandomizedValues, dispatchGame, setLoading, setError, activeCategory);
+  const fetchQuestionsByTest = useQuestionsByTest(setQuestions, testType, setLoading, setError);
+  const fetchTestQuestionsAndOptions = useTestQuestionsAndOptions(setQuestions, setTestQuestions, setTotalQuestions, setRandomizedOptions, setRandomizedValues, dispatchGame, setLoading, setError, activeCategory, testType);
 
   const filteredTests = filterTests(tests, maxScores, opponentA, opponentATests);
   
@@ -243,8 +258,11 @@ const Test = () => {
       } else if (isBelowEikenThreshold) {
         setRecordMessage(`点数: ${yourScore}/${maximumScore}（７０％以下）記録されなかった！`);
         setShowModal(true);
+      } else if (!isValidScore) {
+        setRecordMessage(`点数: ${yourScore}/${maximumScore}（５０％以下）記録されなかった！`);
+        setShowModal(true);
       } else {
-        setRecordMessage(`今のスコア ${yourScore} は最高記録 ${activeTestMaxScore} より少なかった`);
+        setRecordMessage(`今のスコア ${yourScore} は最高記録 ${activeTestMaxScore} を超えかった`);
         setShowModal(true);
       }
       setActiveTestId(null);
@@ -275,8 +293,11 @@ const Test = () => {
       } else if (isBelowEikenThreshold) {
         setRecordMessage(`点数: ${yourScore}/${maximumScore}（７０％以下）記録されなかった！`);
         setShowModal(true);
+      } else if (!isValidScore) {
+        setRecordMessage(`点数: ${yourScore}/${maximumScore}（５０％以下）記録されなかった！`);
+        setShowModal(true);
       } else {
-        setRecordMessage(`今のスコア ${yourScore} は最高記録 ${activeTestMaxScore} より少なかった`);
+        setRecordMessage(`今のスコア ${yourScore} は最高記録 ${activeTestMaxScore} を超えかった`);
         setShowModal(true);
       }
       toggleQuestionDetails({testId: activeTestId});
@@ -502,6 +523,11 @@ const Test = () => {
     }
   }, [showModal, timestamp, opponentATimestamp, youAnsweredCorrect, youAnsweredWrong, opponentAnsweredWrong, opponentAnsweredCorrect, dispatchGame.activeQuestionIndex]);
 
+  const toggleIbaruCharacters = () => {
+    setActiveIbaruCharacters(!activeIbaruCharacters);
+    setActivity(!activeIbaruCharacters ? "ibaru" : "");
+  };
+
   return (
     <div>
       <div className="flex-center-column">
@@ -511,7 +537,13 @@ const Test = () => {
           {!currentUser &&
             <Login />
           }
-          {activity !== "memories" && (opponentA === "" || inviter) &&
+          {!activeCategory && activity !== "memories" &&
+          <IbaruCharactersButton toggleIbaruCharacters={toggleIbaruCharacters} activeIbaruCharacters={activeIbaruCharacters} />
+          }
+          {activeIbaruCharacters &&
+          <IbaruCharacters isEnglish={isEnglish} />
+          }
+          {!activeIbaruCharacters && activity !== "memories" && (opponentA === "" || inviter) &&
           <div ref={testSectionRef}>
           <CategoryButtons isEnglish={isEnglish} toggleCategories={toggleCategories} activeCategory={activeCategory} currentUser={currentUser} />
           {!activeTestId && !activeMusicVideos && !activeFinals &&
@@ -527,8 +559,29 @@ const Test = () => {
                 }
               </div>
           }
-          {(activeCategory?.includes('eiken') && !activeFinals) ? <h4>７割以上とらないと点数は記録されない</h4> : ''}
-          {activeFinals && <h4>最後までやるのと、８割以上とらないと点数は記録されない</h4>}
+          {(isEikenOrPhonics && !activeFinals) ? (
+            <h4>
+              {isEnglish
+                ? "Your score won't be recorded unless you get at least 70%."
+                : "７割以上とらないと点数は記録されない"}
+            </h4>
+          ) : ''}
+
+          {(!isEikenOrPhonics && !activeFinals && activeCategory !== null) ? (
+            <h4>
+              {isEnglish
+                ? "Your score won't be recorded unless you get at least 50%."
+                : "５割以上とらないと点数は記録されない"}
+            </h4>
+          ) : ''}
+          
+          {activeFinals && (
+            <h4>
+              {isEnglish
+                ? "You must finish the test and score at least 80% for your score to be recorded."
+                : "最後までやるのと、８割以上とらないと点数は記録されない"}
+            </h4>
+          )}
           </>
             {loading && <p>Loading...</p>}
             {error && <p>{error}</p>}
@@ -548,9 +601,9 @@ const Test = () => {
                 {(opponentA === "" || inviter) && !activeMusicVideos && filteredTests.map(test => (
                     <span key={test.id}>
                     {activeTestId !== null ? (
-                        <TestReturnButton openModal={openModal} gameState={gameState} isEnglish={isEnglish} activeTestId={activeTestId} test={test} audioRef={audioRef} />
+                        <TestReturnButton openModal={openModal} gameState={gameState} isEnglish={isEnglish} activeTestId={activeTestId} test={test} audioRef={audioRef} urlPath={urlPath} />
                     ) : (
-                      <TestButtons test={test} activeCategory={activeCategory} activeTestId={activeTestId} toggleQuestionDetails={toggleQuestionDetails} maxScores={maxScores} isEnglish={isEnglish} audioRef={audioRef} />
+                      <TestButtons test={test} activeCategory={activeCategory} activeTestId={activeTestId} toggleQuestionDetails={toggleQuestionDetails} maxScores={maxScores} isEnglish={isEnglish} audioRef={audioRef} urlPath={urlPath} />
                     )}
                     </span>
                 ))}
@@ -640,8 +693,41 @@ const Test = () => {
                     </div>
                   )}
                     <ul>
+                      {!isPractice && testQuestions.questions.filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))[0]?.story_picture_url &&
+                      <div>
+                        <img src={testQuestions.questions.filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))[0]?.story_picture_url} alt="Question" width="700" height="500" />
+                      </div>
+                      }
+                      {!isPractice && testQuestions.questions.filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))[0]?.story &&
+                            <div
+                              style={{
+                                height: '400px',           // double height
+                                width: '100%',             // full width
+                                maxWidth: '700px',         // optional max width to keep it readable
+                                overflowY: 'scroll',         // scroll when content overflows
+                                padding: '1rem 1.5rem',    // comfortable padding
+                                borderRadius: '12px',      // rounded corners
+                                border: '2px solid #888',  // subtle border
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.5)', // soft shadow for depth
+                                backgroundColor: '#000', // slight off-white background
+                                fontFamily: '"Georgia", serif', // storybook feel
+                                fontSize: '16px',
+                                lineHeight: '1.6',
+                                color: '#fff',  
+                                boxSizing: 'border-box',
+                                marginBottom: '20px',
+                              }}
+                            >
+                            {testQuestions.questions.filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))[0].story.split('\n').map((line, index) => (
+                                <React.Fragment key={index}>
+                                  {line}<br />
+                                </React.Fragment>
+                            ))}
+                            </div>
+                      }
+
                       {!isPractice && testQuestions.questions
-                      .filter(question => question.test === activeTestId && !question.category || (activeFinals && question.category === activeCategory))
+                      .filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))
                       .sort((a, b) => (b.sound3 ? 1 : 0) - (a.sound3 ? 1 : 0))
                       .map((question, index) => {
                         let selectedKeys = [];
@@ -662,19 +748,25 @@ const Test = () => {
                                 </>
                               ) : randomSound ? null : null
                             ) : null}
-                            {!isEikenAudio && !randomWrongThree && question.name !== "かっこの中のひらがなをヘボン式で書きましょう" &&
+                            {!isEikenAudio && !randomWrongThree && !question.name.includes("ヘボン式") &&
                             <button className="play_buttons btn btn-success mb-3" style={{ border: '5px solid black' }} onClick={(e) => handleAutoPlay()} disabled={isPlayDisabled}>
                                   {isEnglish ? "Play sound" : "音声"} <FaPlay style={{ marginLeft: '10px' }} />
                             </button>    
                             }
 
+
+                            <div>
                             {randomCorrect ? (
                               <h4
                                 style={{ whiteSpace: 'pre-wrap' }}
                                 dangerouslySetInnerHTML={{ __html: formatTextAsHtml(randomAlphabet) }}
                               />
                             ) : randomTranslation ? (
-                              <h4 style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: randomTranslation }} />
+                                <h4 style={{ whiteSpace: 'pre-wrap' }} 
+                                      dangerouslySetInnerHTML={{ 
+                                        __html: `${question.story ? '(　' : ''}${randomTranslation}${question.story ? '　)　のなかに入る言葉を選んでください' : ''}` 
+                                      }} 
+                                />
                             ) : (!isAudio && typeof randomUrl === 'string' && randomUrl.trim() !== '') ? (
                               <h4>
                                 （{randomUrl}）
@@ -704,6 +796,7 @@ const Test = () => {
                             </div>
                             )
                             }
+                            </div>
                           </div>
                           </>
                         );

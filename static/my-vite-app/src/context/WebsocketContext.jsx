@@ -34,15 +34,7 @@ export function WebsocketProvider({ children }) {
     return maxScore && (maxScore.score / test.total_score) >= 0.7;
   });
 
-  useEffect(() => {
-    if (opponentA && !connectedUsers.some(u => u.username === opponentA)) {
-      setOpponentA("");
-      setInviter(false);
-      setShowInvitationModal(true);
-      setInvitationModalPicture("https://storage.googleapis.com/battle_mode/runaway.png");
-      setInvitationMessage("相手が君を恐れて逃げた。。。。");
-    }
-  }, [connectedUsers, opponentA, inviter]);
+
 
   useEffect(() => {
     if (currentUser && !connected) {

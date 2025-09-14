@@ -106,6 +106,67 @@ const InvitationsAndSettings = () => {
   return (
         <div>
           <div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px', gap: '80px' }}>
+            {activeTestId === null &&
+              <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '20px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={isPractice}
+                    onChange={handlePracticeChange}
+                    style={{
+                      width: '70px',
+                      height: '70px',
+                      accentColor: '#3B82F6',
+                      borderRadius: '20px',
+                      boxShadow: '0 6px 12px rgba(0,0,0,0.3)',
+                      transition: 'transform 0.3s, box-shadow 0.3s',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'scale(1.2)';
+                      e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.35)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.3)';
+                    }}
+                  />
+                  <span style={{ fontSize: '3rem', fontWeight: '900', color: '#FFFFFF' }}>
+                    {isEnglish ? 'Practice' : '練習'}
+                  </span>
+                </label>
+              </div>
+            }
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '20px', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={isEnglish}
+                  onChange={handleLanguageChange}
+                  style={{
+                    width: '70px',
+                    height: '70px',
+                    accentColor: '#10B981',
+                    borderRadius: '20px',
+                    boxShadow: '0 6px 12px rgba(0,0,0,0.3)',
+                    transition: 'transform 0.3s, box-shadow 0.3s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'scale(1.2)';
+                    e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.35)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = '0 6px 12px rgba(0,0,0,0.3)';
+                  }}
+                />
+                <span style={{ fontSize: '3rem', fontWeight: '900', color: '#FFFFFF' }}>
+                  {isEnglish ? '英語' : 'English'}
+                </span>
+              </label>
+            </div>
+          </div>
           {opponentA === "" && (!activeClassroom || activeClassroom?.battle_permission) &&
           <div>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: urlPath === "/portfolio/" ? '0' : '20px' }}>
@@ -131,38 +192,25 @@ const InvitationsAndSettings = () => {
             </button>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: urlPath === "/portfolio/" ? '0' : '20px' }}>
-            {opponentA === "" && activeNakama && connectedUsers.filter(u => u.username !== currentUser.username).map(({ username, student_number }) => {
-              let matchedStudent = null;
-
-              for (const cls of (currentUser.teacher ? currentUser.teacher.classrooms : currentUser.student.classrooms)) {
-                const student = cls.students.find(
-                  (s) => s.user.username === username
-                );
-                if (student) {
-                  matchedStudent = student;
-                  break;
-                }
-              }
-
-              if (!matchedStudent) return null;
-
-              const displayName =
-                matchedStudent.user.last_name?.trim() !== ""
-                  ? matchedStudent.user.last_name
-                  : matchedStudent.user.username;
-              return (
-              <button
-                key={username}
-                className={`btn btn-success category_button ${urlPath === "/portfolio/" ? "" : "mb-3"}`}
-                style={{ marginLeft: "10px", border: "5px solid black" }}
-                onClick={() => {
-                  handleSendInvitation(username); 
-                }}
-              >
-                {displayName}{student_number}
-              </button>
-              );
-            })}
+            {opponentA === "" && activeNakama &&
+  (currentUser.teacher ? currentUser.teacher.classrooms : currentUser.student.classrooms)
+                .filter(c => c.id === activeClassroomId)
+                .flatMap(c => c.students)
+                .filter(s => s.user.username !== currentUser.username)
+                .map(s => {
+                  const displayName = s.user.last_name?.trim() !== "" ? s.user.last_name : s.user.username;
+                  return (
+                    <button
+                      key={s.user.username}
+                      className={`btn btn-success category_button ${urlPath === "/portfolio/" ? "" : "mb-3"}`}
+                      style={{ marginLeft: "10px", border: "5px solid black" }}
+                      onClick={() => handleSendInvitation(s.user.username)}
+                    >
+                      {displayName}{s.student_number}
+                    </button>
+                 );
+                })
+            }
             </div>
             </>
             }
@@ -237,31 +285,16 @@ const InvitationsAndSettings = () => {
             />
           </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-          {activeTestId === null &&
-          <div>
-            <span className='size-20-20'>{isEnglish ? 'Practice' : '練習'}：</span>
-            <input
-              type="checkbox"
-              className='size-20-20'
-              checked={isPractice}
-              onChange={handlePracticeChange}
-            />
-          </div>
-          }
-          <div>
-            <span className='size-20-20'>{isEnglish ? '英語' : 'English'}：</span>
-            <input
-              type="checkbox"
-              className='size-20-20'
-              checked={isEnglish}
-              onChange={handleLanguageChange}
-            />
-          </div>
-          </div>
           <div>
           <p style={{ color: 'white', marginBottom: '5px', display: 'flex', justifyContent: 'center' }}>
-                {teacher || student ? '変更すると今の教室からすべて抜けてしまいます' : '学校の先生か生徒ならそれぞれ先生か生徒をえらんでください'}
+                {isEnglish
+                  ? (teacher || student
+                      ? "If you change, you'll be removed from any classroom you're in"
+                      : "If you're a school teacher or student then choose teacher or student")
+                  : (teacher || student
+                      ? "変更すると今の教室からすべて抜けてしまいます"
+                      : "学校の先生か生徒ならそれぞれ先生か生徒をえらんでください")
+                }
           </p>
           {(student || teacher) &&
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
@@ -269,10 +302,13 @@ const InvitationsAndSettings = () => {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="ユーザー名入力"
+            placeholder={isEnglish ? "Enter username" : "ユーザネーム入力"}
           />
           <button className="btn btn-success submit_buttons" style={{ marginLeft: "10px", border: "5px solid black" }} onClick={handleUserNameSubmit}>
-            {teacher ? '生徒に変更' : student ? '先生に変更' : ''}
+            {isEnglish 
+              ? (teacher ? 'Change to student' : student ? 'Change to teacher' : '') 
+              : (teacher ? '生徒に変更' : student ? '先生に変更' : '')
+            }
           </button>
           </div>
           }
@@ -280,12 +316,12 @@ const InvitationsAndSettings = () => {
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
             {!teacher &&
             <button className="btn btn-success submit_buttons" style={{ border: "5px solid black" }} onClick={() => handleRoleSelection('teacher')}>
-              先生になる
+              {isEnglish ? 'Become teacher' : '先生になる'}
             </button>
             }
             {!student &&
             <button className="btn btn-success submit_buttons" style={{ border: "5px solid black" }} onClick={() => handleRoleSelection('student')}>
-              生徒になる
+              {isEnglish ? 'Become student' : '生徒になる'}
             </button>
             }
           </div>

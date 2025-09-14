@@ -139,9 +139,9 @@ const TestRenderForm = ({
                     {(question.first_letter || question.second_letter || question.third_letter || question.last_letter) ? (
                       <div>
                         <span style={{ fontSize: '50px' }}>{randomAlphabetSliced}</span>
-                        <h4>書いてある文字と足りない文字を全部書いて上の言葉を完成させてください</h4>
                       </div>
                     ) : null}
+
                     {question.description && (
                       <h4>{question.name}</h4>
                     )}

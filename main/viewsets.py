@@ -125,9 +125,21 @@ class TestQuestionViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'], url_path='one-question/(?P<test_id>[^/.]+)')
-    def get_one_question_by_test(self, request, test_id=None):
-        question = Question.objects.filter(test__id=test_id).order_by('id').first()
+    @action(detail=False, methods=['get'], url_path='by-test-and-category/(?P<category>[^/.]+)/(?P<test_id>[^/.]+)')
+    def get_questions_by_test_and_category(self, request, test_id=None, category=None):
+        questions = Question.objects.filter(test__id=test_id, category=category)
+        if not questions.exists():
+            questions = Question.objects.filter(test__id=test_id, category="a")
+        questions = list(questions)
+        shuffle(questions)
+        serializer = TestQuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='one-question/(?P<category>[^/.]+)/(?P<test_id>[^/.]+)')
+    def get_one_question_by_test(self, request, test_id=None, category=None):
+        question = Question.objects.filter(test__id=test_id, category=category).order_by('id').first()
+        if not question:
+            question = Question.objects.filter(test__id=test_id, category="a").order_by('id').first()
 
         if question:
             serializer = TestQuestionSerializer(question)
@@ -162,7 +174,7 @@ class NameIdTestViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='by-category')
     def by_category(self, request):
         categories = request.query_params.getlist('category')
-        valid_categories = ['japanese', 'english_5', 'english_6', 'jr_1', 'phonics', 'numbers', 'eiken', 'eiken4', 'eiken3', 'eiken_pre2', 'eiken2']
+        valid_categories = ['japanese', 'english_5', 'english_6', 'jr_1', 'jr_2', 'jr_3', 'phonics', 'numbers', 'eiken', 'eiken4', 'eiken3', 'eiken_pre2', 'eiken2']
 
         if any(category in valid_categories for category in categories):
             tests = self.queryset.filter(category__in=categories)
@@ -271,3 +283,15 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         user_data['total_category_scores'] = total_category_scores
 
         return Response(user_data)
+
+from .real_eiken_vocab import matched_real_eiken3_vocab, remaining_eiken3_real_vocab
+from django.http import HttpResponse
+
+class EikenVocabDataViewSet(viewsets.ViewSet):
+    @action(detail=False, methods=['get'], url_path='matched')
+    def matched_vocab(self, request):
+        return Response(matched_real_eiken3_vocab)
+
+    @action(detail=False, methods=['get'], url_path='remaining')
+    def remaining_vocab(self, request):
+        return Response(remaining_eiken3_real_vocab)

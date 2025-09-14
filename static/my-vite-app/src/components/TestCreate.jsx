@@ -36,6 +36,8 @@ const TestCreate = () => {
   const [questionWord2, setQuestionWord2] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
 
+  const urlPath = window.urlPath
+
 
   useEffect(() => {
   }, [options]);
@@ -259,6 +261,7 @@ const TestCreate = () => {
     if (formData.question_sound) {
       data.append('question_sound', formData.question_sound);
     }
+    data.append('category', formData.category);
     data.append('list_selection', formData.list_selection);
     data.append('japanese_option', japaneseOption);
     data.append('write_answer', writeAnswer);
@@ -503,6 +506,8 @@ const TestCreate = () => {
                 <option value="english_5">English_5</option>
                 <option value="english_6">English_6</option>
                 <option value="jr_1">Jr_1</option>
+                <option value="jr_2">Jr_2</option>
+                <option value="jr_3">Jr_3</option>
                 <option value="phonics">Phonics</option>
                 <option value="numbers">Numbers</option>
                 <option value="eiken">Eiken</option>
@@ -594,6 +599,58 @@ const TestCreate = () => {
                         <option value="jr_1_lesson_2_conversation">Lesson 2 Conversation</option>
                         <option value="jr_1_lesson_3_vocab">Lesson 3 Vocab</option>
                         <option value="jr_1_lesson_3_sentence">Lesson 3 Sentence</option>
+                        <option value="jr_1_lesson_4_vocab">Lesson 4 Vocab</option>
+                        <option value="jr_1_lesson_4_conversation">Lesson 4 Conversation</option>
+                        <option value="jr_1_lesson_5_vocab">Lesson 5 Vocab</option>
+                        <option value="jr_1_lesson_5_conversation">Lesson 5 Conversation</option>
+                        <option value="jr_1_lesson_6_vocab">Lesson 6 Vocab</option>
+                        <option value="jr_1_lesson_6_sentence">Lesson 6 Sentence</option>
+                        <option value="jr_1_lesson_7_vocab">Lesson 7 Vocab</option>
+                        <option value="jr_1_lesson_7_conversation">Lesson 7 Conversation</option>
+                        <option value="jr_1_lesson_8_vocab">Lesson 8 Vocab</option>
+                        <option value="jr_1_lesson_8_sentence">Lesson 8 Sentence</option>
+                        <option value="jr_1_lesson_9_vocab">Lesson 9 Vocab</option>
+                        <option value="jr_1_lesson_9_conversation">Lesson 9 Conversation</option>
+                        <option value="jr_1_lesson_10_vocab">Lesson 10 Vocab</option>
+                        <option value="lesson_10_story">Lesson 10 Story</option>
+                        </>
+                        }
+                        {test.category === 'jr_2' &&
+                        <>
+                        <option value="jr_2_lesson_1_vocab">Lesson 1 Vocab</option>
+                        <option value="jr_2_lesson_1_story">Lesson 1 Story</option>
+                        <option value="jr_2_lesson_2_vocab">Lesson 2 Vocab</option>
+                        <option value="jr_2_lesson_2_story">Lesson 2 Story</option>
+                        <option value="jr_2_lesson_3_vocab">Lesson 3 Vocab</option>
+                        <option value="jr_2_lesson_3_story">Lesson 3 Story</option>
+                        <option value="jr_2_lesson_4_vocab">Lesson 4 Vocab</option>
+                        <option value="jr_2_lesson_4_story">Lesson 4 Story</option>
+                        <option value="jr_2_lesson_5_vocab">Lesson 5 Vocab</option>
+                        <option value="jr_2_lesson_5_story">Lesson 5 Story</option>
+                        <option value="jr_2_lesson_6_vocab">Lesson 6 Vocab</option>
+                        <option value="jr_2_lesson_6_story">Lesson 6 Story</option>
+                        <option value="jr_2_lesson_7_vocab">Lesson 7 Vocab</option>
+                        <option value="jr_2_lesson_7_story">Lesson 7 Story</option>
+                        <option value="jr_2_lesson_8_vocab">Lesson 8 Vocab</option>
+                        <option value="jr_2_lesson_8_story">Lesson 8 Story</option>
+                        </>
+                        }
+                        {test.category === 'jr_3' &&
+                        <>
+                        <option value="jr_3_lesson_1_vocab">Lesson 1 Vocab</option>
+                        <option value="jr_3_lesson_1_story">Lesson 1 Story</option>
+                        <option value="jr_3_lesson_2_vocab">Lesson 2 Vocab</option>
+                        <option value="jr_3_lesson_2_story">Lesson 2 Story</option>
+                        <option value="jr_3_lesson_3_vocab">Lesson 3 Vocab</option>
+                        <option value="jr_3_lesson_3_story">Lesson 3 Story</option>
+                        <option value="jr_3_lesson_4_vocab">Lesson 4 Vocab</option>
+                        <option value="jr_3_lesson_4_story">Lesson 4 Story</option>
+                        <option value="jr_3_lesson_5_vocab">Lesson 5 Vocab</option>
+                        <option value="jr_3_lesson_5_story">Lesson 5 Story</option>
+                        <option value="jr_3_lesson_6_vocab">Lesson 6 Vocab</option>
+                        <option value="jr_3_lesson_6_story">Lesson 6 Story</option>
+                        <option value="jr_3_lesson_7_vocab">Lesson 7 Vocab</option>
+                        <option value="jr_3_lesson_7_story">Lesson 7 Story</option>
                         </>
                         }
                         {test.category === 'phonics' &&
@@ -626,7 +683,29 @@ const TestCreate = () => {
                         <option value="thousand_quadrillion">Thousand Quadrillion</option>
                         </>
                         }
-                        {test.category === 'eiken' &&
+                        {test.category === 'eiken' && 
+                        <>
+                        {urlPath === "/ar/" ? (
+                        <>
+                        <option value="arabic_eiken5_vocab">Arabic_eiken5 Vocab</option>
+                        <option value="arabic_eiken5_vocab1">Arabic_eiken5 Vocab1</option>
+                        <option value="arabic_eiken5_vocab2">Arabic_eiken5 Vocab2</option>
+                        <option value="arabic_eiken5_vocab3">Arabic_eiken5 Vocab3</option>
+                        <option value="arabic_eiken5_vocab4">Arabic_eiken5 Vocab4</option>
+                        <option value="arabic_eiken5_vocab5">Arabic_eiken5 Vocab5</option>
+                        <option value="arabic_eiken5_vocab6">Arabic_eiken5 Vocab6</option>
+                        <option value="arabic_eiken5_vocab7">Arabic_eiken5 Vocab7</option>
+                        <option value="arabic_eiken5_vocab8">Arabic_eiken5 Vocab8</option>
+                        <option value="arabic_eiken5_vocab9">Arabic_eiken5 Vocab9</option>
+                        <option value="arabic_eiken5_vocab10">Arabic_eiken5 Vocab10</option>
+                        <option value="arabic_eiken5_vocab11">Arabic_eiken5 Vocab11</option>
+                        <option value="arabic_eiken5_vocab12">Arabic_eiken5 Vocab12</option>
+                        <option value="arabic_eiken5_vocab13">Arabic_eiken5 Vocab13</option>
+                        <option value="arabic_eiken5_vocab14">Arabic_eiken5 Vocab14</option>
+                        <option value="arabic_eiken5_vocab15">Arabic_eiken5 Vocab15</option>
+                        <option value="arabic_eiken5_vocab16">Arabic_eiken5 Vocab16</option>
+                        </>
+                        ) : (
                         <>
                         <option value="eiken5_vocab1">Eiken5 Vocab1</option>
                         <option value="eiken5_vocab2">Eiken5 Vocab2</option>
@@ -652,8 +731,28 @@ const TestCreate = () => {
                         <option value="eiken5_conversation_vocab_practice">Eiken5 Conversation Vocab Practice</option>
                         <option value="eiken5_sentence_order">Eiken5 Sentence Order</option>
                         </>
+                        )}
+                        </>
                         }
                         {test.category === 'eiken4' &&
+                        <>
+                        {urlPath === "/ar/" ? (
+                        <>
+                        <option value="arabic_eiken4_vocab1">Arabic Eiken4 Vocab1</option>
+                        <option value="arabic_eiken4_vocab2">Arabic Eiken4 Vocab2</option>
+                        <option value="arabic_eiken4_vocab3">Arabic Eiken4 Vocab3</option>
+                        <option value="arabic_eiken4_vocab4">Arabic Eiken4 Vocab4</option>
+                        <option value="arabic_eiken4_vocab5">Arabic Eiken4 Vocab5</option>
+                        <option value="arabic_eiken4_vocab6">Arabic Eiken4 Vocab6</option>
+                        <option value="arabic_eiken4_vocab7">Arabic Eiken4 Vocab7</option>
+                        <option value="arabic_eiken4_vocab8">Arabic Eiken4 Vocab8</option>
+                        <option value="arabic_eiken4_vocab9">Arabic Eiken4 Vocab9</option>
+                        <option value="arabic_eiken4_vocab10">Arabic Eiken4 Vocab10</option>
+                        <option value="arabic_eiken4_vocab11">Arabic Eiken4 Vocab11</option>
+                        <option value="arabic_eiken4_vocab12">Arabic Eiken4 Vocab12</option>
+                        <option value="arabic_eiken4_vocab">Arabic Eiken4 Vocab</option>
+                        </>
+                        ) : (
                         <>
                         <option value="eiken4_vocab1">Eiken4 Vocab1</option>
                         <option value="eiken4_vocab2">Eiken4 Vocab2</option>
@@ -674,6 +773,8 @@ const TestCreate = () => {
                         <option value="eiken4_grammar_practice">Eiken4 Grammar Practice</option>
                         <option value="eiken4_grammar_sentence_answers">Eiken4 Grammar Sentence Answers</option>
                         <option value="eiken4_sentence_order">Eiken4 Sentence Order</option>
+                        </>
+                        )}
                         </>
                         }
                         {test.category === 'eiken3' &&
@@ -703,9 +804,30 @@ const TestCreate = () => {
                         <option value="eiken3_grammar_sentence_answers">Eiken3 Grammar Sentence Answers</option>
                         </>
                         }
+                        {test.category === 'eiken2' &&
+                        <>
+                            <option value="true_eiken2_vocab">True_eiken2 Vocab</option>
+                            <option value="eiken2_vocab1">Eiken2 Vocab1</option>
+                            <option value="eiken2_vocab2">Eiken2 Vocab2</option>
+                            <option value="eiken2_vocab3">Eiken2 Vocab3</option>
+                            <option value="eiken2_vocab4">Eiken2 Vocab4</option>
+                            <option value="eiken2_vocab5">Eiken2 Vocab5</option>
+                            <option value="eiken2_vocab6">Eiken2 Vocab6</option>
+                            <option value="eiken2_vocab7">Eiken2 Vocab7</option>
+                            <option value="eiken2_vocab8">Eiken2 Vocab8</option>
+                            <option value="eiken2_vocab9">Eiken2 Vocab9</option>
+                            <option value="eiken2_vocab10">Eiken2 Vocab10</option>
+                            <option value="eiken2_vocab11">Eiken2 Vocab11</option>
+                            <option value="eiken2_vocab12">Eiken2 Vocab12</option>
+                            <option value="eiken2_vocab13">Eiken2 Vocab13</option>
+                            <option value="eiken2_vocab14">Eiken2 Vocab14</option>
+                            <option value="eiken2_vocab15">Eiken2 Vocab15</option>
+                            <option value="eiken2_vocab_practice">Eiken2 Vocab_practice</option>
+                        </>
+                        }
                         {test.category === 'eiken_pre2' &&
                         <>
-                        <option value="eiken_pre2_vocab">Eiken_pre2 Vocab</option>
+                        <option value="true_eiken_pre2_vocab">True_eiken_pre2 Vocab</option>
                         <option value="eiken_pre2_vocab1">Eiken_pre2 Vocab1</option>
                         <option value="eiken_pre2_vocab2">Eiken_pre2 Vocab2</option>
                         <option value="eiken_pre2_vocab3">Eiken_pre2 Vocab3</option>
@@ -722,8 +844,16 @@ const TestCreate = () => {
                         <option value="eiken_pre2_vocab14">Eiken_pre2 Vocab14</option>
                         <option value="eiken_pre2_vocab15">Eiken_pre2 Vocab15</option>
                         <option value="eiken_pre2_vocab16">Eiken_pre2 Vocab16</option>
+                        <option value="eiken_pre2_vocab_practice">Eiken_pre2 Vocab_practice</option>
                         </>
                         }
+                    </select>
+                    <select name="category" value={formData.category} onChange={handleTestCreateInputChange} className="form-control">
+                        <option value="">Select Category</option>
+                        <option value="a">A</option>
+                        <option value="b">B</option>
+                        <option value="c">C</option>
+                        <option value="ar">Ar</option>
                     </select>
                     <input
                       type="file"

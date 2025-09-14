@@ -11,14 +11,15 @@ const StudentProfile = () => {
   const [changedStudentNumber, setChangedStudentNumber] = useState("");
   const [message, setMessage] = useState("");
   const [cookies, setCookie, removeCookie] = useCookies(['csrftoken']);
+  const [changedLastName, setChangedLastName] = useState("");
 
   const urlPath = window.urlPath
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
-    if (changedStudentNumber === "") {
-      alert("出席番号を入れてください！");
+    if (changedStudentNumber === "" && changedLastName === "") {
+      alert("出席番号または名字を入れてください！");
       return;
     }
 
@@ -26,7 +27,10 @@ const StudentProfile = () => {
       const csrfToken = cookies.csrftoken;
       const response = await axios.post(
         "/update/profile/",
-        { studentNumber: changedStudentNumber },
+        { 
+          studentNumber: changedStudentNumber, 
+          lastName: changedLastName 
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -34,26 +38,32 @@ const StudentProfile = () => {
           },
         }
       );
+
       if (response.data.status === "success") {
-        const newStudentNumber = response.data.student_number;
+        const { student_number, last_name } = response.data;
+
         setCurrentUser((prevUser) => {
           if (!prevUser) return prevUser;
-
           const updatedUser = { ...prevUser };
-        
-          if (newStudentNumber !== "" && prevUser.student) {
+
+          if (student_number && prevUser.student) {
             updatedUser.student = { 
               ...prevUser.student, 
-              student_number: newStudentNumber 
+              student_number 
             };
           }
-        
+
+          if (last_name) {
+            updatedUser.last_name = last_name;
+          }
+
           return updatedUser;
         });
       }
 
       setMessage({ type: response.data.status, text: response.data.message });
       setChangedStudentNumber("");
+      setChangedLastName("");
     } catch (error) {
       setMessage({
         type: "error",
@@ -74,6 +84,7 @@ const StudentProfile = () => {
           )}
           <h2>{currentUser?.username}</h2>
           <h4>{isEnglish ? "User Name" : "ユーザーネーム"}：{currentUser?.username}</h4>
+          <h4>{isEnglish ? "Last Name" : "名字"}：{currentUser?.last_name}</h4>
           <h4>{isEnglish ? "Student number" : "出席番号"}：{currentUser?.student?.student_number}</h4>
           <form onSubmit={handleUpdateProfile}>
             <input
@@ -81,6 +92,12 @@ const StudentProfile = () => {
               placeholder={isEnglish ? "Change student ID" : "出席番号変更"}
               value={changedStudentNumber}
               onChange={(e) => setChangedStudentNumber(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder={isEnglish ? "Change last name" : "名字変更"}
+              value={changedLastName}
+              onChange={(e) => setChangedLastName(e.target.value)}
             />
             <button type="submit" className="btn btn-primary submit_buttons" style={{ border: '5px solid black' }}>{isEnglish ? "Change name and ID" : "名字番号変更"}</button>
           </form>

@@ -526,7 +526,7 @@ hebonshiki5 = {
     'Toyata': 'とやた',
     'Yomiura': 'よみうら',
     'Sonyo': 'そんよう',
-    'Kawasaki': 'かわそき',
+    'Kawasoki': 'かわそき',
     'judo': 'じゅうどう',
     'karate': 'からて',
     'kendo': 'けんどう',
@@ -570,7 +570,7 @@ hebonshiki5 = {
     'Osaka': 'おおさか',
     'Wakayama': 'わかやま',
     'Tokyo': 'とうきょう',
-    'yokohama': 'よこはま',
+    'Yokohama': 'よこはま',
     'manga': 'まんが',
     'anime': 'あにめ',
     'Doroemon': 'どろえもん',
@@ -1047,102 +1047,102 @@ lesson4_grade6_dict = {
     'a': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/DALL%C2%B7E%202024-09-10%2015.52.08%20-%20A%20vibrant%20Japanese%20festival%20scene%20in%20a%20traditional%20setting%2C%20depicted%20in%20a%20manga%20style.%20The%20night%20sky%20is%20illuminated%20by%20colorful%20fireworks%2C%20with%20people.webp',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(48).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_07_11_2.mp3'
     },
     'b': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/DALL%C2%B7E%202024-09-10%2016.04.21%20-%20A%20beautiful%20seaside%20and%20beach%20scene%20in%20a%20manga%20style%2C%20with%20clear%20blue%20waters%20and%20soft%20white%20sand.%20People%20are%20swimming%20and%20playing%20in%20the%20water%2C%20while%20.webp',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(49).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_07_20_2.mp3'
     },
     'c': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/DALL%C2%B7E%202024-09-10%2016.08.51%20-%20A%20manga-style%20depiction%20of%20Mount%20Fuji%20with%20people%20climbing%20its%20slopes.%20The%20mountain%20is%20shown%20with%20its%20snowy%20peak%20and%20rocky%20trails.%20The%20climbers%20are%20we.webp',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(50).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_07_44_2.mp3'
     },
     'd': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/DALL%C2%B7E%202024-09-10%2016.11.17%20-%20A%20wild-looking%20manga%20character%20with%20spiky%2C%20colorful%20hair%20and%20exaggerated%20features%20eating%20a%20large%20ice%20cream%20cone%20in%20a%20vibrant%2C%20surreal%20amusement%20park.%20.webp',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(51).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_07_54_2.mp3'
     },
     'e': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/DALL%C2%B7E%202024-09-10%2016.12.27%20-%20A%20cool-looking%20manga%20character%20with%20sleek%2C%20stylish%20hair%20and%20a%20calm%20expression%20enjoying%20a%20high-end%20Wagyu%20beef%20BBQ%20outside.%20The%20setting%20is%20a%20scenic%20outd.webp',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(52).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_08_09_2.mp3'
     },
     'f': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_0Kyu487q_1726023386384_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(53).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_08_43_2.mp3'
     },
     'g': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_422aELnX_1726023666152_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(54).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_08_57_2.mp3'
     },
     'h': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_6ZAJg4h1_1726022569913_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(55).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_09_14_2.mp3'
     },
     'i': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_BJM10mTo_1726028566801_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(56).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_09_26_2.mp3'
     },
     'j': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_KCyTDRnZ_1726028716877_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(57).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_09_36_2.mp3'
     },
     'k': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_LmLu3mqh_1726028316859_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(58).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_09_50_2.mp3'
     },
     'l': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_PsfzeKnS_1726022504571_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(59).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_10_01_2.mp3'
     },
     'm': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_VFrz1jg5_1726028208386_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(60).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_10_14_2.mp3'
     },
     'n': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_YXur0zvK_1726023509981_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(61).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_10_35_2.mp3'
     },
     'o': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image__FDWwEuI_1725600378072_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(62).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_10_43_2.mp3'
     },
     'p': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_j0OpSAtk_1726019195760_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(63).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_10_57_2.mp3'
     },
     'q': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_l16_5g7__1725582938340_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(64).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_11_19_2.mp3'
     },
     'r': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_lNhyv1vP_1726023438633_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(65).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_11_45_2.mp3'
     },
     's': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_uDTyCDb5_1726022640374_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(66).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_11_56_2.mp3'
     },
     't': {
         'word': '',
         'picture': 'https://storage.googleapis.com/past_tense_image/openart-image_vu41oyTY_1726028888942_raw.jpg',
-        'sound': 'https://storage.googleapis.com/past_tense_sound/Record%20(online-voice-recorder.com)%20(67).mp3'
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_09_12_12_04_2.mp3'
     }
 }
 
@@ -2125,8 +2125,8 @@ grade6_lesson2 = {
     },
     'e': {
         'word': 'manga',
-        'picture': 'https://storage.googleapis.com/grade6_lesson2/manga.png',
-        'sound': 'https://storage.googleapis.com/grade6_lesson2/2024_11_27_14_13_24_1.mp3'
+        'picture': 'https://storage.googleapis.com/stories_conversations/ibarunodensetsu.png',
+        'sound': 'https://storage.googleapis.com/ibaru_repair/2025_09_02_16_44_02_2.mp3'
     },
     'f': {
         'word': 'Mount Fuji',

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-JP">
+<html lang="{{ lang }}">
 <head>
     {% load static %}
     {% load my_tags %}
@@ -22,6 +22,7 @@
 
       gtag('config', 'G-0VR8B465LL');
     </script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <script>
         window.correctAudioUrls = [
@@ -74,39 +75,39 @@
             <audio id="audio" src="{{ profile_audio }}" preload="auto"></audio>
             {% endif %}
         <div>
-            <form method="post" action="{% url 'accounts:logout' %}?next={% url 'accounts:login' %}">
+            <form method="post" action="{% if path == '/ar/' %}{% url 'accounts:logout' %}?next={% url 'accounts:login_ar' %}{% else %}{% url 'accounts:logout' %}?next={% url 'accounts:login' %}{% endif %}">
                 {% csrf_token %}
                 <div>
                     {% if user %}
                     <button type="submit" style="width: 200px; border: 4px solid black;" class="btn btn-danger">
-                        ログアウト
+                        {% if path == '/ar/' %}تسجيل الخروج{% else %}ログアウト{% endif %}
                     </button>
                     {% else %}
                     <button type="submit" style="width: 200px; border: 4px solid black;" class="btn btn-primary">
-                        ログイン
+                        {% if path == '/ar/' %}تسجيل الدخول{% else %}ログイン{% endif %}
                     </button>
                     {% endif %}
                 </div>
             </form>
             {% if user == "" %}
-            <a href="{% provider_login_url 'google' process='login' %}" 
+            <a href="{% if path == '/ar/' %}{% provider_login_url 'google' process='login' next='/ar/' %}{% else %}{% provider_login_url 'google' process='login' next='/' %}{% endif %}"
                    class="btn btn-light d-flex align-items-center mt-3 justify-content-center"
                    style="border: 1px solid #dadce0; width: 200px; height: 40px; font-weight: 500; text-decoration: none;">
                   <img src="https://developers.google.com/identity/images/g-logo.png" 
                        alt="Google logo" 
                        style="width: 20px; height: 20px; margin-right: 10px;">
-                  <span>Googleでログイン</span>
+                  <span>{% if path == '/ar/' %}تسجيل الدخول عبر جوجل{% else %}Googleでログイン{% endif %}</span>
             </a>
             {% elif has_google %}
                       <p>Google account already linked.</p>
                     {% else %}
-                    <a href="{% provider_login_url 'google' process='connect' %}"
+                    <a href="{% if path == '/ar/' %}{% provider_login_url 'google' process='connect' next='/ar/' %}{% else %}{% provider_login_url 'google' process='connect' next='/' %}{% endif %}"
                          class="btn btn-light d-flex align-items-center mt-3 justify-content-center"
                          style="border: 1px solid #dadce0; width: 200px; height: 40px; font-weight: 500; text-decoration: none;">
                         <img src="https://developers.google.com/identity/images/g-logo.png" 
                              alt="Google logo" 
                              style="width: 20px; height: 20px; margin-right: 10px;">
-                        <span>Googleと連携</span>
+                        <span>{% if path == '/ar/' %}ربط مع جوجل{% else %}Googleと連携{% endif %}</span>
                     </a>
             {% endif %}
         </div>
@@ -115,7 +116,7 @@
     </div>
 </div>
 </body>
-<script type="module" src="{% static 'my-vite-app/dist/assets/index-B2L8lMBr.js' %}"></script>
+<script type="module" src="{% static 'my-vite-app/dist/assets/index-SBH711LA.js' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>

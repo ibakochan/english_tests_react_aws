@@ -37,42 +37,42 @@
         <div class="card-group mb-0">
           <div class="card p-4">
             <div class="card-body">
-              <h1>ログイン</h1>
+              <h1>{% if path == '/accounts/login/ar/' %}تسجيل الدخول{% else %}ログイン{% endif %}</h1>
               {% if form.non_field_errors %}
                   <div class="alert alert-danger">
                       {{ form.non_field_errors }}
                   </div>
               {% endif %}
               <div class="input-group mb-3">
-                <span class="input-group-addon"><i class="fa fa-user"></i>ユーザー名：</span>
+                <span class="input-group-addon"><i class="fa fa-user"></i>{% if path == '/accounts/login/ar/' %}اسم المستخدم:{% else %}ユーザー名：{% endif %}</span>
                 {{ form.username }}
               </div>
               <div class="input-group mb-4">
-                <div class="input-group-addon"><i class="fa fa-lock"></i>パスワード：</div>
+                <div class="input-group-addon"><i class="fa fa-lock"></i>{% if path == '/accounts/login/ar/' %}كلمة المرور:{% else %}パスワード：{% endif %}</div>
                 {{ form.password }}
               </div>
               <div class="row">
                 <div class="col-6">
-                  <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 200px; padding: 4px; border: 5px solid black; box-sizing: border-box;">ログイン</button>
+                  <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 200px; padding: 4px; border: 5px solid black; box-sizing: border-box;">{% if path == '/accounts/login/ar/' %}تسجيل الدخول{% else %}ログイン{% endif %}</button>
                 </div>
               </div>
-                <a href="{% provider_login_url 'google' process='login' %}" 
+                <a href="{% if path == '/accounts/login/ar/' %}{% provider_login_url 'google' process='login' next='/ar/' %}{% else %}{% provider_login_url 'google' process='login' next='/' %}{% endif %}"
                    class="btn btn-light d-flex align-items-center mt-3 justify-content-center"
                    style="border: 1px solid #dadce0; width: 200px; height: 40px; font-weight: 500; text-decoration: none;">
                   <img src="https://developers.google.com/identity/images/g-logo.png" 
                        alt="Google logo" 
                        style="width: 20px; height: 20px; margin-right: 10px;">
-                  <span>Googleでログイン</span>
+                  <span>Google{% if path == '/accounts/login/ar/' %}تسجيل الدخول{% else %}でログイン{% endif %}</span>
                 </a>
             </div>
           </div>
 
           <div class="card p-4" style="border: 1px solid black;">
             <div class="card-body text-center">
-            　<h3>アカウント登録：</h3>
-              <a href="{% url 'accounts:signup' %}">
+            　<h3>{% if path == '/accounts/login/ar/' %}تسجيل الحساب:{% else %}アカウント登録：{% endif %}</h3>
+              <a href="{% if path == '/accounts/login/ar/' %}{% url 'accounts:signup_ar' %}{% else %}{% url 'accounts:signup' %}{% endif %}">
                 <button type="button" class="btn btn-success mb-3" style="width: 200px; border: 5px solid black;">
-                  登録！
+                  {% if path == '/accounts/login/ar/' %}تسجيل!{% else %}登録！{% endif %}
                 </button>
               </a>
             </div>

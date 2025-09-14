@@ -60,19 +60,37 @@ export const shuffleArray = (array) => {
 
 export const getRandomizedValues = (questions) => {
     return questions.reduce((acc, question) => {
-      const keys = Object.keys(question.question_list);
-      const shuffledKeys = shuffleArray([...keys]);
-  
-      const unusedKeys = keys.filter(
-        key => !Object.values(acc).some(item => item.randomAlphabet === key)
-      );
-  
-      const randomKey = unusedKeys.length > 0
-        ? unusedKeys[Math.floor(Math.random() * unusedKeys.length)]
-        : keys[Math.floor(Math.random() * keys.length)];
-  
-      const randomValue = question.question_list[randomKey];
-  
+
+      let randomKey;
+      let randomValue;
+
+      if (question.story) {
+  // Get all keys sorted by the number in question_list[key][0]
+        const sortedKeys = Object.keys(question.question_list).sort(
+          (a, b) => question.question_list[a][0] - question.question_list[b][0]
+        );
+
+  // Filter out keys already used
+        const unusedKeys = sortedKeys.filter(
+          key => !Object.values(acc).some(item => item.randomAlphabet === key)
+        );
+
+  // Take the next key in order, or first if all used
+        randomKey = unusedKeys.length > 0 ? unusedKeys[0] : sortedKeys[0];
+        randomValue = question.question_list[randomKey];
+      } else {
+  // Non-story version: pick random key
+        const keys = Object.keys(question.question_list);
+        const unusedKeys = keys.filter(
+          key => !Object.values(acc).some(item => item.randomAlphabet === key)
+        );
+        randomKey = unusedKeys.length > 0
+          ? unusedKeys[Math.floor(Math.random() * unusedKeys.length)]
+          : keys[Math.floor(Math.random() * keys.length)];
+        randomValue = question.question_list[randomKey];
+      }
+
+
       let randomAlphabetSliced = null;
       if (question.first_letter) {
         randomAlphabetSliced = `_${randomKey.slice(1)}`;
@@ -167,7 +185,7 @@ export const useAutoPlay = (
     if (isPlayDisabled || !testQuestions.questions.length) return;
 
     const activeQuestion = testQuestions.questions
-      .filter(q => (q.test === activeTestId && !q.category) || (activeFinals && q.category === activeCategory))
+      .filter(q => (q.test === activeTestId && !q.category_on) || (activeFinals && q.category_on === activeCategory))
       .sort((a, b) => (b.sound3 ? 1 : 0) - (a.sound3 ? 1 : 0))[gameState.activeQuestionIndex];
 
     if (!activeQuestion) return;

@@ -67,19 +67,6 @@ class SimpleConsumer(AsyncWebsocketConsumer):
             "users": shared_users,
         }))
 
-        for u in shared_users:
-            if u["username"] == self.username:
-                continue
-            channel = SimpleConsumer.connected_users.get(u["username"])
-            if channel:
-                await self.channel_layer.send(
-                    channel,
-                    {
-                        "type": "user_joined",
-                        "username": self.username,
-                        "student_number": my_student_number,
-                    }
-                )
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
@@ -87,18 +74,6 @@ class SimpleConsumer(AsyncWebsocketConsumer):
 
         my_student_number = getattr(getattr(self.user, "student", None), "student_number", None)
         shared_users = await get_shared_users(self.user)
-
-        for u in shared_users:
-            channel = SimpleConsumer.connected_users.get(u["username"])
-            if channel:
-                await self.channel_layer.send(
-                    channel,
-                    {
-                        "type": "user_left",
-                        "username": self.username,
-                        "student_number": my_student_number,
-                    }
-                )
 
 
     async def user_joined(self, event):

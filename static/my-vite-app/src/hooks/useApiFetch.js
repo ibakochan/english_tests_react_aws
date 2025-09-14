@@ -32,11 +32,11 @@ export const useTestsByCategory = (setTests, setLoading, setError) => {
   return fetchTestsByCategory;
 };
 
-export const useQuestionsByTest = (setQuestions, setLoading, setError) => {
+export const useQuestionsByTest = (setQuestions, testType, setLoading, setError) => {
   const { fetchData } = useFetch('', 'GET', null, setLoading, setError);
   
   const fetchQuestionsByTest = async (testId) => {
-    const data = await fetchData(`/api/test-questions/one-question/${testId}/`);
+    const data = await fetchData(`/api/test-questions/one-question/${testType}/${testId}/`);
     if (data) {
       setQuestions(data);
     }
@@ -45,13 +45,13 @@ export const useQuestionsByTest = (setQuestions, setLoading, setError) => {
   return fetchQuestionsByTest;
 };
 
-export const useTestQuestionsAndOptions = (setQuestions, setTestQuestions, setTotalQuestions, setRandomizedOptions, setRandomizedValues, dispatchGame, setLoading, setError, activeCategory) => {
+export const useTestQuestionsAndOptions = (setQuestions, setTestQuestions, setTotalQuestions, setRandomizedOptions, setRandomizedValues, dispatchGame, setLoading, setError, activeCategory, testType) => {
   const { fetchData } = useFetch('', 'GET', null, setLoading, setError);
 
   const fetchTestQuestionsAndOptions = async (testId, numberOfQuestions = 10, category) => {
     let apiUrl = category 
       ? `/api/test-questions/by-category/${category}/` 
-      : `/api/test-questions/by-test/${testId}/`;
+      : `/api/test-questions/by-test-and-category/${testType}/${testId}/`;
 
     const fetchedQuestions = await fetchData(apiUrl);
     if (!fetchedQuestions) return;
@@ -66,7 +66,7 @@ export const useTestQuestionsAndOptions = (setQuestions, setTestQuestions, setTo
     if (category) {
       questions = questions.map(question => ({
         ...question,
-        category: category,
+        category_on: category,
       }));
     }
 
@@ -88,8 +88,8 @@ export const useTestQuestionsAndOptions = (setQuestions, setTestQuestions, setTo
     }));
 
     const total = category
-      ? questions.filter(q => q.category === activeCategory).length
-      : questions.filter(q => q.test === testId && !q.category).length;
+      ? questions.filter(q => q.category_on === activeCategory).length
+      : questions.filter(q => q.test === testId && !q.category_on).length;
 
     setTotalQuestions(total);
 

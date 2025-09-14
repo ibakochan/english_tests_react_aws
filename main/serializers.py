@@ -111,7 +111,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        exclude = ['password', 'last_name', 'first_name']
+        exclude = ['password', 'first_name']
 
 class ClassroomRequestSerializer(serializers.ModelSerializer):
     teacher = TeacherSerializer()

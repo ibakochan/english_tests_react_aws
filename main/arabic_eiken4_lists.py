@@ -1,4 +1,6 @@
-raw_eiken4_vocab = {
+from .eiken4_lists import eiken4_vocab_examples
+
+eiken4_vocab_arabic_translation = {
     'another': ['آخر، شيئ آخر', 'https://storage.googleapis.com/eiken5/2025_03_15_18_19_34_1.mp3'],
     'around': ['حول، حوالي', 'https://storage.googleapis.com/eiken5/2025_03_15_18_19_38_1.mp3'],
     'able': ['قادر', 'https://storage.googleapis.com/eiken5/2025_03_15_18_19_42_1.mp3'],
@@ -299,3 +301,26 @@ raw_eiken4_vocab = {
     'young': ['شاب', 'https://storage.googleapis.com/eiken5/2025_01_07_02_58_05_1.mp3'],
     'you': ['انت', 'https://storage.googleapis.com/eiken5/2024_12_17_14_48_35_1.mp3'],
 }
+
+arabic_eiken4_vocab = {}
+
+for word in eiken4_vocab_arabic_translation:
+    if word in eiken4_vocab_examples:
+        arabic = eiken4_vocab_arabic_translation[word][0]
+        english_example = eiken4_vocab_examples[word][0]
+        audio_url = eiken4_vocab_arabic_translation[word][1]
+
+        arabic_eiken4_vocab[word] = [[arabic, english_example], audio_url]
+
+arabic_eiken4_vocab1 = dict(list(arabic_eiken4_vocab.items())[:25])
+arabic_eiken4_vocab2 = dict(list(arabic_eiken4_vocab.items())[25:50])
+arabic_eiken4_vocab3 = dict(list(arabic_eiken4_vocab.items())[50:75])
+arabic_eiken4_vocab4 = dict(list(arabic_eiken4_vocab.items())[75:100])
+arabic_eiken4_vocab5 = dict(list(arabic_eiken4_vocab.items())[100:125])
+arabic_eiken4_vocab6 = dict(list(arabic_eiken4_vocab.items())[125:150])
+arabic_eiken4_vocab7 = dict(list(arabic_eiken4_vocab.items())[150:175])
+arabic_eiken4_vocab8 = dict(list(arabic_eiken4_vocab.items())[175:200])
+arabic_eiken4_vocab9 = dict(list(arabic_eiken4_vocab.items())[200:225])
+arabic_eiken4_vocab10 = dict(list(arabic_eiken4_vocab.items())[225:250])
+arabic_eiken4_vocab11 = dict(list(arabic_eiken4_vocab.items())[250:275])
+arabic_eiken4_vocab12 = dict(list(arabic_eiken4_vocab.items())[275:300])

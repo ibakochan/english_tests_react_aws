@@ -389,6 +389,7 @@ const UserTestRecords = () => {
                         className={`btn btn-success mb-3`}
                       >
                         <h5>{user.username} - {user.student.student_number}</h5>
+                        <h5>{user.last_name}</h5>
                         <h5>最大記録トータル＝{user.total_max_scores}</h5>
                         <h5>英検トータル＝{user.total_eiken_score}</h5>
                       <button className={`btn btn-danger submit_buttons`} style={{ border: '5px solid black' }} onClick={() => openModal(user.id)}>

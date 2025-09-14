@@ -13,6 +13,7 @@ router.register(r'options', viewsets.OptionViewSet)
 router.register(r'users', viewsets.CustomUserViewSet)
 router.register(r'maxscore', viewsets.MaxScoreViewSet)
 router.register(r'classroomrequest', viewsets.ClassroomRequestViewSet)
+router.register(r'vocab-data', viewsets.EikenVocabDataViewSet, basename='vocab-data')
 
 
 
@@ -25,6 +26,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('choose-role/', views.StudentTeacherChooseView.as_view(), name='choose_role'),
     path('', views.ProfilePageView.as_view(), name='profile'),
+    path('ar/', views.ProfilePageView.as_view(), name='profile_ar'),
     path('portfolio/', views.PortfolioView.as_view(), name='portfolio'),
     path('classrooms/<int:id>/toggle-battle/', views.ToggleBattlePermissionView.as_view(), name='toggle-battle-permission'),
     path('classrooms/<int:id>/toggle-character-voice/', views.ToggleCharacterVoiceView.as_view(), name='toggle-character-voice'),

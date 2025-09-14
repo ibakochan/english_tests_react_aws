@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
@@ -16,6 +16,184 @@ const UserProfile = () => {
 
   const activeClassroom = userClassrooms?.find(classroom => classroom.id === activeClassroomId);
   const [characterVoice, setCharacterVoice] = useState(false);
+
+  const [usedStudents, setUsedStudents] = useState([]);
+  const [currentStudent, setCurrentStudent] = useState(null);
+
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const intervalRef = useRef(null);
+
+
+
+  const audioRef = useRef(new Audio());
+  const startSoundRef = useRef(new Audio());
+
+  useEffect(() => {
+    audioRef.current.src = "https://storage.googleapis.com/ivar_reactions/2025_09_11_12_28_02_2.mp3"
+
+    startSoundRef.current.src = "https://storage.googleapis.com/ivar_reactions/2025_09_11_12_27_56_2.mp3"
+  }, [isEnglish]);
+
+
+  useEffect(() => {
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(intervalRef.current);
+            setIsRunning(false);
+            audioRef.current.play(); // 🔔 final sound
+            handleReset();
+            return 0;
+          }
+          if (prev === 6) {
+            audioRef.current.play();
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      clearInterval(intervalRef.current);
+    }
+
+    return () => clearInterval(intervalRef.current);
+  }, [isRunning]);
+
+
+  const handleReset = () => {
+    setIsRunning(false);
+    setTimeLeft(0);
+    setMinutes(0);
+    setSeconds(0);
+    setHasStarted(false);
+  };
+
+  const handleStart = () => {
+    const totalSeconds = minutes * 60 + seconds;
+
+    if (!hasStarted) {
+      if (totalSeconds > 0) {
+        startSoundRef.current.play();
+        setTimeout(() => {
+          setTimeLeft(totalSeconds);
+          setIsRunning(true);
+          setHasStarted(true);
+        }, 2000);
+      }
+    } else {
+      setIsRunning(!isRunning);
+    }
+  };
+
+
+
+  // Format display
+  const formatTime = (totalSec) => {
+    const mins = Math.floor(totalSec / 60);
+    const secs = totalSec % 60;
+    return `${mins < 10 ? "0" : ""}${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
+  const handleTimeChange = (e) => {
+    // Remove all non-digit characters
+    let digits = e.target.value.replace(/\D/g, "");
+    if (digits.length === 0) {
+      setMinutes(0);
+      setSeconds(0);
+      return;
+    }
+
+    // Parse minutes and seconds
+    let sec = parseInt(digits.slice(-2), 10); // last two digits
+    if (sec > 59) sec = 59;
+    let min = digits.length > 2 ? parseInt(digits.slice(0, -2), 10) : 0;
+
+    setMinutes(min);
+    setSeconds(sec);
+  };
+
+  const soundUrls = [
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_17_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_20_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_23_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_27_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_30_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_34_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_37_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_41_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_45_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_48_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_52_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_56_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_42_59_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_03_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_07_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_11_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_14_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_18_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_22_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_26_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_30_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_33_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_37_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_41_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_46_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_49_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_53_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_43_57_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_01_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_05_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_09_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_13_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_17_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_21_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_25_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_29_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_33_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_37_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_54_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_44_59_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_45_02_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_45_06_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_45_10_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_45_31_2.mp3",
+    "https://storage.googleapis.com/ivar_reactions/2025_09_08_10_45_35_2.mp3"
+  ];
+
+  const pickRandomStudent = () => {
+    if (!activeClassroom || !activeClassroom.students?.length) return;
+
+    let availableStudents = activeClassroom.students.filter(
+      s => !usedStudents.includes(s.id)
+    );
+
+    if (availableStudents.length === 0) {
+      setUsedStudents([]);
+      availableStudents = [...activeClassroom.students];
+    }
+
+    const randomIndex = Math.floor(Math.random() * availableStudents.length);
+    const chosen = availableStudents[randomIndex];
+
+    setUsedStudents(prev => [...prev, chosen.id]);
+
+    // Convert student_number to int (default 0 if empty)
+    const num = parseInt(chosen.student_number, 10);
+
+    let soundUrl = "";
+    if (num && num >= 1 && num <= soundUrls.length) {
+      soundUrl = soundUrls[num - 1]; // -1 because array starts at 0
+      const audio = new Audio(soundUrl);
+      audio.play();
+    }
+
+    setCurrentStudent({ ...chosen, soundUrl });
+  };
+
 
   useEffect(() => {
     if (activeClassroom?.character_voice !== undefined) {
@@ -74,57 +252,189 @@ const UserProfile = () => {
     {!activeMemories && !activeEikenMemories && (
         <figure style={{ margin: 0 }}>
         <h1 style={{ fontWeight: 'bold' }}>{currentUser?.username}</h1>
-        <img
-          src={currentUser ? currentUser.profile_asset?.[lvl]?.image : "https://storage.googleapis.com/profile_assets/a-crying.jpeg"}
-          alt="Level Image"
-          className="profile_pic"
-          style={{ marginBottom: '20px' }}
-          onClick={() => !characterVoice && document.getElementById('audio').play()}        
-        />
-        <img
-          src={currentUser ? currentUser?.pets?.[petLevel]?.image : 'https://storage.googleapis.com/profile_pets/one_cell.png'}
-          alt="Level Image"
-          style={{ height: '150px', width: '150px', border: '5px solid black' }}
-          onClick={() => !characterVoice && document.getElementById('pet_audio').play()}
-        />
+        
+        
+        <div className="d-flex flex-wrap justify-content-center">
+          <div>
+            <button
+              className="btn btn-dark d-flex flex-column align-items-center p-2"
+              style={{
+                borderRadius: "0.75rem",
+                border: "2px solid #333",
+                background: "linear-gradient(180deg, #222, #333)",
+                height: "355px", // slightly taller for more text
+                width: "240px",  // slightly wider
+                overflow: "hidden",
+                marginBottom: "8px",
+              }}
+              onClick={() => !characterVoice && document.getElementById('audio').play()}
+            >
+              <img
+                src={currentUser ? currentUser.profile_asset?.[lvl]?.image : "https://storage.googleapis.com/profile_assets/a-crying.jpeg"}
+                alt="Level Image"
+                loading="lazy"
+                width="220"
+                height="220"
+                style={{ marginBottom: "8px", border: '5px solid black', borderRadius: '0.5rem' }}
+              />
+
+              <div style={{ marginBottom: "12px" }}>
+                {isEnglish ? 'you' : '君は'}
+                {isEnglish 
+                  ? (currentUser ? currentUser?.profile_asset?.[lvl]?.english_text : "are a baby that can do nothing but cry")
+                  : (currentUser ? currentUser?.profile_asset?.[lvl]?.text : "泣くことしかできない生まれたての赤ちゃんです")}
+              </div>
+              <div>{isEnglish ? 'Total excluding Eiken:' : '英検以外トータル:'} {currentUser ? currentUser?.total_max_scores : 0}{isEnglish ? 'points' : '点'}</div>
+              <div>{isEnglish ? 'Until growth:' : '成長まで:'} {50 - (currentUser ? currentUser?.total_max_scores % 50 : 0)}{isEnglish ? 'points' : '点'}</div>
+            </button>
+          </div>
+
+          <div>
+            <button
+              className="btn btn-dark d-flex flex-column align-items-center p-2"
+              style={{
+                borderRadius: "0.75rem",
+                border: "2px solid #333",
+                background: "linear-gradient(180deg, #222, #333)",
+                height: "355px", // match profile card
+                width: "240px",  // match profile card
+                overflow: "hidden",
+                marginBottom: "8px"
+              }}
+              onClick={() => !characterVoice && document.getElementById('pet_audio').play()}
+            >
+              <img
+                src={currentUser ? currentUser?.pets?.[petLevel]?.image : 'https://storage.googleapis.com/profile_pets/one_cell.png'}
+                alt="Pet Image"
+                loading="lazy"
+                width="220"
+                height="220"
+                style={{ marginBottom: "8px", border: '5px solid black', borderRadius: '0.5rem' }}
+              />
+
+              <div style={{ marginBottom: "12px" }}>
+                {isEnglish ? 'your pet' : '君のペットは'}
+                {isEnglish 
+                  ? (currentUser ? currentUser?.pets?.[petLevel]?.english_text : 'still only a one celled organism')
+                  : (currentUser ? currentUser?.pets?.[petLevel]?.text : 'まだ細胞一つしかない生物')}
+              </div>
+              <div>{isEnglish ? 'Total excluding Eiken:' : '小中以外トータル:'}{currentUser ? (currentUser?.total_eiken_score + currentUser?.total_4eiken_score + currentUser?.total_numbers_score + currentUser?.total_phonics_score) : 0}{isEnglish ? 'points' : '点'}</div>
+              <div>{isEnglish ? 'Until evolution:' : '進化まで:'}{100 - (currentUser ? (currentUser?.total_eiken_score + currentUser?.total_4eiken_score + currentUser?.total_numbers_score + currentUser?.total_phonics_score) % 100 : 0)}{isEnglish ? 'points' : '点'}</div>
+            </button>
+          </div>
+        </div>
+
+        <style>{`
+          button.btn {
+            transition: transform .15s ease, box-shadow .15s ease;
+          }
+          button.btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 .75rem 1.25rem rgba(0,0,0,.2);
+          }
+        `}</style>
+
         {urlPath !== "/portfolio/" ? (
         <>
-        <figcaption className="profile-text-style">
-              {isEnglish ? 'you ' : '君は'}{isEnglish ? (currentUser ? currentUser?.profile_asset?.[lvl]?.english_text : "are a baby that can do nothing but cry") : (currentUser ? currentUser?.profile_asset?.[lvl]?.text: "泣くことしかできない生まれたての赤ちゃんです")}
-        </figcaption>
-        <figcaption className="profile-text-style">
-              {isEnglish ? 'your pet is ' : '君のペットは'}{isEnglish ? (currentUser ? currentUser?.pets?.[petLevel]?.english_text : 'still only a one celled organism') : (currentUser ? currentUser?.pets?.[petLevel]?.text : 'まだ細胞一つしかない生物')}
-        </figcaption>
-        <figcaption className="profile-text-style">
-                  <strong>
-                    {isEnglish ? 'Total max scores=' : (
-                      <>
-                        <span>（</span>
-                        <span style={{ color: '#e67e22' }}>文字、数字、</span>
-                        <span style={{ color: '#2ecc71' }}>小、中</span>
-                        <span>）最大記録トータル＝</span>
-                      </>
-                    )}
-                    {currentUser ? currentUser?.total_max_scores : 0}    {isEnglish ? 'points untill growth=' : '自分成長まで＝'} {50 - (currentUser ? currentUser?.total_max_scores % 50 : 0)}{isEnglish ? 'points' : '点'}</strong>
-        </figcaption>
-        <figcaption className="profile-text-style">
-                  <strong>
-                    {isEnglish ? 'Total Eiken score=' : (
-                      <>
-                        <span>（</span>
-                        <span style={{ color: '#e67e22' }}>文字、数字、</span>
-                        <span style={{ color: '#3498db' }}>英検</span>
-                        <span>）最大記録トータル＝</span>
-                      </>
-                    )}
-                    {currentUser ? (currentUser?.total_eiken_score + currentUser.total_4eiken_score + currentUser.total_eiken3_score + currentUser.total_eiken_pre2_score + currentUser.total_eiken2_score +  currentUser?.total_numbers_score + currentUser.total_phonics_score) : 0}    {isEnglish ? 'points untill evolution=' : 'ペット進化まで＝'} {100 - (currentUser ? (currentUser?.total_eiken_score +  currentUser?.total_4eiken_score + currentUser?.total_numbers_score + currentUser?.total_phonics_score) % 100 : 0)}{isEnglish ? 'points' : '点'}</strong>
-        </figcaption>
         {currentUser?.teacher &&
+        <>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
           <button style={{ border: "5px solid black" }} className="btn btn-primary submit_buttons" onClick={toggleCharacterVoice}>
             {!characterVoice ? 'キャラ音声 (ON)' : 'キャラ音声 (OFF)'}
           </button>
         </div>
+        
+        <div className="d-flex flex-wrap justify-content-center">
+        <div style={{ marginRight: "50px" }}>
+        <button
+          onClick={pickRandomStudent}
+          className={`btn btn-warning test_button_hover`}
+          style={{
+                    borderRadius: "0.75rem",
+                    border: "2px solid #333",
+                    background: "linear-gradient(180deg, #222, #333)",
+                    overflow: "hidden",
+                    marginBottom: "10px",
+                    width: "180",
+                    height: "160",
+          }}
+        >
+        <img src={'https://storage.googleapis.com/ivar_reactions/randamu.png'} alt="Question" width="200" height="170" style={{ border: '5px solid black', borderRadius: '0.5rem' }} />
+        </button>
+
+        {currentStudent && (
+          <div style={{ fontSize: "50px", margin: "10px 0" }}>
+            Number {currentStudent.student_number || "?"}
+          </div>
+        )}
+        </div>
+        <div style={{ textAlign: "center", fontFamily: "Arial, sans-serif" }}>
+        <div
+        style={{
+          fontSize: "60px",
+          fontWeight: "bold",
+          padding: "20px",
+          border: "2px solid #090808ff",
+          borderRadius: "12px",
+          display: "inline-block",
+          minWidth: "180px",
+          background: "#2d2828ff",
+          color: "white",
+        }}
+        >
+        {!isRunning && !hasStarted ? (
+          <input
+            type="text"
+            value={`${minutes < 10 ? "0" : ""}${minutes}:${
+              seconds < 10 ? "0" : ""
+            }${seconds}`}
+            onChange={handleTimeChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleStart();
+            }}
+            style={{
+              fontSize: "60px",
+              fontWeight: "bold",
+              width: "180px",
+              border: "none",
+              textAlign: "center",
+              background: "transparent",
+              outline: "none",
+              color: "white",
+            }}
+          />
+        ) : (
+          formatTime(timeLeft)
+        )}
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center" }}>
+        <button
+          onClick={handleStart}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        >
+          {isRunning ? "Pause" : hasStarted ? "Resume" : "Start"}
+        </button>
+        <button
+          onClick={handleReset}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        >
+          Reset
+        </button>
+        </div>
+        </div>
+        </div>
+        </>
         }
         <audio id="audio" src={currentUser ? (isEnglish ? currentUser?.profile_asset?.[lvl]?.english_audio : currentUser?.profile_asset?.[lvl]?.audio) : "https://storage.googleapis.com/profile_assets/2024_10_28_13_01_19_1.mp3"} />
         <audio id="pet_audio" src={currentUser ? currentUser?.pets?.[petLevel]?.audio : 'https://storage.googleapis.com/profile_pets/2024_12_23_12_14_25_1.mp3'} />
@@ -332,14 +642,14 @@ const UserProfile = () => {
     )}
     </div>
     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-    {!activeEikenMemories && (
+    {!activeEikenMemories && !currentUser?.teacher && (
     <button
       onClick={() => toggleMemories()}
       className=".memory-button"
       style={{ height: !activeMemories ? '100px' : '50px', width: !activeMemories ? '220px' : '290px', padding: '10px', border: '5px solid black' }}
     ><span className={`text-white ${activeMemories ? 'text_shadow' : ''}`}>{!activeMemories ? (isEnglish ? 'Memories' : '思い出を見る') : (isEnglish ? 'Go back' : '戻る！')}</span></button>
     )}
-    {!activeMemories && (
+    {!activeMemories && !currentUser?.teacher && (
     <button
       onClick={() => toggleEikenMemories()}
       className=".memory-button"

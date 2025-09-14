@@ -6,7 +6,9 @@ class RedirectAuthenticatedUserMiddleware:
 
     def __call__(self, request):
         if request.user.is_authenticated:
-            if request.path in ['/accounts/login/', '/accounts/login', '/signup/student/', '/signup/teacher/', '/accounts/signup']:
+            if request.path in ['/accounts/login/ar/', '/signup/student/ar/', '/signup/teacher/ar/', '/accounts/signup/ar/']:
+                return redirect('main:profile_ar')
+            elif request.path in ['/accounts/login/', '/accounts/login', '/signup/student/', '/signup/teacher/', '/accounts/signup']:
                 return redirect('main:profile')
 
         response = self.get_response(request)

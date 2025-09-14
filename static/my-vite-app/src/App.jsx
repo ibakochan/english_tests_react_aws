@@ -24,7 +24,7 @@ function AppContent() {
           <UserTestRecords />
         </div>
       )}
-      {activity !== "user_records" && activity !== "test" && (
+      {activity !== "user_records" && activity !== "test" && activity !== "ibaru" && (
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
           <UserProfile />
         </div>
