@@ -12,7 +12,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),   # accounts still available
     path('', include('kaibaru.urls')),  # kaibaru app only
     re_path(r'^oauth/', include('social_django.urls', namespace='social')),
-    path('oauth2/', include('oidc_provider.urls', namespace='oidc_provider')),
 ]
 
 # Serve the static HTML

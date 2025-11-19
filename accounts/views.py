@@ -12,64 +12,12 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.decorators.cache import never_cache
 from django.shortcuts import redirect
-from mozilla_django_oidc.views import OIDCAuthenticationRequestView
+from django.conf import settings
+import requests
 
 import logging
 logger = logging.getLogger(__name__)
 
-class EibaruOIDCCallbackView(View):
-    def get(self, request):
-        try:
-            code = request.GET.get('code')
-            if not code:
-                raise ValueError("No code returned in callback")
-
-            # Exchange code for token
-            token_url = 'https://kaibaru.jp/oidc/token/'
-            data = {
-                'grant_type': 'authorization_code',
-                'code': code,
-                'redirect_uri': request.build_absolute_uri(),
-                'client_id': settings.OIDC_RP_CLIENT_ID,
-                'client_secret': settings.OIDC_RP_CLIENT_SECRET,
-            }
-
-            resp = requests.post(token_url, data=data)
-            resp.raise_for_status()  # Will raise for non-200
-            tokens = resp.json()
-            access_token = tokens.get('access_token')
-            if not access_token:
-                raise ValueError("No access_token returned")
-
-            # Save in session
-            request.session['oidc_access_token'] = access_token
-            return redirect('/')
-        except Exception as e:
-            logger.exception("OIDC callback error")
-            return render(request, 'accounts/oidc_error.html', {'error': str(e)})
-
-@method_decorator(never_cache, name='dispatch')
-class EibaruOIDCLoginView(View):
-    """Kaibaru login page used only for Eibaru OIDC requests"""
-    template_name = 'accounts/oidc_login.html'
-
-    def get(self, request):
-        form = AuthenticationForm(request)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data['username'], 
-                password=form.cleaned_data['password']
-            )
-            if user:
-                login(request, user)
-                # Redirect back to OIDC authorize URL
-                next_url = request.GET.get('next', '/')
-                return redirect(next_url)
-        return render(request, self.template_name, {'form': form})
 
 @method_decorator(never_cache, name='dispatch')
 class CustomLoginView(View):

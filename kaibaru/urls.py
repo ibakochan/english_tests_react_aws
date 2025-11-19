@@ -16,5 +16,4 @@ urlpatterns = [
     path('', views.KaibaruPageView.as_view(), name='kaibaru'),
     path('api/', include(router.urls)),
     path("start_google_login/", views.start_google_login, name="start_google_login"),
-    path('oidc/', include('oidc_provider.urls', namespace='oidc_provider'))
 ]

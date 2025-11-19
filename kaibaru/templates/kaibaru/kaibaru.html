@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0, user-scalable=yes">
     <link href="{% static 'kaibaru/custom.css' %}?v=61" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>英語練習</title>
-    <meta name="description" content="">
-    <link rel="icon" href="https://storage.googleapis.com/ibaru_repair/kaibarufavicon.png" type="image/x-icon">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VR8B465LL"></script>
-    <link rel="canonical" href="https://kaibaru.jp/" />
 
-
+    <title>{{ club_data.title }}</title>
+    <meta name="description" content="{{ club_data.search_description }}">
+    <link rel="icon" href="{{ club_data.favicon }}" type="image/x-icon">
+    <link rel="canonical" href="https://{{ club_data.subdomain }}.kaibaru.jp/" />
+    <meta property="og:title" content="{{ club_data.title }}">
+    <meta property="og:description" content="{{ club_data.search_description }}">
+    <meta property="og:image" content="{{ club_data.og_image }}">
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -46,6 +46,7 @@
 
 
 </head>
+    <div>{{ club_data.favicon }}</div>
     <div id="root" style="width: 100%; padding: 0; margin: 0;"></div>
     <div>
     <form method="post" action="{% if path == '/ar/' %}{% url 'accounts:logout' %}?next={% url 'accounts:login_ar' %}{% else %}{% url 'accounts:logout' %}?next={% url 'accounts:login' %}{% endif %}">

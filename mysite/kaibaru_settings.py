@@ -28,11 +28,11 @@ environ.Env.read_env()
 
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
-DEBUG = False
+DEBUG = True
 
 
 
-ALLOWED_HOSTS = ["eibaru.jp", "www.eibaru.jp" '13.158.230.76']
+ALLOWED_HOSTS = ["kaibaru.jp", "www.kaibaru.jp", '.kaibaru.jp', '13.158.230.76']
 
 
 AUTH_PASSWORD_VALIDATORS = []
@@ -99,7 +99,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'mysite.urls'
 
 ROOT_HOSTCONF = 'mysite.hosts'
-DEFAULT_HOST = 'eibaru'
+DEFAULT_HOST = 'kaibaru'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -241,7 +241,7 @@ PASSWORD_HASHERS = [
 SESSION_CACHE_ALIAS = 'default'
 
 CORS_ALLOWED_ORIGINS = [
-    "https://eibaru.jp",
+    "https://kaibaru.jp",
 ]
 ASGI_APPLICATION = 'mysite.asgi.application'
 
@@ -277,8 +277,6 @@ USE_X_FORWARDED_HOST = True
  
 
 
-# Define redirect URLs and login URL
-
 HOST = os.environ.get("DJANGO_HOST")  # set per process
 
 AUTHENTICATION_BACKENDS = [
@@ -286,3 +284,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+
+SESSION_COOKIE_DOMAIN = ".kaibaru.jp"
+SESSION_COOKIE_NAME = "csrftoken"
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_DOMAIN = None  # Let Django handle CSRF per subdomain
+CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SECURE = True

@@ -5,15 +5,7 @@ from django.utils.deprecation import MiddlewareMixin
 
 from django.middleware.csrf import get_token
 
-class DefaultCookieMiddleware(MiddlewareMixin):
-    def process_request(self, request):
-        host = request.get_host().lower()
 
-        if 'eibaru.jp' in host:
-            settings.SESSION_COOKIE_DOMAIN = ".eibaru.jp"
-        else:
-            # Handle local development or other domains
-            settings.SESSION_COOKIE_DOMAIN = ".kaibaru.jp"
  
 
 

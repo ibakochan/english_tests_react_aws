@@ -19,7 +19,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', include('main.urls')),  # main app
     re_path(r'^oauth/', include('social_django.urls', namespace='social')),
-    path('oidc/', include('mozilla_django_oidc.urls')),
 ]
 
 # Serve the static HTML
