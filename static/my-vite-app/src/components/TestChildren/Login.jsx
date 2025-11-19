@@ -35,7 +35,7 @@ const Login = () => {
           ログイン
         </a>
         <a
-          href="/account/google/login/"
+          href={'/account/google/login/'}
           className="btn btn-light submit_buttons mb-2 d-flex align-items-center justify-content-center"
           style={{ marginLeft: "10px", border: "5px solid black" }}
         >

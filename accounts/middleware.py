@@ -1,6 +1,33 @@
 from django.shortcuts import redirect
+from django.urls import reverse
+from django.conf import settings
+from django.utils.deprecation import MiddlewareMixin
+
+from django.middleware.csrf import get_token
+
+class DefaultCookieMiddleware(MiddlewareMixin):
+    def process_request(self, request):
+        host = request.get_host().lower()
+
+        if 'eibaru.jp' in host:
+            settings.SESSION_COOKIE_DOMAIN = ".eibaru.jp"
+        else:
+            # Handle local development or other domains
+            settings.SESSION_COOKIE_DOMAIN = ".kaibaru.jp"
+ 
+
+
+
+
+
+
+
 
 class RedirectAuthenticatedUserMiddleware:
+    """
+    Redirects authenticated users away from login/signup pages
+    to their appropriate profile pages on eibaru.jp.
+    """
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -11,17 +38,26 @@ class RedirectAuthenticatedUserMiddleware:
             elif request.path in ['/accounts/login/', '/accounts/login', '/signup/student/', '/signup/teacher/', '/accounts/signup']:
                 return redirect('main:profile')
 
-        response = self.get_response(request)
-        return response
+        return self.get_response(request)
 
-class RedirectSocialConnectionMiddleware:
+
+
+
+
+class DomainRedirectMiddleware:
+    """
+    Redirects users to the correct profile page based on eibaru.jp paths.
+    """
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        response = self.get_response(request)
+        host = request.get_host()
 
-        if request.path == '/account/3rdparty/':
-            return redirect('/')
+        if host.startswith("eibaru.jp"):
+            if request.path == "/accounts":
+                return redirect(reverse("main:profile"))
+            elif request.path.startswith("/ar/"):
+                return redirect(reverse("main:profile_ar"))
 
-        return response
+        return self.get_response(request)

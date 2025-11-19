@@ -27,6 +27,7 @@ from django.core.exceptions import ObjectDoesNotExist
 def remove_digits_from_end(string, num_digits):
     return string[:-num_digits]
 
+ 
 
 
 class ClassroomSilenceView(View):

@@ -44,7 +44,7 @@ from .eiken3_lists import (
 )
 from .eiken4_lists import eiken4_sentence_order, eiken4_grammar_sentence_answers, eiken4_grammar_practice, eiken4_conversation_vocab_practice, eiken4_grammar_vocab, eiken4_vocab_practice, eiken4_vocab, eiken4_vocab1, eiken4_vocab2, eiken4_vocab3, eiken4_vocab4, eiken4_vocab5, eiken4_vocab6, eiken4_vocab7, eiken4_vocab8, eiken4_vocab9, eiken4_vocab10, eiken4_vocab11, eiken4_vocab12
 from .lists_eiken import eiken5_sentence_order, eiken5_grammar_sentence_answers, eiken5_grammar_vocab, eiken5_vocab1, eiken5_vocab2, eiken5_vocab3, eiken5_vocab4, eiken5_vocab5, eiken5_vocab6, eiken5_vocab7, eiken5_vocab8, eiken5_vocab9, eiken5_vocab10, eiken5_vocab11, eiken5_vocab12, eiken5_vocab13, eiken5_vocab14, eiken5_vocab15, eiken5_vocab16, eiken5_vocab, eiken5_vocab_practice, eiken5_grammar_practice, eiken5_conversation_vocab_practice
-from .lists import hebonshiki1, hebonshiki2, hebonshiki3, hebonshiki4, hebonshiki5, grade5_lesson3_sentence, alphabet_sounds3, grade5_lesson8, grade5_lesson7, grade5_lesson1_names, grade5_lesson1_words, grade5_lesson1_sentence, grade5_lesson2, grade5_lesson3, grade5_lesson4_sentence, dates, months, days, grade6_lesson1, grade6_lesson2, grade6_lesson3, grade6_lesson3_frequency, grade_6_lesson_8, grade_6_lesson_7, phonics3, alphabet_sounds2, japanese_numbers, grade_6_lesson_6, alphabet_sounds, one_twenty, one_hundred, eleven_ninety, one_thousand, one_quadrillion, thousand_quadrillion, grade_6_lesson_5, grade_5_lesson_5, grade_5_lesson_6, small_alphabet_sounds, alphabet_phonics, jlpt_n5_vocabulary, phonics1, phonics_2, lesson4_list, lesson4_grade6_dict
+from .lists import grade6_lesson4_vocab, hebonshiki1, hebonshiki2, hebonshiki3, hebonshiki4, hebonshiki5, grade5_lesson3_sentence, alphabet_sounds3, grade5_lesson8, grade5_lesson7, grade5_lesson1_names, grade5_lesson1_words, grade5_lesson1_sentence, grade5_lesson2, grade5_lesson3, grade5_lesson4_sentence, dates, months, days, grade6_lesson1, grade6_lesson2, grade6_lesson3, grade6_lesson3_frequency, grade_6_lesson_8, grade_6_lesson_7, phonics3, alphabet_sounds2, japanese_numbers, grade_6_lesson_6, alphabet_sounds, one_twenty, one_hundred, eleven_ninety, one_thousand, one_quadrillion, thousand_quadrillion, grade_6_lesson_5, grade_5_lesson_5, grade_5_lesson_6, small_alphabet_sounds, alphabet_phonics, jlpt_n5_vocabulary, phonics1, phonics_2, lesson4_list, lesson4_grade6_dict
 from .jr_high_grade_1_lists import (
     jr_1_lesson_1_vocab, jr_1_lesson_1_conversation, jr_1_lesson_2_vocab, jr_1_lesson_2_conversation, jr_1_lesson_3_vocab, jr_1_lesson_3_sentence,
     jr_1_lesson_4_vocab, jr_1_lesson_4_conversation, jr_1_lesson_5_vocab, jr_1_lesson_5_conversation,
@@ -151,6 +151,7 @@ QUESTION_LISTS = {
     'lesson4_grade6_dict': lesson4_grade6_dict,
     'alphabet_phonics': alphabet_phonics,
     'phonics_2': phonics_2,
+    'grade6_lesson4_vocab': grade6_lesson4_vocab,
     'grade_6_lesson_5': grade_6_lesson_5,
     'grade5_lesson1_names': grade5_lesson1_names,
     'grade5_lesson1_words': grade5_lesson1_words,
@@ -383,6 +384,7 @@ class QuestionCreateForm(forms.ModelForm):
         ('lesson4_grade6_dict', 'Lesson4_grade6_dict'),
         ('alphabet_phonics', 'Alphabet_phonics'),
         ('phonics_2', 'Phonics_2'),
+        ('grade6_lesson4_vocab', 'grade6_lesson4_vocab'),
         ('grade_6_lesson_5', 'grade_6_lesson_5'),
         ('grade5_lesson1_names', 'grade5_lesson1_names'),
         ('grade5_lesson1_words', 'grade5_lesson1_words'),

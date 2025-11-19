@@ -58,6 +58,9 @@ def get_profile_assets(total_max_scores):
 
         46: {"english_audio": "https://storage.googleapis.com/profile_assets/2024_12_07_19_03_31_1.mp3", "image": "https://storage.googleapis.com/profile_assets/m-uni.jpeg", "text": "宇宙のすべてを１秒で破壊できる存在", "english_text" : "are a being that can destroy the whole universe in 1 second", "audio": "https://storage.googleapis.com/profile_assets/2024_10_29_16_05_21_1.mp3"},
         47: {"english_audio": "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_36_49_1.mp3", "image": "https://storage.googleapis.com/profile_assets/n-ivar.jpg", "text": "このサイトの理解を超えてる存在", "english_text" : "are a being that is beyond the comprehension of this site", "audio": "https://storage.googleapis.com/ivar_reactions/sound13%20(1).mp3"},
+        48: {"english_audio": "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_36_49_1.mp3", "image": "https://storage.googleapis.com/profile_assets/n-ivar.jpg", "text": "このサイトの理解を超えてる存在", "english_text" : "are a being that is beyond the comprehension of this site", "audio": "https://storage.googleapis.com/ivar_reactions/sound13%20(1).mp3"},
+        49: {"english_audio": "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_36_49_1.mp3", "image": "https://storage.googleapis.com/profile_assets/n-ivar.jpg", "text": "このサイトの理解を超えてる存在", "english_text" : "are a being that is beyond the comprehension of this site", "audio": "https://storage.googleapis.com/ivar_reactions/sound13%20(1).mp3"},
+        50: {"english_audio": "https://storage.googleapis.com/ivar_reactions/2024_12_07_19_36_49_1.mp3", "image": "https://storage.googleapis.com/profile_assets/n-ivar.jpg", "text": "このサイトの理解を超えてる存在", "english_text" : "are a being that is beyond the comprehension of this site", "audio": "https://storage.googleapis.com/ivar_reactions/sound13%20(1).mp3"},
 
     }
 

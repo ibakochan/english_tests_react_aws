@@ -13,6 +13,9 @@ const UserProfile = () => {
   const [activeEikenMemories, setActiveEikenMemories] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(['csrftoken']);
 
+  const [showLinaInput, setShowLinaInput] = useState(false);
+  const [linaInput, setLinaInput] = useState('');
+  const [showPhoneNumber, setShowPhoneNumber] = useState(false);
 
   const activeClassroom = userClassrooms?.find(classroom => classroom.id === activeClassroomId);
   const [characterVoice, setCharacterVoice] = useState(false);
@@ -38,6 +41,15 @@ const UserProfile = () => {
     startSoundRef.current.src = "https://storage.googleapis.com/ivar_reactions/2025_09_11_12_27_56_2.mp3"
   }, [isEnglish]);
 
+
+  const handleLinaSubmit = (e) => {
+    e.preventDefault();
+    if (linaInput.trim().toLowerCase() === "lina") {
+      setShowPhoneNumber(true);
+    } else {
+      setShowPhoneNumber(false);
+    }
+  };
 
   useEffect(() => {
     if (isRunning) {
@@ -252,6 +264,34 @@ const UserProfile = () => {
     {!activeMemories && !activeEikenMemories && (
         <figure style={{ margin: 0 }}>
         <h1 style={{ fontWeight: 'bold' }}>{currentUser?.username}</h1>
+        
+        {currentUser?.username === "lina" && (
+        <div style={{ marginTop: "20px" }}>
+          {!showLinaInput ? (
+            <button className="btn btn-primary submit_buttons" onClick={() => setShowLinaInput(true)}>お父さん</button>
+          ) : (
+            <form onSubmit={handleLinaSubmit}>
+              <input
+                type="text"
+                value={linaInput}
+                onChange={(e) => setLinaInput(e.target.value)}
+                placeholder="Type here..."
+              />
+              <button className="btn btn-primary submit_buttons" type="submit">見せる</button>
+            </form>
+          )}
+          {showPhoneNumber && (
+            <>
+            <h1 style={{ marginTop: "10px", fontWeight: "bold" }}>
+              090 6246 3392
+            </h1>
+            <h1 style={{ marginTop: "10px", fontWeight: "bold" }}>
+              slammsa5555@gmail.com
+            </h1>
+            </>
+          )}
+        </div>
+        )}
         
         
         <div className="d-flex flex-wrap justify-content-center">

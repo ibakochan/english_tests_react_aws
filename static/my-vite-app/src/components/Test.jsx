@@ -83,7 +83,18 @@ const Test = () => {
 
 
 
+  const currentQuestion = testQuestions.questions.filter(
+    q =>
+      (q.test === activeTestId && !q.category_on) ||
+      (activeFinals && q.category_on === activeCategory)
+  )[0];
 
+  const currentMaxScore = maxScores.find(score => score.test === activeTestId);
+
+  const scoreRatio =
+    currentMaxScore && currentMaxScore.total_questions > 0
+      ? currentMaxScore.score / currentMaxScore.total_questions
+      : 0;
 
 
   const correctAudioUrls = window.correctAudioUrls;
@@ -693,12 +704,12 @@ const Test = () => {
                     </div>
                   )}
                     <ul>
-                      {!isPractice && testQuestions.questions.filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))[0]?.story_picture_url &&
+                      {!isPractice && currentQuestion?.story_picture_url &&
                       <div>
-                        <img src={testQuestions.questions.filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))[0]?.story_picture_url} alt="Question" width="700" height="500" />
+                        <img src={currentQuestion?.story_picture_url} alt="Question" width="700" height="500" />
                       </div>
                       }
-                      {!isPractice && testQuestions.questions.filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))[0]?.story &&
+                      {!isPractice && currentQuestion?.story &&
                             <div
                               style={{
                                 height: '400px',           // double height
@@ -718,13 +729,25 @@ const Test = () => {
                                 marginBottom: '20px',
                               }}
                             >
-                            {testQuestions.questions.filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))[0].story.split('\n').map((line, index) => (
+                            {(((currentMaxScore &&  currentMaxScore.score === currentMaxScore.total_questions) || currentUser?.teacher) ? currentQuestion.full_story : currentQuestion.story).split('\n').map((line, index) => (
                                 <React.Fragment key={index}>
                                   {line}<br />
                                 </React.Fragment>
                             ))}
                             </div>
                       }
+                      {!isPractice && currentQuestion?.full_story_sound_url && (scoreRatio >= 0.8 || currentUser?.teacher) && (
+                        <div style={{ marginTop: "10px" }}>
+                          <audio
+                            controls
+                            src={currentQuestion.full_story_sound_url}
+                            style={{ width: "100%", maxWidth: "700px" }}
+                          >
+                            Your browser does not support the audio element.
+                          </audio>
+                        </div>
+                      )}
+
 
                       {!isPractice && testQuestions.questions
                       .filter(question => question.test === activeTestId && !question.category_on || (activeFinals && question.category_on === activeCategory))

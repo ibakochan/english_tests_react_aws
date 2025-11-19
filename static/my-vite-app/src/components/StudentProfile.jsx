@@ -84,7 +84,6 @@ const StudentProfile = () => {
           )}
           <h2>{currentUser?.username}</h2>
           <h4>{isEnglish ? "User Name" : "ユーザーネーム"}：{currentUser?.username}</h4>
-          <h4>{isEnglish ? "Last Name" : "名字"}：{currentUser?.last_name}</h4>
           <h4>{isEnglish ? "Student number" : "出席番号"}：{currentUser?.student?.student_number}</h4>
           <form onSubmit={handleUpdateProfile}>
             <input
@@ -93,13 +92,7 @@ const StudentProfile = () => {
               value={changedStudentNumber}
               onChange={(e) => setChangedStudentNumber(e.target.value)}
             />
-            <input
-              type="text"
-              placeholder={isEnglish ? "Change last name" : "名字変更"}
-              value={changedLastName}
-              onChange={(e) => setChangedLastName(e.target.value)}
-            />
-            <button type="submit" className="btn btn-primary submit_buttons" style={{ border: '5px solid black' }}>{isEnglish ? "Change name and ID" : "名字番号変更"}</button>
+            <button type="submit" className="btn btn-primary submit_buttons" style={{ border: '5px solid black' }}>{isEnglish ? "Change name and ID" : "出席番号変更"}</button>
           </form>
           </div>
           }

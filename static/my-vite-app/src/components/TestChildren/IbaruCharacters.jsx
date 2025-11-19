@@ -8,6 +8,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Dorobocchi",
       age: "19歳",
       en_age: "19 years old",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_25_31_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/burglarwoman.png",
       desc: "ドロボッチはお金や金、ダイヤなどの宝石が大好きな泥棒だ。でも何よりもお母さんが好き。生まれてから一度も買い物をしたことがない。いつも盗むからだ。",
       en_desc: "Dorobocchi is a thief who loves money, gold, and gems like diamonds. But above all, she loves her mother. She has never once gone shopping since birth because she always steals."
@@ -17,6 +18,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Lavatios",
       age: "20歳",
       en_age: "20 years old",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_26_17_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/lavaguy.png",
       desc: "2000度を超えるマグマ魔法を使える。そこそこイケメンと言われている。",
       en_desc: "He can use magma magic over 2000°C. People say he’s fairly handsome."
@@ -26,6 +28,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Ivar",
       age: "2540歳",
       en_age: "2540 years old",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_26_57_2.mp3",
       img: "https://storage.googleapis.com/profile_assets/ghibliibaru.jpg",
       desc: "主人公。最強の存在。不死身だ。",
       en_desc: "The main character. The strongest being. Immortal."
@@ -35,6 +38,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Mamashmamash",
       age: "年齢不明",
       en_age: "Age unknown",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_27_10_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/mamashmamasu.png",
       desc: "生まれたときから完璧なカレーを作れる。10キロのA5神戸牛か松阪牛を渡せば、カレーを一食くれるらしい。",
       en_desc: "They can cook perfect curry from the moment they're born. If given 10 kg of A5 Kobe or Matsusaka beef, They’ll serve you one plate of curry."
@@ -44,6 +48,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Ayatsuripiko",
       age: "25歳",
       en_age: "25 years old",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_27_25_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/manipulatinggirl.png",
       desc: "洗脳と人の心を操る天才だ。",
       en_desc: "A genius at brainwashing and manipulating people’s hearts."
@@ -53,6 +58,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Monstario",
       age: "年齢不明",
       en_age: "Age unknown",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_27_42_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/mosterhammer.png",
       desc: "人間ではない。体重1トン。イバルの次に一番強い。",
       en_desc: "Not human. Weighs one ton. The second strongest after Ibaru."
@@ -62,6 +68,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Lowjishingirl",
       age: "14歳",
       en_age: "14 years old",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_28_10_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/noconfidentgirl.png",
       desc: "数学以外の才能がまったくない。自信も極めて少ない。",
       en_desc: "She has no talent outside of math and has very little confidence."
@@ -71,6 +78,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Lowjishinboy",
       age: "13歳",
       en_age: "13 years old",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_28_22_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/noconfinentboy.png",
       desc: "ロー自信ガールの弟。才能も自信もまったくない。",
       en_desc: "The younger brother of Lowjishingirl. He has neither talent nor confidence."
@@ -80,6 +88,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Samuraito",
       age: "30歳",
       en_age: "30 years old",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_28_42_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/samuraihero.png",
       desc: "山で侍の達人たちに侍の道を教わった侍。モンスタリオには勝てないが、ラバティオスとはいい勝負をする。",
       en_desc: "A samurai who learned the way of the sword from masters in the mountains. He can’t defeat Monstario, but he fights evenly with Lavatios."
@@ -89,6 +98,7 @@ const IbaruCharacters = ({ isEnglish }) => {
       en_name: "Scientristo",
       age: "15歳",
       en_age: "15 years old",
+      voice: "https://storage.googleapis.com/stories_conversations/2025_09_15_14_29_08_2.mp3",
       img: "https://storage.googleapis.com/jr_high_1/weaponboy.png",
       desc: "世界一と言っていい科学者であり発明家。有名な物理学者ビルベルト・ウェインステインの息子だ。",
       en_desc: "Perhaps the greatest scientist and inventor in the world. Son of the famous physicist Bilbert Weinstein."
@@ -119,7 +129,10 @@ const IbaruCharacters = ({ isEnglish }) => {
                 overflow: "hidden",
                 margin: "0", // remove margin that might add gaps
               }}
-              onClick={() => console.log(`${c.name} clicked`)}
+              onClick={() => {
+                const audio = new Audio(c.voice);
+                audio.play();
+              }}
             >
               <img
                 src={c.img}

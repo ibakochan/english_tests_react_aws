@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    {% load static %}
+    {% load my_tags %}
+    {% load socialaccount %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+    <link href="{% static 'kaibaru/custom.css' %}?v=61" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>英語練習</title>
+    <meta name="description" content="">
+    <link rel="icon" href="https://storage.googleapis.com/ibaru_repair/kaibarufavicon.png" type="image/x-icon">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0VR8B465LL"></script>
+    <link rel="canonical" href="https://kaibaru.jp/" />
+
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-0VR8B465LL');
+    </script>
+
+  {% if user %}
+    <script id="currentUser" type="application/json">
+      {
+        "id": {{ user.id }},
+        "username": "{{ user.username|escapejs }}",
+        "email": "{{ user.email|escapejs }}"
+      }
+    </script>
+  {% else %}
+    <script id="currentUser" type="application/json">null</script>
+  {% endif %}
+
+  <!-- CSRF token -->
+  <script>
+    window.currentUser = JSON.parse(document.getElementById("currentUser").textContent);
+    window.csrfToken = "{{ csrf_token }}";
+  </script>
+
+
+
+
+</head>
+    <div id="root" style="width: 100%; padding: 0; margin: 0;"></div>
+    <div>
+    <form method="post" action="{% if path == '/ar/' %}{% url 'accounts:logout' %}?next={% url 'accounts:login_ar' %}{% else %}{% url 'accounts:logout' %}?next={% url 'accounts:login' %}{% endif %}">
+                {% csrf_token %}
+                <div>
+                    {% if user %}
+                    <button type="submit" style="width: 200px; border: 4px solid black;" class="btn btn-danger">
+                        ログアウト
+                    </button>
+                    {% else %}
+                    <button type="submit" style="width: 200px; border: 4px solid black;" class="btn btn-primary">
+                        ログイン
+                    </button>
+                    {% endif %}
+                </div>
+    </form>
+    </div>
+</html>
+<script type="module" src="{% static 'kaibaru/dist/assets/index-CGZVrjNV.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

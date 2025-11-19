@@ -596,32 +596,32 @@ hebonshiki5 = {
 
 
 alphabet_sounds = {
-    'A': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(36).mp3',
-    'B': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(37).mp3',
-    'C': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(38).mp3',
-    'D': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(39).mp3',
-    'E': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(40).mp3',
-    'F': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(41).mp3',
-    'G': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(42).mp3',
-    'H': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(43).mp3',
-    'I': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(44).mp3',
-    'J': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(45).mp3',
-    'K': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(46).mp3',
-    'L': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(47).mp3',
-    'M': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(48).mp3',
-    'N': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(49).mp3',
-    'O': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(50).mp3',
-    'P': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(51).mp3',
-    'Q': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(52).mp3',
-    'R': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(53).mp3',
-    'S': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(54).mp3',
-    'T': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(55).mp3',
-    'U': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(56).mp3',
-    'V': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(56.1).mp3',
-    'W': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(56.2).mp3',
-    'X': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(57).mp3',
-    'Y': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(58).mp3',
-    'Z': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(59).mp3'
+    'A': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_17_2.mp3',
+    'B': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_19_2.mp3',
+    'C': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_22_2.mp3',
+    'D': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_24_2.mp3',
+    'E': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_27_2.mp3',
+    'F': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_29_2.mp3',
+    'G': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_32_2.mp3',
+    'H': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_35_2.mp3',
+    'I': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_37_2.mp3',
+    'J': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_40_2.mp3',
+    'K': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_42_2.mp3',
+    'L': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_45_2.mp3',
+    'M': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_47_2.mp3',
+    'N': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_50_2.mp3',
+    'O': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_53_2.mp3',
+    'P': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_55_2.mp3',
+    'Q': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_58_2.mp3',
+    'R': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_01_2.mp3',
+    'S': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_03_2.mp3',
+    'T': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_06_2.mp3',
+    'U': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_08_2.mp3',
+    'V': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_11_2.mp3',
+    'W': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_14_2.mp3',
+    'X': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_16_2.mp3',
+    'Y': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_19_2.mp3',
+    'Z': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_21_2.mp3'
 }
 
 alphabet_sounds2 = {
@@ -683,35 +683,35 @@ alphabet_sounds3 = {
 }
 
 
-
 small_alphabet_sounds = {
-    'a': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(36).mp3',
-    'b': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(37).mp3',
-    'c': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(38).mp3',
-    'd': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(39).mp3',
-    'e': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(40).mp3',
-    'f': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(41).mp3',
-    'g': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(42).mp3',
-    'h': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(43).mp3',
-    'i': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(44).mp3',
-    'j': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(45).mp3',
-    'k': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(46).mp3',
-    'l': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(47).mp3',
-    'm': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(48).mp3',
-    'n': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(49).mp3',
-    'o': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(50).mp3',
-    'p': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(51).mp3',
-    'q': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(52).mp3',
-    'r': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(53).mp3',
-    's': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(54).mp3',
-    't': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(55).mp3',
-    'u': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(56).mp3',
-    'v': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(56.1).mp3',
-    'w': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(56.2).mp3',
-    'x': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(57).mp3',
-    'y': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(58).mp3',
-    'z': 'https://storage.googleapis.com/the-alphabet/Record%20(online-voice-recorder.com)%20(59).mp3'
+    'a': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_17_2.mp3',
+    'b': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_19_2.mp3',
+    'c': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_22_2.mp3',
+    'd': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_24_2.mp3',
+    'e': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_27_2.mp3',
+    'f': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_29_2.mp3',
+    'g': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_32_2.mp3',
+    'h': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_35_2.mp3',
+    'i': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_37_2.mp3',
+    'j': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_40_2.mp3',
+    'k': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_42_2.mp3',
+    'l': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_45_2.mp3',
+    'm': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_47_2.mp3',
+    'n': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_50_2.mp3',
+    'o': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_53_2.mp3',
+    'p': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_55_2.mp3',
+    'q': 'https://storage.googleapis.com/phonics_repair/2025_09_19_15_59_58_2.mp3',
+    'r': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_01_2.mp3',
+    's': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_03_2.mp3',
+    't': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_06_2.mp3',
+    'u': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_08_2.mp3',
+    'v': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_11_2.mp3',
+    'w': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_14_2.mp3',
+    'x': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_16_2.mp3',
+    'y': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_19_2.mp3',
+    'z': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_00_21_2.mp3'
 }
+
 
 alphabet_phonics = {
     'a': 'https://storage.googleapis.com/alphabet-phonics/Record%20(online-voice-recorder.com)%20(58).mp3',
@@ -743,68 +743,69 @@ alphabet_phonics = {
 }
 
 
-
 phonics1 = {
-    'at': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(36).mp3',
-    'in': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(37).mp3',
-    'on': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(38).mp3',
-    'is': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(39).mp3',
-    'up': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(40).mp3',
-    'it': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(41).mp3',
-    'no': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(42).mp3',
-    'an': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(43).mp3',
-    'am': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(44).mp3',
-    'as': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(45).mp3',
-    'do': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(46).mp3',
-    'go': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(47).mp3',
-    'he': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(48).mp3',
-    'me': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(49).mp3',
-    'we': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(50).mp3',
-    'to': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(51).mp3',
-    'cat': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(52).mp3',
-    'dog': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(53).mp3',
-    'pig': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(54).mp3',
-    'hat': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(55).mp3',
-    'sun': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(56).mp3',
-    'run': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(57).mp3',
-    'car': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(58).mp3',
-    'bed': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(59).mp3',
-    'pen': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(60).mp3',
-    'fan': 'https://storage.googleapis.com/phonics1/Record%20(online-voice-recorder.com)%20(61).mp3'
+    'at': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_22_2.mp3',
+    'in': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_24_2.mp3',
+    'on': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_26_2.mp3',
+    'is': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_28_2.mp3',
+    'up': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_31_2.mp3',
+    'it': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_33_2.mp3',
+    'no': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_36_2.mp3',
+    'an': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_38_2.mp3',
+    'am': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_41_2.mp3',
+    'as': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_43_2.mp3',
+    'do': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_46_2.mp3',
+    'go': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_48_2.mp3',
+    'he': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_51_2.mp3',
+    'me': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_54_2.mp3',
+    'we': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_56_2.mp3',
+    'to': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_06_58_2.mp3',
+    'cat': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_01_2.mp3',
+    'dog': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_04_2.mp3',
+    'pig': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_06_2.mp3',
+    'hat': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_09_2.mp3',
+    'sun': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_15_2.mp3',
+    'run': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_18_2.mp3',
+    'car': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_22_2.mp3',
+    'bed': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_25_2.mp3',
+    'pen': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_27_2.mp3',
+    'fan': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_07_30_2.mp3'
 }
+
 
 phonics_2 = {
-    'bat': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(28).mp3',
-    'rat': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(29).mp3',
-    'mat': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(30).mp3',
-    'tap': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(31).mp3',
-    'zip': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(32).mp3',
-    'lip': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(33).mp3',
-    'sip': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(34).mp3',
-    'fix': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(35).mp3',
-    'box': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(36).mp3',
-    'fox': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(37).mp3',
-    'top': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(38).mp3',
-    'pop': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(39).mp3',
-    'hop': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(40).mp3',
-    'cap': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(41).mp3',
-    'nap': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(42).mp3',
-    'lap': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(43).mp3',
-    'gap': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(44).mp3',
-    'bug': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(45).mp3',
-    'rug': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(46).mp3',
-    'cup': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(47).mp3',
-    'hut': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(48).mp3',
-    'pit': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(49).mp3',
-    'net': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(50).mp3',
-    'kit': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(51).mp3',
-    'jet': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(52).mp3',
-    'win': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(53).mp3',
-    'pin': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(54).mp3',
-    'fit': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(55).mp3',
-    'log': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(56).mp3',
-    'mop': 'https://storage.googleapis.com/phonics-2/Record%20(online-voice-recorder.com)%20(57).mp3'
+    'bat': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_10_56_2.mp3',
+    'rat': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_10_58_2.mp3',
+    'mat': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_01_2.mp3',
+    'tap': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_04_2.mp3',
+    'zip': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_06_2.mp3',
+    'lip': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_09_2.mp3',
+    'sip': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_11_2.mp3',
+    'fix': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_14_2.mp3',
+    'box': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_17_2.mp3',
+    'fox': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_20_2.mp3',
+    'top': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_23_2.mp3',
+    'pop': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_25_2.mp3',
+    'hop': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_28_2.mp3',
+    'cap': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_32_2.mp3',
+    'nap': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_35_2.mp3',
+    'lap': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_38_2.mp3',
+    'gap': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_40_2.mp3',
+    'bug': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_43_2.mp3',
+    'rug': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_45_2.mp3',
+    'cup': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_48_2.mp3',
+    'hut': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_11_51_2.mp3',
+    'pit': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_00_2.mp3',
+    'net': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_02_2.mp3',
+    'kit': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_05_2.mp3',
+    'jet': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_07_2.mp3',
+    'win': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_10_2.mp3',
+    'pin': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_12_2.mp3',
+    'fit': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_15_2.mp3',
+    'log': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_18_2.mp3',
+    'mop': 'https://storage.googleapis.com/phonics_repair/2025_09_19_16_12_20_2.mp3'
 }
+
 
 phonics3 = {
     'can': 'https://storage.googleapis.com/phonics-3/2024_11_13_16_04_08_1.mp3',
@@ -1041,6 +1042,94 @@ lesson4_list = {
     }
 }
 
+
+grade6_lesson4_vocab = {
+    # saw
+    'a': {
+        'word': 'art',
+        'picture': 'https://storage.googleapis.com/past_tense_image/art.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_18_2.mp3'
+    },
+    'b': {
+        'word': 'fireworks',
+        'picture': 'https://storage.googleapis.com/past_tense_image/fireworks.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_37_2.mp3'
+    },
+    'c': {
+        'word': 'lions',
+        'picture': 'https://storage.googleapis.com/past_tense_image/lions.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_51_2.mp3'
+    },
+    'd': {
+        'word': 'pandas',
+        'picture': 'https://storage.googleapis.com/past_tense_image/pandas.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_55_2.mp3'
+    },
+    'e': {
+        'word': 'sharks',
+        'picture': 'https://storage.googleapis.com/past_tense_image/sharks.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_57_2.mp3'
+    },
+
+    # enjoyed
+    'f': {
+        'word': 'climbing',
+        'picture': 'https://storage.googleapis.com/past_tense_image/climbing.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_27_2.mp3'
+    },
+    'g': {
+        'word': 'cycling',
+        'picture': 'https://storage.googleapis.com/past_tense_image/cycling.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_29_2.mp3'
+    },
+    'h': {
+        'word': 'diving',
+        'picture': 'https://storage.googleapis.com/past_tense_image/diving.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_31_2.mp3'
+    },
+    'i': {
+        'word': 'fishing',
+        'picture': 'https://storage.googleapis.com/past_tense_image/fishing.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_39_2.mp3'
+    },
+    'j': {
+        'word': 'hiking',
+        'picture': 'https://storage.googleapis.com/past_tense_image/hiking.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_42_2.mp3'
+    },
+    'k': {
+        'word': 'shopping',
+        'picture': 'https://storage.googleapis.com/past_tense_image/shopping.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_51_05_2.mp3'
+    },
+
+    # ate
+    'l': {
+        'word': 'candy apples',
+        'picture': 'https://storage.googleapis.com/past_tense_image/candy%20apples.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_23_2.mp3'
+    },
+    'm': {
+        'word': 'ice cream',
+        'picture': 'https://storage.googleapis.com/past_tense_image/ice%20cream.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_50_46_2.mp3'
+    },
+    'n': {
+        'word': 'shaved ice',
+        'picture': 'https://storage.googleapis.com/past_tense_image/shaved%20ice.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_51_00_2.mp3'
+    },
+    'o': {
+        'word': 'strawberries',
+        'picture': 'https://storage.googleapis.com/past_tense_image/strawberry.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_51_08_2.mp3'
+    },
+    'p': {
+        'word': 'watermelon',
+        'picture': 'https://storage.googleapis.com/past_tense_image/watermelon.png',
+        'sound': 'https://storage.googleapis.com/past_tense_sound/2025_09_18_10_51_11_2.mp3'
+    }
+}
 
 
 lesson4_grade6_dict = {
@@ -1567,6 +1656,12 @@ grade5_lesson4_sentence = {
     'ゴルフできない': 'https://storage.googleapis.com/can_sound/2025_04_12_15_36_07_1.mp3',
     '速くはしれる': 'https://storage.googleapis.com/can_sound/2025_04_12_15_36_37_1.mp3',
     'ビデオゲームとゴルフできる': 'https://storage.googleapis.com/can_sound/2025_04_12_15_37_01_1.mp3',
+    
+    'ビデオゲームできない、料理できる': 'https://storage.googleapis.com/can_sound/2025_09_18_11_10_12_2.mp3',
+    'けん玉できる、バスケできない': 'https://storage.googleapis.com/can_sound/2025_09_18_11_10_25_2.mp3',
+    '泳げる、速く走れない': 'https://storage.googleapis.com/can_sound/2025_09_18_11_10_56_2.mp3',
+    '料理とダンスできる': 'https://storage.googleapis.com/can_sound/2025_09_18_11_11_10_2.mp3',
+    '柔道と空手もできない': 'https://storage.googleapis.com/can_sound/2025_09_18_11_11_46_2.mp3',
 }
 
 

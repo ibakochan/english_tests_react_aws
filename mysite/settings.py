@@ -19,42 +19,22 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 import environ
 
-#class SSLRedirectMiddleware:
- #   def __init__(self, get_response):
-  #      self.get_response = get_response
-
-   # def __call__(self, request):
-    #    if not settings.DEBUG and not request.is_secure():
-     #       secure_url = request.build_absolute_uri(request.get_full_path()).replace('http://', 'https://')
-      #      return HttpResponsePermanentRedirect(secure_url)
-       # return self.get_response(request)
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 env = environ.Env()
 environ.Env.read_env()
 
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
-
-# settings.py
-
-MEDIA_URL = '/media/'
+DEBUG = True
 
 
-ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS').split(',')
+
+ALLOWED_HOSTS = ["eibaru.jp", "www.eibaru.jp", "kaibaru.jp", "www.kaibaru.jp", '.kaibaru.jp', '13.158.230.76']
 
 AUTH_PASSWORD_VALIDATORS = []
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -67,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
 
+    'storages',
+    'django_hosts',
     'django_extensions',
     'multiselectfield',
     'crispy_forms',
@@ -74,6 +56,7 @@ INSTALLED_APPS = [
     'taggit',
     'accounts.apps.AccountsConfig',
     'main.apps.MainConfig',
+    'kaibaru.apps.KaibaruConfig',
     'crispy_bootstrap5',
     'django_redis',
     'channels',
@@ -82,28 +65,44 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    "django_cleanup.apps.CleanupConfig",
+    'oidc_provider',
+    'mozilla_django_oidc',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_hosts.middleware.HostsRequestMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
+
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
+
+    'allauth.account.middleware.AccountMiddleware',
+    'mozilla_django_oidc.middleware.SessionRefresh',
+
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'mysite.settings.SSLRedirectMiddleware',
     'accounts.middleware.RedirectAuthenticatedUserMiddleware',
-    'accounts.middleware.RedirectSocialConnectionMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    'accounts.middleware.DomainRedirectMiddleware',
+    #'accounts.middleware.DefaultCookieMiddleware',
+    
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
+ 
 ROOT_URLCONF = 'mysite.urls'
 
+ROOT_HOSTCONF = 'mysite.hosts'
+DEFAULT_HOST = 'kaibaru'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -151,16 +150,16 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 SITE_ID = 1
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
+OIDC_AUTHENTICATION_BACKEND_CLASS = 'django.contrib.auth.backends.ModelBackend'
 
-ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
+
+ACCOUNT_ADAPTER = "accounts.adapters.DynamicAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "accounts.adapters.DynamicSocialAccountAdapter"
 
 LOGIN_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_LOGIN_REDIRECT_URL = True
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-SOCIALACCOUNT_LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
@@ -168,6 +167,26 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "OPTIONS": {
+            "bucket_name": "kaibaru_public",
+            "querystring_auth": False,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+GOOGLE_APPLICATION_CREDENTIALS = "/home/bitnami/dp/service-account.json"
+
+MEDIA_URL = "https://storage.googleapis.com/kaibaru/"
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024  # 20 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024 
+GS_FILE_OVERWRITE = False
 
 
 # Internationalization
@@ -223,10 +242,10 @@ PASSWORD_HASHERS = [
 
 
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 
 CORS_ALLOWED_ORIGINS = [
+    "https://.kaibaru.jp",
     "https://eibaru.jp",
 ]
 ASGI_APPLICATION = 'mysite.asgi.application'
@@ -243,7 +262,10 @@ CHANNEL_LAYERS = {
 }
 
 # Security settings
-SESSION_COOKIE_AGE = 120960000
+
+
+
+SESSION_COOKIE_AGE = 1209600
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -256,3 +278,46 @@ SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 USE_X_FORWARDED_HOST = True
+
+ 
+OIDC_RSA_PRIVATE_KEY = open(env('OIDC_RSA_PRIVATE_KEY_PATH'), 'r').read()
+OIDC_ISSUER = 'https://kaibaru.jp' 
+OIDC_CLAIMS = 'oidc_provider.claims.StandardClaims'
+OIDC_CODE_EXPIRE = 600  # seconds
+OIDC_PKCE_REQUIRED = True
+OIDC_SSL_REQUIRED = True 
+
+# OIDC Client Credentials (for eibaru.jp)
+OIDC_RP_CLIENT_ID = env('OIDC_EIBARU_CLIENT_ID')
+OIDC_RP_CLIENT_SECRET = env('OIDC_EIBARU_CLIENT_SECRET')
+OIDC_RP_SCOPES = 'openid email profile' # Request standard data
+OIDC_OP_DISCOVERY_URL = 'https://kaibaru.jp/.well-known/openid-configuration'
+OIDC_OP_BASE_URL = 'https://kaibaru.jp'
+OIDC_OP_AUTHORIZATION_ENDPOINT = f"{OIDC_OP_BASE_URL}/oidc/authorize/"
+OIDC_OP_TOKEN_ENDPOINT = f"{OIDC_OP_BASE_URL}/oidc/token/"
+OIDC_OP_USER_ENDPOINT = f"{OIDC_OP_BASE_URL}/oidc/userinfo/"
+
+# Define redirect URLs and login URL
+LOGIN_URL = '/oidc/login/' # This will be used by all domains if logged out
+
+HOST = os.environ.get("DJANGO_HOST")  # set per process
+
+if HOST == "eibaru":
+    # Eibaru: token-only OIDC
+    AUTHENTICATION_BACKENDS = [
+        'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    ]
+    SESSION_COOKIE_DOMAIN = None
+    SESSION_COOKIE_NAME = None
+    SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+else:
+    # Kaibaru: normal cookies + optional OIDC
+    AUTHENTICATION_BACKENDS = [
+        'django.contrib.auth.backends.ModelBackend',
+        'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+        'allauth.account.auth_backends.AuthenticationBackend',
+    ]
+    SESSION_COOKIE_DOMAIN = ".kaibaru.jp"
+    SESSION_COOKIE_NAME = "csrftoken"
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+    SESSION_COOKIE_SAMESITE = "None"

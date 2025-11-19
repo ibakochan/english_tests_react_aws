@@ -585,6 +585,7 @@ const TestCreate = () => {
                         <option value="grade6_lesson3">Grade6_lesson3</option>
                         <option value="grade6_lesson3_frequency">Grade6_lesson3_frequency</option>
                         <option value="lesson4_grade6_dict">Grade6_lesson4</option>
+                        <option value="grade6_lesson4_vocab">grade6_lesson4_vocab</option>
                         <option value="grade_6_lesson_5">Grade6_lesson5</option>
                         <option value="grade_6_lesson_6">Grade6_lesson6</option>
                         <option value="grade_6_lesson_7">Grade6_lesson7</option>
