@@ -2,7 +2,8 @@ from django.db import models
 from accounts.models import CustomUser
 from django.utils import timezone
 from .storage_backends import PrivateMediaStorage
-
+from django.utils import timezone
+import datetime
 
 def club_folder_upload_to(subfolder=None):
 
@@ -40,10 +41,17 @@ def club_og_image_upload_to(instance, filename):
     return f"{club_subdomain}/og/{filename}"
 
 class Club(models.Model):
-    name = models.CharField(max_length=200, unique=True)
     subdomain = models.SlugField(max_length=50, unique=True, null=True, blank=True)
 
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="owned_clubs")
+
+    trial_start_date = models.DateField(null=True, blank=True)
+    expiration_date = models.DateField(null=True, blank=True)
+    stripe_customer_id = models.CharField(max_length=255, null=True, blank=True)
+    stripe_subscription_id = models.CharField(max_length=255, null=True, blank=True)
+    subscription_active = models.BooleanField(default=False)
+    last_paid_invoice_id = models.CharField(max_length=255, blank=True, null=True)
+
 
     system = models.JSONField(null=True, blank=True)
     trial = models.JSONField(null=True, blank=True)
@@ -64,14 +72,20 @@ class Club(models.Model):
     line_url = models.URLField(null=True, blank=True)
     line_qr_code = models.ImageField(upload_to=line_qr_upload_to, null=True, blank=True)
 
+    join_key = models.CharField(max_length=50, null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        if not self.subdomain:
-            self.subdomain = slugify(self.name)
-        super().save(*args, **kwargs)
+    has_levels = models.BooleanField(default=False)
+    has_attendance = models.BooleanField(default=False)
+    
+    level_names = models.JSONField(null=True, blank=True)
+    
+    level_milestones = models.JSONField(null=True, blank=True)
+
+    last_reset = models.DateField(null=True, blank=True)
+
 
     def __str__(self):
-        return self.name
+        return self.subdomain
 
 class SlateImage(models.Model):
     CATEGORY_CHOICES = [
@@ -85,7 +99,7 @@ class SlateImage(models.Model):
     image = models.ImageField(upload_to=club_slate_image_upload_to)
 
     def __str__(self):
-        return f"{self.club.name} - Image {self.id}"
+        return f"{self.club.subdomain} - Image {self.id}"
 
 class Member(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="memberships")
@@ -96,23 +110,34 @@ class Member(models.Model):
     introduction = models.TextField(null=True, blank=True)  # Only used if instructor
 
     full_name = models.CharField(max_length=200)
+    furigana = models.CharField(max_length=200, default="")
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     emergency_number = models.CharField(max_length=20, null=True, blank=True)
     
-    member_type = models.TextField(null=True, blank=True)  # Free text input
+    member_type = models.TextField(null=True, blank=True)  
     contract = models.TextField(null=True, blank=True)
 
     other_information = models.TextField(null=True, blank=True)
 
-    picture = models.ImageField(storage=PrivateMediaStorage(), upload_to=club_member_pictures_upload_to, null=True, blank=True)
+    picture = models.ImageField(upload_to=club_member_pictures_upload_to, null=True, blank=True)
 
     level = models.PositiveIntegerField(default=1)
 
+    manual_total_participation = models.IntegerField(default=0)
+    manual_level_counts = models.JSONField(default=dict)
+
+    participation_limit = models.PositiveIntegerField(null=True, blank=True, default=None)
+
+    is_kyukai = models.BooleanField(default=False)
+    is_kyukai_paid = models.BooleanField(default=False)
+    kyukai_since = models.DateField(null=True, blank=True)
+
+
     class Meta:
-        unique_together = ('user', 'club')  # Prevent duplicate membership in same club
+        unique_together = ('user', 'club')  
 
     def __str__(self):
-        return f"{self.full_name} ({self.club.name})"
+        return f"{self.full_name} ({self.club.subdomain})"
 
 class Lesson(models.Model):
     club = models.ForeignKey('Club', on_delete=models.CASCADE, related_name='lessons')
@@ -129,8 +154,10 @@ class Lesson(models.Model):
 
     picture = models.ImageField(upload_to=club_lessons_upload_to, null=True, blank=True)
 
+    creation_date = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
-        return f"{self.club.name} - {self.get_weekday_display()} {self.start_time.strftime('%H:%M')}"
+        return f"{self.club.subdomain} - {self.get_weekday_display()} {self.start_time.strftime('%H:%M')}"
 
 class Participation(models.Model):
     member = models.ForeignKey('Member', on_delete=models.CASCADE, related_name='participations')

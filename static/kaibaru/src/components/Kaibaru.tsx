@@ -5,6 +5,7 @@ import type { AxiosRequestConfig } from "axios";
 import { exampleMembers } from "../data/exampleMembers";
 
 import ClubPictureUpdate from './update_forms/ClubPictureUpdate';
+import StripeCheckout from "./Stripe";
 
 import Home from "./sections/Home";
 import Schedule from "./sections/Schedule";
@@ -14,15 +15,44 @@ import Contact from "./sections/Contact";
 import Teacher from "./sections/Teacher";
 import MemberProfile from "./sections/MemberProfile";
 import MemberManagement from "./sections/MemberManagement";
+import Settings from "./sections/Settings";
+import Join from "./sections/Join";
 
 import MemberCreate from './MemberCreate';
 import type { Member } from "./types";
 
-import { Modal, Button } from "react-bootstrap";
+import { PaymentModal } from "../utils/Modals";
+
+
+import { Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { FaCog } from "react-icons/fa";
+
 const KaibaruPage: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<string>("home");
+
+  const urlToSection: { [key: string]: string } = {
+    "/": "home",
+    "/schedule": "schedule",
+    "/system": "system",
+    "/trial": "trial",
+    "/member": "member",
+    "/contact": "contact",
+    "/teacher": "teacher",
+    "/settings": "settings",
+    "/join": "join",
+  };
+  const normalizePath = (path: string) => path.replace(/\/$/, "");
+
+  const [activeSection, setActiveSection] = useState<string>(() => {
+    const path = normalizePath(window.location.pathname);
+    return urlToSection[path] || "home";
+  });
+
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [pendingMemberRedirect, setPendingMemberRedirect] = useState(false);
+
+
   const [club, setClub] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +65,11 @@ const KaibaruPage: React.FC = () => {
   const currentPath = window.location.pathname + window.location.search;
   const currentUrl = window.location.href;
 
-  const [perspective, setPerspective] = useState<"owner" | "manager" | "instructor" | "member">("owner");
-  
+  const [realCurrentMember, setRealCurrentMember] = useState<Member | null>(null);
+
+  const [perspective, setPerspective] = useState<"owner" | "manager" | "instructor" | "member" | "non_member">("owner");
+
+
   const currentMember = club?.members?.find(
     (m: Member) => m.user === club?.current_user?.id
   );
@@ -46,8 +79,49 @@ const KaibaruPage: React.FC = () => {
 
   const currentUser = (window as any).currentUser || null;
   const csrfToken = (window as any).csrfToken || "";
-
   const owner = (club && currentMember && (club?.owner === club?.current_user?.id))
+
+  
+
+
+  const handleNavClick = (section: string) => {
+    setActiveSection(section);
+    const path = section === "home" ? "/" : `/${section}`;
+    window.history.pushState({}, "", path);
+  };
+
+
+
+  useEffect(() => {
+    if (pendingMemberRedirect && currentMember) {
+      setActiveSection("member");
+      window.history.pushState({}, "", "/member");
+      setPendingMemberRedirect(false);
+    }
+  }, [pendingMemberRedirect, currentMember]);
+
+  useEffect(() => {
+    const onPopState = () => {
+      const path = normalizePath(window.location.pathname);
+      const section = urlToSection[path] || "home";
+      const allowed = allowedSectionsForUser();
+  
+      if (!allowed.includes(section)) {
+        setActiveSection("home");
+        window.history.replaceState({}, "", "/");
+      } else {
+        setActiveSection(section);
+      }
+    };
+  
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [club, owner, currentMember]);
+
+
+
+  
+
 
   const [scale, setScale] = useState(1);
 
@@ -75,8 +149,23 @@ const KaibaruPage: React.FC = () => {
 
 
 
-  const switchPerspective = (type: "manager" | "instructor" | "member") => {
+  const switchPerspective = (type: "manager" | "instructor" | "member" | "non_member") => {
     if (!club || !currentMember) return;
+
+    if (!realCurrentMember) {
+      setRealCurrentMember(currentMember);
+    }
+
+    if (type === "non_member") {
+      setClub((prev: any) => ({
+        ...prev,
+        owner: 0,
+        members: prev.members.filter((m: Member) => m.id !== currentMember.id),
+      }));
+
+      setPerspective("non_member");
+      return;
+    }
 
     setClub((prev: any) => ({
       ...prev,
@@ -96,24 +185,35 @@ const KaibaruPage: React.FC = () => {
   };
 
   const resetPerspective = () => {
-    if (!club || !currentMember) return;
+    if (!club || !realCurrentMember) return;
 
-    setClub((prev: any) => ({
-      ...prev,
-      owner: club.current_user.id, // restore owner
-      members: prev.members.map((m: Member) =>
-        m.id === currentMember.id
-          ? {
-              ...m,
-              is_manager: currentMember.is_manager,
-              is_instructor: currentMember.is_instructor,
-            }
-          : m
-      ),
-    }));
+    setClub((prev: any) => {
+      if (!prev) return prev;
+
+      // Check if realCurrentMember is already in members
+      const memberExists = prev.members.some((m: Member) => m.id === realCurrentMember.id);
+
+      return {
+        ...prev,
+        owner: realCurrentMember.user, // restore ownership if needed
+        members: memberExists
+          ? prev.members.map((m: Member) =>
+              m.id === realCurrentMember.id
+                ? {
+                    ...m,
+                    is_manager: realCurrentMember.is_manager,
+                    is_instructor: realCurrentMember.is_instructor,
+                  }
+                : m
+            )
+          : [...prev.members, realCurrentMember], // re-add if missing
+      };
+    });
 
     setPerspective("owner");
   };
+
+
 
 
 
@@ -142,7 +242,7 @@ const KaibaruPage: React.FC = () => {
 
   const fetchClub = async () => {
     const subdomain = getSubdomain();
-    if (!subdomain) return;
+    if (!subdomain || subdomain === "www") return;
 
     const data = await fetchData(`/api/clubs/by-subdomain/${subdomain}/`);
     if (data) setClub(data);
@@ -152,15 +252,14 @@ const KaibaruPage: React.FC = () => {
     fetchClub();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
 
-  const navItems: { label: string; section: string }[] = [
+
+  const navItems: { label: string; section: string; icon?: React.ReactNode }[] = [
     { label: "ホーム", section: "home" },
     { label: "スケジュール", section: "schedule" },
     { label: "システム", section: "system" },
     
-    ...((club?.trial || kaibarudomain === "kaibaru" || owner)
+    ...((club?.trial || kaibarudomain === "kaibaru" || owner || manager)
     ? [{ label: "体験", section: "trial" }]
     : []),
 
@@ -170,8 +269,38 @@ const KaibaruPage: React.FC = () => {
 
     { label: "連絡", section: "contact" },
     { label: "先生", section: "teacher" },
+
+    ...(!club?.frozen && (owner || manager)
+    ? [
+        {
+          label: "設定",
+          section: "settings",
+          icon: <FaCog />,
+        },
+      ]
+    : []),
+
+    ...(!currentMember ? [{ label: "入会/ログイン", section: "join" }] : []),
   ];
 
+  const allowedSectionsForUser = () => navItems.map(item => item.section);
+
+  useEffect(() => {
+    if (!club) return;
+
+    const path = normalizePath(window.location.pathname);
+    const section = urlToSection[path] || "home";
+    const allowed = allowedSectionsForUser();
+  
+    if (!allowed.includes(section)) {
+      // Not allowed → go to home
+      setActiveSection("home");
+      window.history.replaceState({}, "", "/");
+    } else {
+      setActiveSection(section);
+    }
+  }, [club, owner, currentMember]);
+  
   if (!owner && !manager) {
     navItems.forEach((item) => {
       if (item.section === "member") {
@@ -182,235 +311,234 @@ const KaibaruPage: React.FC = () => {
 
   return (
     <>
-    <div 
-      className="kaibaru-page"
-      style={{
-        transform: `scale(${scale})`,
-        transformOrigin: "top left",
-        width: "1200px",
-        margin: 0,
-        position: "absolute",
-        left: 0,
-        top: 0,
-        paddingRight: `${15 * scale}px`
-      }}
-    >
-
-      <header 
-        className="kaibaru-header_style"
-        style={{
-          position: "relative", backgroundImage: `url(${club?.picture_url || "https://storage.googleapis.com/ibaru_repair/kaibaruslogan.png"})`,
-        }}
-      >
-        <div
-        style={{
-              position: "absolute",
-              bottom: "5px",
-              left: "5px",
-              fontSize: "1.5rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-        }}
-        >
-        {club && owner &&
-            <ClubPictureUpdate
-              clubId={club.id}
-              onUpdated={(updatedPicture: string) =>
-                setClub((prev: any) => ({ ...prev, picture_url: updatedPicture }))
-              }
-            />
-        }
-        </div>
-      </header>
-
-      {club && owner &&
-        <div>
-
-        {perspective === "owner" &&
-          <>
-            <Button className="perspective-button" onClick={() => switchPerspective("manager")}>管理者の視点</Button>
-            <Button className="perspective-button" onClick={() => switchPerspective("instructor")}>先生の視点</Button>
-            <Button className="perspective-button" onClick={() => switchPerspective("member")}>会員の視点</Button>
-          </>
-        }
-        </div>
-      }
-      {!owner && (perspective === "member" || perspective === "manager" || perspective === "instructor") &&
-        <Button style={{ border: "2px solid black", padding: "5px", borderRadius: "4px" }} variant="secondary" onClick={resetPerspective}>
-            {perspective === "member" && "会員としての視点をやめる"}
-            {perspective === "manager" && "マネージャーとしての視点をやめる"}
-            {perspective === "instructor" && "インストラクターとしての視点をやめる"}
-       </Button>
-      }
-      
-      <nav className="kaibaru-nav">
-        {navItems.map((item) => {
-          const isActive = activeSection === item.section;
-          return (
-            <button
-              key={item.section}
-              className={`nav-button ${isActive ? "active" : ""}`}
-              onClick={() => setActiveSection(item.section)}
-            >
-              {item.label}
-            </button>
-          );
-        })}
-      </nav>
-
-      <main className="kaibaru-main">
-        <div className="content-box">
-
-          {activeSection === "schedule" && (
-            <Schedule
-              club={club}
-              setClub={setClub}
-              owner={owner}
-              instructor={instructor}
-              clubSubdomain={kaibarudomain || ""}
-            />
-          )}
-
-          {activeSection === "home" && (
-            <Home
-              club={club}
-              owner={owner}
-              kaibarudomain={kaibarudomain}
-              setClub={setClub}
-              scale={scale}
-            />
-          )}
-
-          {activeSection === "system" && (
-            <System
-              club={club}
-              owner={owner}
-              setClub={setClub}
-              scale={scale}
-            />
-          )}
-
-          {activeSection === "trial" && (
-            <Trial
-              club={club}
-              owner={owner}
-              setClub={setClub}
-              scale={scale}
-            />
-          )}
-
-          {activeSection === "member" && club && (owner || manager) && (
-            <MemberManagement
-              members={club?.members?.length > 0 ? club.members : exampleMembers}
-              setSelectedMember={setSelectedMember}
-            />
-          )}
-
-          {activeSection === "member" && (!manager && club && !owner) && (
-            <MemberProfile currentMember={currentMember} setShowModal={setShowModal} />
-          )}
-
-          {activeSection === "contact" && (
-            <Contact
-              club={club}
-              owner={owner}
-              setClub={setClub}
-              scale={scale}
-            />
-          )}
-
-          {activeSection === "teacher" && <Teacher club={club} />}
-        </div>
-      </main>
-
-    <>
-      {!currentUser ? (
-        <a
-          href={`https://kaibaru.jp/start_google_login/?next=${encodeURIComponent(currentUrl)}`}
-          className="btn btn-light submit_buttons mb-2 d-flex align-items-center justify-content-center"
-          style={{ marginLeft: "10px", border: "5px solid black" }}
-        >
-          <img
-            src="https://developers.google.com/identity/images/g-logo.png"
-            alt="Google logo"
-            style={{ width: "20px", height: "20px", marginRight: "10px" }}
-          />
-          <span>Googleでログイン</span>
-        </a>
+      {/* LOADING / ERROR STATES */}
+      {loading ? (
+        <p style={{ textAlign: "center", marginTop: "2rem" }}>Loading...</p>
+      ) : error ? (
+        <p style={{ textAlign: "center", marginTop: "2rem", color: "red" }}>
+          Error: {error}
+        </p>
+      ) : club?.frozen && club.owner !== club.current_user?.id ? (
+        <p style={{ textAlign: "center", marginTop: "2rem", color: "orange" }}>
+          このクラブは現在凍結されています。編集はできず、オーナー以外のユーザーには表示されません。
+        </p>
       ) : (
-        <form method="post" action={`/accounts/logout/?next=${encodeURIComponent(currentPath)}`}>
-          <input
-            type="hidden"
-            name="csrfmiddlewaretoken"
-            value={csrfToken}
-          />
-          <button
-            type="submit"
-            style={{ width: 200, border: "4px solid black" }}
-            className="btn btn-danger"
+        <div
+          className="kaibaru-page"
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+            width: "1200px",
+            margin: 0,
+            position: "absolute",
+            left: 0,
+            top: 0,
+            paddingRight: `${15 * scale}px`,
+          }}
+        >
+          {/* HEADER */}
+          <header
+            className="kaibaru-header_style"
+            style={{
+              position: "relative",
+              backgroundImage: `url(${club?.picture_url || "https://storage.googleapis.com/ibaru_repair/kaibaruslogan.png"})`,
+            }}
           >
-            ログアウト
-          </button>
-        </form>
-      )}
-    </>
-
-    </div>
-    <Modal show={!!selectedMember} onHide={() => setSelectedMember(null)} centered>
-            <Modal.Header closeButton>
-              <Modal.Title>{selectedMember?.full_name}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{ textAlign: "center" }}>
-              <img
-                src={selectedMember?.picture}
-                alt={selectedMember?.full_name}
-                className="modal-member-img"
+            <div
+              style={{
+                position: "absolute",
+                bottom: "5px",
+                left: "5px",
+                fontSize: "1.5rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {club && (owner || manager) && (
+                <ClubPictureUpdate
+                  clubId={club.id}
+                  onUpdated={(updatedPicture: string) =>
+                    setClub((prev: any) => ({ ...prev, picture_url: updatedPicture }))
+                  }
                 />
-              <button
-                type="button"
-                onClick={() => setShowModal(true)}
-                className="member-edit-button"
-              >
-                ✎
+              )}
+            </div>
+          </header>
+
+          {/* PERSPECTIVE BUTTONS */}
+          {club && owner && perspective === "owner" && (
+            <div>
+              <Button className="perspective-button" onClick={() => switchPerspective("manager")}>
+                管理者の視点
+              </Button>
+              <Button className="perspective-button" onClick={() => switchPerspective("instructor")}>
+                先生の視点
+              </Button>
+              <Button className="perspective-button" onClick={() => switchPerspective("member")}>
+                会員の視点
+              </Button>
+              <Button className="perspective-button" onClick={() => switchPerspective("non_member")}>
+                非会員の視点
+              </Button>
+            </div>
+          )}
+
+          {!owner && ["member", "manager", "instructor", "non_member"].includes(perspective) && (
+            <Button
+              style={{ border: "2px solid black", padding: "5px", borderRadius: "4px" }}
+              variant="secondary"
+              onClick={resetPerspective}
+            >
+              {perspective === "member" && "会員としての視点をやめる"}
+              {perspective === "manager" && "管理人としての視点をやめる"}
+              {perspective === "instructor" && "先生としての視点をやめる"}
+              {perspective === "non_member" && "非会員としての視点をやめる"}
+            </Button>
+          )}
+
+          {/* NAV */}
+          <nav className="kaibaru-nav">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.section;
+              return (
+                <button
+                  key={item.section}
+                  className={`nav-button ${isActive ? "active" : ""}`}
+                  onClick={() => handleNavClick(item.section)}
+                >
+                  {item.label}
+                  {item.icon}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* MAIN CONTENT */}
+          <main className="kaibaru-main">
+
+            <div className="content-box">
+              {activeSection === "schedule" && (
+                <Schedule
+                  manager={manager}
+                  club={club}
+                  setClub={setClub}
+                  owner={owner}
+                  instructor={instructor}
+                  clubSubdomain={kaibarudomain || ""}
+                />
+              )}
+              {activeSection === "home" && (
+                <Home
+                  club={club}
+                  manager={manager}
+                  owner={owner}
+                  kaibarudomain={kaibarudomain}
+                  setClub={setClub}
+                  scale={scale}
+                />
+              )}
+              {activeSection === "system" && <System club={club} owner={owner} setClub={setClub} scale={scale} />}
+              {activeSection === "trial" && <Trial club={club} owner={owner} setClub={setClub} scale={scale} />}
+              {activeSection === "member" && club && (owner || manager) && (
+                <MemberManagement
+                  setClub={setClub}
+                  club={club}
+                  members={club?.members?.length > 0 ? club.members : exampleMembers}
+                  setSelectedMember={setSelectedMember}
+                  selectedMember={selectedMember}
+                  setShowModal={setShowModal}
+                />
+              )}
+              {activeSection === "member" && !manager && club && !owner && (                
+                  <MemberProfile successMessage={successMessage} club={club} currentMember={currentMember} setShowModal={setShowModal} />
+              )}
+              {activeSection === "contact" && <Contact club={club} manager={manager} owner={owner} setClub={setClub} scale={scale} />}
+              {activeSection === "teacher" && <Teacher club={club} />}
+              {activeSection === "settings" && <Settings club={club} setClub={setClub} owner={owner} />}
+              
+              {activeSection === "join" && club && (
+                <Join
+                  club={club}
+                  currentUser={currentUser}
+                  currentMember={currentMember}
+                  onCreated={(newMember: Member) => {
+                    setClub((prevClub: any) => {
+                      if (!prevClub) return prevClub;
+                      const memberExists = prevClub.members.some((m: Member) => m.id === newMember.id);
+                      return {
+                        ...prevClub,
+                        members: memberExists
+                          ? prevClub.members.map((m: Member) => (m.id === newMember.id ? newMember : m))
+                          : [...prevClub.members, newMember],
+                      };
+                    });
+                    setSuccessMessage("会員登録が完了しました！");
+                    setPendingMemberRedirect(true);
+                  }}
+                />
+              )}
+
+
+            </div>
+          </main>
+
+          {/* LOGIN / LOGOUT */}
+          {!currentUser ? (
+            <a
+              href={`https://kaibaru.jp/start_google_login/?next=${encodeURIComponent(currentUrl)}`}
+              className="btn btn-light submit_buttons mb-2 d-flex align-items-center justify-content-center"
+              style={{ marginLeft: "10px", border: "5px solid black" }}
+            >
+              <img
+                src="https://developers.google.com/identity/images/g-logo.png"
+                alt="Google logo"
+                style={{ width: "20px", height: "20px", marginRight: "10px" }}
+              />
+              <span>Googleでログイン</span>
+            </a>
+          ) : (
+            <form method="post" action={`/accounts/logout/?next=${encodeURIComponent(currentPath)}`}>
+              <input type="hidden" name="csrfmiddlewaretoken" value={csrfToken} />
+              <button type="submit" style={{ width: 200, border: "4px solid black" }} className="btn btn-danger">
+                ログアウト
               </button>
-              <div style={{ marginTop: "1rem", textAlign: "left" }}>
-                {selectedMember?.member_type && <p><strong>会員種類:</strong> {selectedMember.member_type}</p>}
-                {selectedMember?.introduction && <p><strong>自己紹介:</strong> {selectedMember.introduction}</p>}
-                {selectedMember?.phone_number && <p><strong>電話番号:</strong> {selectedMember.phone_number}</p>}
-                {selectedMember?.emergency_number && <p><strong>緊急連絡先:</strong> {selectedMember.emergency_number}</p>}
-                {selectedMember?.other_information && <p><strong>その他情報:</strong> {selectedMember.other_information}</p>}
-                {selectedMember?.level && <p><strong>レベル:</strong> {selectedMember.level}</p>}
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={() => setSelectedMember(null)}>Close</Button>
-            </Modal.Footer>
-    </Modal>
+            </form>
+          )}
 
-    <MemberCreate showModal={showModal} setShowModal={setShowModal} club={club} member={selectedMember || currentMember}
-    onCreated={(updatedMember) => {
-      setClub((prevClub: { members: Member[] } | null) => {
-        if (!prevClub) return prevClub;
+          {club && (
+            <StripeCheckout club={club} />
+          )}
 
-        const memberExists = prevClub.members.some(m => m.id === updatedMember.id);
-        if (selectedMember?.id === updatedMember.id) {
-          setSelectedMember(updatedMember);
-        }
-        return {
-          ...prevClub,
-          members: memberExists
-            ? prevClub.members.map((m: Member) =>
-                m.id === updatedMember.id ? updatedMember : m
-              )
-            : [...prevClub.members, updatedMember], // append if new
-        };
-      });
-    }}
-    />
-
+          {/* MEMBER CREATE MODAL */}
+          <MemberCreate
+            perspective={perspective}
+            owner={owner}
+            manager={manager}
+            showModal={showModal}
+            setShowModal={setShowModal}
+            club={club}
+            member={selectedMember || currentMember}
+            onCreated={(updatedMember) => {
+              setClub((prevClub: { members: Member[] } | null) => {
+                if (!prevClub) return prevClub;
+                const memberExists = prevClub.members.some((m) => m.id === updatedMember.id);
+                if (selectedMember?.id === updatedMember.id) setSelectedMember(updatedMember);
+                return {
+                  ...prevClub,
+                  members: memberExists
+                    ? prevClub.members.map((m) => (m.id === updatedMember.id ? updatedMember : m))
+                    : [...prevClub.members, updatedMember],
+                };
+              });
+            }}
+          />
+        </div>
+      )}
+      <PaymentModal club={club} />
     </>
   );
+
 };
 
 export default KaibaruPage;

@@ -1,13 +1,27 @@
 import React from "react";
-import type { Member } from "../types";
+import type { Member, Club } from "../types";
+import { safeParseJSON } from "../../utils/safeParseJSON";
+
 
 interface Props {
+  club: Club;
   currentMember?: Member;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  successMessage?: string | null;
+
 }
 
-const MemberProfile: React.FC<Props> = ({ currentMember, setShowModal }) => {
+const MemberProfile: React.FC<Props> = ({ successMessage, club, currentMember, setShowModal }) => {
   if (!currentMember) return null;
+  const levelNames: Record<string, string> = safeParseJSON(club.level_names);
+
+  const getLevelLabel = (lvl: number) =>
+    levelNames[String(lvl)] && levelNames[String(lvl)].trim() !== ""
+      ? levelNames[String(lvl)]
+      : `レベル ${lvl}`;
+
+  const currentLevel = currentMember.level;
+  const currentLevelLabel = getLevelLabel(currentLevel);
 
   return (
     <div
@@ -21,6 +35,11 @@ const MemberProfile: React.FC<Props> = ({ currentMember, setShowModal }) => {
         textAlign: "center",
       }}
     >
+      {successMessage !== "" && (
+        <h2 style={{ color: "green", marginBottom: "1rem" }}>
+          {successMessage}
+        </h2>
+      )}
       <div style={{ position: "relative", display: "inline-block", marginBottom: "1rem" }}>
         <img
           src={currentMember.picture}
@@ -64,7 +83,7 @@ const MemberProfile: React.FC<Props> = ({ currentMember, setShowModal }) => {
       <p style={{ color: "#666", marginBottom: "1.5rem" }}>
         メンバータイプ：{currentMember.member_type || "不明"}
       </p>
-
+      {club.has_attendance &&
       <div
         style={{
           display: "flex",
@@ -83,19 +102,26 @@ const MemberProfile: React.FC<Props> = ({ currentMember, setShowModal }) => {
         </div>
         <div>
           <div style={{ fontSize: "0.9rem", color: "#777" }}>今月</div>
+          {club.has_attendance &&
           <div style={{ fontSize: "1.2rem", fontWeight: "600" }}>
             {currentMember.this_month_participation ?? 0}
           </div>
+          }
         </div>
         <div>
+          {club.has_levels &&
+          <>
           <div style={{ fontSize: "0.9rem", color: "#777" }}>
-            レベル{currentMember.level}
+            レベル：{currentLevelLabel}
           </div>
           <div style={{ fontSize: "1.2rem", fontWeight: "600" }}>
             {currentMember.level_participation?.[currentMember.level] ?? 0}
           </div>
+          </>
+          }
         </div>
       </div>
+      }
 
       <div style={{ textAlign: "left", color: "#444", fontSize: "0.95rem" }}>
         <p><strong>電話番号：</strong>{currentMember.phone_number || "未登録"}</p>

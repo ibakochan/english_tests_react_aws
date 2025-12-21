@@ -12,20 +12,28 @@ export interface Participation {
 export interface Member {
   id: number;
   full_name: string;
+  furigana?: string;
   picture: string;
   user?: number;
   is_instructor?: boolean;
+  is_manager?: boolean; 
   member_type?: string;
   total_participation?: number;
+  manual_total_participation?: number; 
   this_month_participation?: number;
   level: number;
   level_participation?: Record<number, number>;
+  manual_level_counts?: Record<number, number>;
   phone_number?: string;
   emergency_number?: string;
   contract?: string;
   other_information?: string;
   introduction?: string;
   participations?: Participation[];
+  participation_limit?: number;
+  is_kyukai?: boolean;
+  is_kyukai_paid?: boolean;       
+  kyukai_since?: string; 
 }
 
 export interface User {
@@ -66,6 +74,20 @@ export interface Club {
   trial?: string;
   contact?: string;
   home_images?: HomeImageType[];
+
+  has_levels: boolean;
+  has_attendance: boolean;
+  level_names?: Record<number, string>;
+  level_milestones?: Record<number, number>;
+
+  trial_start_date?: string; // ISO date string
+  expiration_date?: string; // ISO date string
+  stripe_customer_id?: string;
+  stripe_subscription_id?: string;
+  subscription_active: boolean;
+  warning_message?: string;
+  frozen?: boolean;
+  frozen_deleted_unpaid_members?: number;
 }
 
 
@@ -78,4 +100,8 @@ export type LessonType = {
   end_time: string;
   description?: string;
   instructor?: Member | null;
+
+  total_participation?: number;
+  monthly_participation?: number;
+  monthly_average?: number;
 };

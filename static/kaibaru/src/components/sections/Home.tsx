@@ -1,27 +1,25 @@
-// Home.tsx
 import { FaInstagram, FaFacebook } from "react-icons/fa";
 import ClubInstagramUpdate from "../update_forms/ClubInstagramUpdate";
 import ClubFacebookUpdate from "../update_forms/ClubFacebookUpdate";
-import ClubOgImageUpdate from "../update_forms/ClubOgImageUpdate";
-import ClubSearchResultEditor from "../update_forms/ClubSearchResultEditor";
 import ClubCreate from "../ClubCreate";
 import type { Club } from "../types";
 import Editable from "./Editable";
 
 interface Props {
   club?: Club;
+  manager?: boolean;
   owner?: boolean;
   kaibarudomain?: string;
   setClub: React.Dispatch<React.SetStateAction<any>>;
   scale: number;
 }
 
-const Home: React.FC<Props> = ({ club, owner, kaibarudomain, setClub, scale }) => {
+const Home: React.FC<Props> = ({ club, manager, owner, kaibarudomain, setClub, scale }) => {
+  
 
   return (
     <>
       <div className="home-content-container" style={{ position: "relative" }}>
-        
         <Editable
           club={club}
           owner={owner}
@@ -44,7 +42,7 @@ const Home: React.FC<Props> = ({ club, owner, kaibarudomain, setClub, scale }) =
 
         {/* SNS icons */}
         <div style={{ marginTop: "15px", marginBottom: "10px" }}>
-          {(club?.instagram_url || owner || !club) && (
+          {(club?.instagram_url || (owner || manager) || !club) && (
             <a
               href={club?.instagram_url}
               target="_blank"
@@ -54,7 +52,7 @@ const Home: React.FC<Props> = ({ club, owner, kaibarudomain, setClub, scale }) =
               <FaInstagram size={28} color="#E1306C" />
             </a>
           )}
-          {(club?.facebook_url || owner || !club) && (
+          {(club?.facebook_url || (owner || manager) || !club) && (
             <a href={club?.facebook_url} target="_blank" rel="noopener noreferrer">
               <FaFacebook size={28} color="#1877F2" />
             </a>
@@ -62,10 +60,10 @@ const Home: React.FC<Props> = ({ club, owner, kaibarudomain, setClub, scale }) =
         </div>
 
         {/* Create club prompt */}
-        {!club?.home && kaibarudomain === "kaibaru" && <ClubCreate />}
+        {!club?.home && (kaibarudomain === "kaibaru" || kaibarudomain === "www") && <ClubCreate />}
 
         {/* Instagram / Facebook update forms */}
-        {club && owner && (
+        {club && !club?.frozen && (owner || manager) && (
           <div style={{ marginBottom: "15px" }}>
             <ClubInstagramUpdate
               clubId={club.id}
@@ -81,29 +79,10 @@ const Home: React.FC<Props> = ({ club, owner, kaibarudomain, setClub, scale }) =
                 setClub((prev: any) => ({ ...prev, facebook_url: updatedFacebook }))
               }
             />
-              <div style={{ marginTop: "20px" }}>
-                <ClubOgImageUpdate
-                  clubId={club.id}
-                  onUpdated={(updatedOg: string) =>
-                    setClub((prev: any) => ({ ...prev, og_image: updatedOg }))
-                  }
-                />
-              </div>
-              <div style={{ marginTop: "20px" }}>
-                <ClubSearchResultEditor
-                  clubId={club.id}
-                  subdomain={club.subdomain}
-                  initialTitle={club.title}
-                  initialDescription={club.search_description}
-                  initialFavicon={club.favicon}
-                  onUpdated={(field, value) =>
-                    setClub((prev: any) => ({ ...prev, [field]: value }))
-                  }
-                />
-              </div>
           </div>
         )}
       </div>
+
     </>
   );
 };

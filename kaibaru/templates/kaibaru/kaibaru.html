@@ -6,7 +6,7 @@
     {% load socialaccount %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=3.0, user-scalable=yes">
-    <link href="{% static 'kaibaru/custom.css' %}?v=61" rel="stylesheet">
+    <link href="{% static 'kaibaru/custom.css' %}?v=76" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <title>{{ club_data.title }}</title>
@@ -40,13 +40,13 @@
   <script>
     window.currentUser = JSON.parse(document.getElementById("currentUser").textContent);
     window.csrfToken = "{{ csrf_token }}";
+    window.STRIPE_PUBLISHABLE_KEY = "{{ stripe_publishable_key }}";
   </script>
 
 
 
 
 </head>
-    <div>{{ club_data.favicon }}</div>
     <div id="root" style="width: 100%; padding: 0; margin: 0;"></div>
     <div>
     <form method="post" action="{% if path == '/ar/' %}{% url 'accounts:logout' %}?next={% url 'accounts:login_ar' %}{% else %}{% url 'accounts:logout' %}?next={% url 'accounts:login' %}{% endif %}">
@@ -63,9 +63,11 @@
                     {% endif %}
                 </div>
     </form>
+
     </div>
 </html>
-<script type="module" src="{% static 'kaibaru/dist/assets/index-CGZVrjNV.js' %}"></script>
+<script type="module" src="{% static 'kaibaru/dist/assets/index-CPyu8OvX.js' %}"></script>
+<script src="https://js.stripe.com/v3/"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

@@ -18,12 +18,36 @@ interface Props {
   clubSubdomain: string;
 }
 
+function safeParseJSON<T>(input: any, fallback: T): T {
+  if (!input) return fallback;
+  if (typeof input === "object") return input;
+  if (typeof input === "string") {
+    try {
+      const once = JSON.parse(input);
+      if (typeof once === "string") return JSON.parse(once);
+      return once;
+    } catch {
+      console.error("Invalid JSON:", input);
+      return fallback;
+    }
+  }
+  return fallback;
+}
+
+
 const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, clubSubdomain }) => {
   const [showLessonModal, setShowLessonModal] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState<LessonType | null>(null);
   const [showLessonUpdateModal, setShowLessonUpdateModal] = useState(false);
   const [presentMembers, setPresentMembers] = useState<Record<number, Record<number, boolean>>>({});
   const [isUpdating, setIsUpdating] = useState(false);
+  const [levelUpMember, setLevelUpMember] = useState<{ member: Member; newLevel: number } | null>(null);
+  const [limitConfirmMember, setLimitConfirmMember] = useState<Member | null>(null);
+
+
+
+  const levelNames = safeParseJSON<Record<string, string>>(club?.level_names, {});
+
 
   
   const [cookies] = useCookies(["csrftoken"]);
@@ -81,14 +105,35 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
       if (!res.ok) throw new Error("Network error");
       const data = await res.json();
 
-      setClub((prevClub: { members: Member[] } | null) => {
+
+      setClub((prevClub: { members: Member[]; lessons: LessonType[] } | null) => {
         if (!prevClub) return prevClub;
+
+        if (data?.member_data.level_up) {
+          const leveledUpMember = prevClub.members.find(m => m.id === memberId);
+          if (leveledUpMember) {
+            setLevelUpMember({ member: leveledUpMember, newLevel: data.member_data.current_level });
+          }
+        }
+
 
         const updatedMembers = prevClub.members.map((member: Member) => {
           if (member.id === memberId) {
             const change = isPresent ? 1 : -1;
-            const level = String(member.level);
+            
+            const level = data?.member_data.current_level;
+            const levelUp = data?.member_data.level_up;
+            
+            
             const participationDate = data?.last_participation_date ?? null;
+
+            const newLevelParticipation = levelUp
+              ? { ...member.level_participation, [level]: 0 }
+              : { 
+                  ...member.level_participation, 
+                  [level]: Math.max((member.level_participation?.[Number(level)] || 0) + change, 0) 
+                };
+
             const updatedParticipations = [
               ...(member.participations?.filter(p => p.lesson !== currentLessonId) ?? []),
               {
@@ -96,21 +141,39 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
                 last_participation_date: isPresent ? participationDate : null,
               },
             ];
+
+
             return {
               ...member,
               total_participation: (member.total_participation || 0) + change,
               this_month_participation: (member.this_month_participation || 0) + change,
-              level_participation: {
-                ...member.level_participation,
-                [level]: Math.max((member.level_participation?.[Number(level)] || 0) + change, 0),
-              },
+              level_participation: newLevelParticipation,
               participations: updatedParticipations,
+              level: level,
             };
           }
           return member;
         });
+        const change = isPresent ? 1 : -1;
+        const updatedLessons = prevClub.lessons.map((lesson: LessonType) =>
+           
+          lesson.id === currentLessonId
+                ? {
+                    ...lesson,
+                    total_participation: (lesson.total_participation || 0) + change,
+                    monthly_participation: (lesson.monthly_participation || 0) + change,
+                  }
+                : lesson
+        );
+        if (selectedLesson?.id === currentLessonId) {
+          setSelectedLesson(prev => prev ? {
+              ...prev,
+              total_participation: (prev.total_participation || 0) + change,
+              monthly_participation: (prev.monthly_participation || 0) + change
+          } : prev);
+        }
 
-        return { ...prevClub, members: updatedMembers };
+        return { ...prevClub, members: updatedMembers, lessons: updatedLessons };
       });
     } catch (error) {
       console.error("Failed to update participation:", error);
@@ -148,7 +211,7 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
 
   return (
     <>
-      {owner && club && (
+      {!club?.frozen && (owner || manager) && club && (
         <Button
           variant="primary"
           style={{ marginBottom: "15px", border: "2px solid black", borderRadius: "4px", cursor: "pointer", }}
@@ -168,6 +231,11 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
               >
                 {(club?.lessons?.length > 0 ? club.lessons : exampleLessons)
                   .filter((l: LessonType) => l.weekday === dayIndex)
+                  .sort((a: LessonType, b: LessonType) => {
+                    const [aH, aM] = (a.start_time ?? "00:00").split(":").map(Number);
+                    const [bH, bM] = (b.start_time ?? "00:00").split(":").map(Number);
+                    return aH * 60 + aM - (bH * 60 + bM);
+                  })
                   .map((lesson: LessonType) => (
                     <div
                       key={lesson.title}
@@ -177,7 +245,7 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
                       <img
                         src={lesson.picture}
                         alt={lesson.title}
-                        style={{ width: "100%", height: "70%", objectFit: "cover", borderRadius: "5px", border: "2px solid black" }}
+                        style={{ width: "100%", height: "70%", borderRadius: "5px", border: "2px solid black" }}
                       />
                       <div style={{ textAlign: "center", marginTop: "5px" }}>
                         <div>{lesson.title}</div>
@@ -193,11 +261,13 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
         </div>
       </div>
 
-      <Modal show={!!selectedLesson} onHide={() => setSelectedLesson(null)} centered>
-        <Modal.Header closeButton>
+    {!club?.frozen &&
+    <>
+      <Modal show={!!selectedLesson} onHide={() => setSelectedLesson(null)} centered className={club?.has_attendance && (owner || instructor || manager) ? "fullwidth-modal" : ""}>
+        <Modal.Header style={{ textAlign: "center"}} closeButton>
           <Modal.Title>{selectedLesson?.title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ textAlign: "center" }}>
+        <Modal.Body style={{ textAlign: "center"}}>
           {selectedLesson && (
             <>
               <img
@@ -205,7 +275,7 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
                 alt={selectedLesson.title}
                 style={{ width: "150px", height: "150px", objectFit: "cover", border: "3px solid black", borderRadius: "15px" }}
               />
-              <div style={{ marginTop: "1rem", textAlign: "left" }}>
+              <div style={{ marginTop: "1rem" }}>
                 <p><strong>Day:</strong> {daysOfWeek[selectedLesson.weekday]}</p>
                 {selectedLesson.description && (
                   <p><strong>Description:</strong> {selectedLesson.description}</p>
@@ -221,7 +291,7 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
             </>
           )}
 
-          {club && owner && (
+          {club && (owner || manager) && (
             <div>
               <Button
                 variant="primary"
@@ -232,12 +302,27 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
               </Button>
             </div>
           )}
+          {selectedLesson && (owner || manager) && club?.has_attendance &&
+            <div style={{ marginBottom: "10px", textAlign: "center" }}>
+              <div>
+                <strong>トータル出席:</strong> {selectedLesson.total_participation ?? 0}
+              </div>
+              <div>
+                <strong>今月の出席:</strong> {selectedLesson.monthly_participation ?? 0}
+              </div>
+              <div>
+                <strong>平均/月:</strong> {selectedLesson.monthly_average ?? 0}
+              </div>
+            </div>
+          }
 
-          {(instructor || owner || manager) && (
+          {club?.has_attendance && (instructor || owner || manager) && (
+            <>
             <h5>メンバーを押すだけで出席を取れます。もう一度押すと取り消せます。</h5>
+            </>
           )}
 
-          {(club?.members?.length > 0 ? club.members : exampleMembers).length > 0 &&
+          {club?.has_attendance && (club?.members?.length > 0 ? club.members : exampleMembers).length > 0 &&
             (instructor || owner || manager) && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
                 {(club?.members?.length > 0 ? club.members : exampleMembers)
@@ -260,7 +345,13 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
                         key={member.full_name}
                         className="member-card"
                         onClick={() => {
-                          if (!isUpdating) toggleParticipation(member.id);
+                          if (isUpdating) return;
+
+                          if (!isPresent && (member.this_month_participation ?? 0) >= (member.participation_limit ?? Infinity)) {
+                            setLimitConfirmMember(member);
+                            return;
+                          }
+                          toggleParticipation(member.id);
                         }}
                       >
                         <img
@@ -276,13 +367,20 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
                         <div style={{ marginTop: "0.5rem", fontWeight: "500" }}>
                           {member.full_name}
                         </div>
-                        <div style={{ marginTop: "0.25rem", fontSize: "0.85rem", textAlign: "left" }}>
+                        <div style={{ marginTop: "0.25rem", fontSize: "0.7rem", textAlign: "left" }}>
                           <div>トータル：{member.total_participation ?? 0}</div>
                           <div>今月：{member.this_month_participation ?? 0}</div>
+                          {club?.has_levels &&
                           <div>
-                            レベル{member.level}：
-                            {member.level_participation?.[member.level] ?? 0}
+                            {(() => {
+                              const level = member.level;
+                              const levelName = levelNames[String(level)] || `レベル${level}`;
+                              const shortLabel = levelName.length > 5 ? levelName.slice(0, 5) : levelName;
+                              const count = member.level_participation?.[level] ?? 0;
+                              return `${shortLabel}：${count}`;
+                            })()}
                           </div>
+                          }
                         </div>
                       </div>
                     );
@@ -301,7 +399,7 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
         show={showLessonUpdateModal}
         onHide={() => setShowLessonUpdateModal(false)}
         centered
-        size="lg"
+        size="xl"
     >
         <Modal.Header closeButton>
             <Modal.Title>レッスンを編集</Modal.Title>
@@ -376,6 +474,75 @@ const Schedule: React.FC<Props> = ({ club, owner, instructor, manager, setClub, 
             </Button>
         </Modal.Footer>
     </Modal>
+
+    <Modal
+      show={!!levelUpMember}
+      onHide={() => setLevelUpMember(null)}
+      centered
+      backdrop={true}   // or just remove this line entirely
+      keyboard={true}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>おめでとう！🎉</Modal.Title>
+      </Modal.Header>
+      <Modal.Body style={{ textAlign: "center" }}>
+        {levelUpMember && (
+          <>
+            <img
+              src={levelUpMember.member.picture} // <- .member
+              alt={levelUpMember.member.full_name}
+              style={{
+                width: "150px",
+                height: "150px",
+                borderRadius: "50%",
+                border: "3px solid gold",
+                marginBottom: "1rem",
+              }}
+            />
+            <h4 style={{ fontWeight: "bold", color: "goldenrod", textShadow: "1px 1px 4px #000" }}>
+              {levelUpMember.member.full_name} さんが
+              {safeParseJSON<Record<string, string>>(club?.level_names, {})[levelUpMember.newLevel] ??
+                `レベル${levelUpMember.newLevel}`} にレベルアップしました！
+            </h4>
+          </>
+        )}
+      </Modal.Body>
+    </Modal>
+    <Modal
+      show={!!limitConfirmMember}
+      onHide={() => setLimitConfirmMember(null)}
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>注意 ⚠️</Modal.Title>
+      </Modal.Header>
+      <Modal.Body style={{ textAlign: "center" }}>
+        {limitConfirmMember && (
+          <p>
+            {limitConfirmMember.full_name} さんは今月の参加上限に達しています。<br />
+            それでもこのレッスンに参加させますか？
+          </p>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setLimitConfirmMember(null)}>
+          キャンセル
+        </Button>
+        <Button
+          variant="primary"
+          onClick={() => {
+            if (limitConfirmMember) {
+              toggleParticipation(limitConfirmMember.id);
+              setLimitConfirmMember(null);
+            }
+          }}
+        >
+          はい
+        </Button>
+      </Modal.Footer>
+    </Modal>
+    </>
+    }
     </>
   );
 };

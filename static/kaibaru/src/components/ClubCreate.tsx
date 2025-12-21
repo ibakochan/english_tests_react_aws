@@ -4,19 +4,18 @@ import { useCookies } from 'react-cookie';
 
 interface ClubResponse {
   id: number;
-  name: string;
+  join_key: string;
   subdomain: string;
-  // 必要に応じて他のフィールドも追加
 }
 
 interface Props {
-  onCreated?: (club: ClubResponse) => void; // 作成後のコールバック（任意）
+  onCreated?: (club: ClubResponse) => void; 
 }
 
 const ClubCreate: React.FC<Props> = ({ onCreated }) => {
   const [cookies] = useCookies(['csrftoken']);
-  const [name, setName] = useState("");
   const [subdomain, setSubdomain] = useState("");
+  const [joinKey, setJoinKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const currentUser = (window as any).currentUser || null;
@@ -24,7 +23,7 @@ const ClubCreate: React.FC<Props> = ({ onCreated }) => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !subdomain.trim()) {
+    if (!subdomain.trim() || !joinKey.trim()) {
       setError("すべての項目を入力してください。");
       return;
     }
@@ -39,20 +38,21 @@ const ClubCreate: React.FC<Props> = ({ onCreated }) => {
           'Content-Type': 'application/json',
           'X-CSRFToken': cookies.csrftoken,
         },
-        body: JSON.stringify({ name, subdomain }),
+        body: JSON.stringify({ subdomain, join_key: joinKey }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.detail || "クラブの作成に失敗しました。");
+        const errorMessage = data.error || data.subdomain || "クラブの作成に失敗しました。";
+        setError(errorMessage);
         setLoading(false);
         return;
       }
 
       // 作成成功 → サブドメインページへリダイレクト
       if (data.subdomain) {
-        window.location.href = `https://${data.subdomain}.kaibaru.jp/accounts/login`;
+        window.location.href = `https://${data.subdomain}.kaibaru.jp/join`;
       }
 
       if (onCreated) {
@@ -98,15 +98,6 @@ const ClubCreate: React.FC<Props> = ({ onCreated }) => {
         </p>
       )}
 
-      <label style={{ display: "block", marginBottom: "5px" }}>ページ名：</label>
-      <input
-        type="text"
-        placeholder="例：ピアノ教室、ヨガスタジオ"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        style={{ width: "100%", padding: "8px", marginBottom: "15px" }}
-      />
 
       <label style={{ display: "block", marginBottom: "5px" }}>サブドメイン：</label>
       <input
@@ -117,6 +108,19 @@ const ClubCreate: React.FC<Props> = ({ onCreated }) => {
         required
         style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
       />
+      <label style={{ display: "block", marginBottom: "5px" }}>入会キー：</label>
+      <input
+        type="text"
+        placeholder="入会キー入力"
+        value={joinKey}
+        onChange={(e) => setJoinKey(e.target.value)}
+        required
+        style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+      />
+      <p style={{ fontSize: "12px", color: "#777", marginBottom: "10px" }}>
+        入会キーは、会員がクラブに参加する際に入力するパスワードのようなものです。<br/>
+        これを設定しておくことで、知らない人が勝手に参加するのを防げます。
+      </p>
 
       <p style={{ fontSize: "12px", color: "#777", marginTop: "-10px", marginBottom: "15px" }}>
         ※ページのURLは「https://(サブドメイン).kaibaru.jp」となります。

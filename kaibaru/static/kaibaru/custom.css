@@ -312,6 +312,7 @@
 /* Schedule table */
 .schedule-container {
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 10px;
 }
 
@@ -364,6 +365,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-height: 220px;
   aspect-ratio: 1 / 1;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -373,7 +375,7 @@
 }
 
 .schedule-lesson-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px); 
 }
 
 .member-card {
@@ -381,13 +383,24 @@
   cursor: pointer;
   position: relative;
   transition: transform 0.2s ease;
-  flex: 0 1 120px;
+  flex: 0 1 109px;
   border: 1px solid #ccc;
   border-radius: 12px;
   padding: 0.5rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   background-color: #fff;
 }
+
+.fullwidth-modal .modal-dialog {
+  width: 95vw;       /* 95% of viewport width */
+  max-width: 95vw;   /* prevent it from exceeding viewport */
+  margin: 1.75rem auto; /* keep vertical spacing */
+}
+
+.fullwidth-modal .modal-content {
+  overflow-x: auto;  /* horizontal scroll if content is wider */
+}
+
 
 /* Slate editor content spacing */
 .slate-editor p,
@@ -423,3 +436,23 @@
 
 
 
+.info-bubble {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 5px;
+  user-select: none; /* prevent text selection */
+  transition: background-color 0.2s;
+}
+
+.info-bubble:hover {
+  background-color: #0056b3;
+}

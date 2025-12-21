@@ -12,6 +12,7 @@ interface Props {
 
 const Trial: React.FC<Props> = ({ club, owner, setClub, scale }) => {
   return (
+    <div className="home-content-container" style={{ position: "relative" }}>
     <Editable
       club={club}
       owner={owner}
@@ -27,6 +28,7 @@ const Trial: React.FC<Props> = ({ club, owner, setClub, scale }) => {
         </div>
       }
     />
+    </div>
   );
 };
 

@@ -6,14 +6,17 @@ import { withHistory } from "slate-history";
 import { FaBold, FaItalic } from "react-icons/fa";
 import { useCookies } from "react-cookie";
 import { FaUpload } from "react-icons/fa";
+import { SketchPicker } from "react-color";
 
 
 // Custom types
-type CustomText = { text: string; bold?: boolean; italic?: boolean, fontSize?: number; };
+type CustomText = { text: string; bold?: boolean; italic?: boolean, fontSize?: number; color?: string; };
 type BlockElement = {
   type: "block";
   children: CustomText[];
   paragraphSize?: number;
+  align?: "left" | "center" | "right";
+  color?: string;
 };
 type ImageElement = {
   type: "image";
@@ -21,6 +24,10 @@ type ImageElement = {
   url: string;
   width?: number;
   height?: number;
+  
+  x?: number;
+  y?: number;
+
   children: CustomText[];
 };
 type CustomElement = BlockElement | ImageElement;
@@ -44,10 +51,11 @@ interface Props {
 
 const withImages = (editor: ReactEditor) => {
   const { isVoid, isInline } = editor;
-  editor.isInline = element => (element.type === "image" ? true : isInline(element));
+  editor.isInline = element => isInline(element);
   editor.isVoid = element => (element.type === "image" ? true : isVoid(element));
   return editor;
 };
+
 
 const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, category }) => {
   const [cookies] = useCookies(["csrftoken"]);
@@ -70,10 +78,10 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
           } else if ("type" in node && node.type === "block") {
             const children = node.children.map(child =>
               Text.isText(child)
-                ? { text: child.text, bold: child.bold, italic: child.italic, fontSize: child.fontSize ?? 22 }
+                ? { text: child.text, bold: child.bold, italic: child.italic, fontSize: child.fontSize ?? 22, color: child.color ?? "#000000" }
                 : child
             );
-            return { ...node, children };
+            return { ...node, children, align: node.align || "left"  };
           } else if ("type" in node && node.type === "image") {
             const children = node.children.map(child =>
               Text.isText(child)
@@ -101,6 +109,11 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
   const loadedImagesRef = useRef<Set<string>>(new Set());
   const imgRefs = useRef<Set<HTMLImageElement>>(new Set());
   const editorContainerRef = useRef<HTMLDivElement>(null);
+  const [fontColorActive, setFontColorActive] = useState("#000000");
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
+ 
+
 
    
 
@@ -146,6 +159,9 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
   const [fontSizeActive, setFontSizeActive] = useState<number>(22);
   const [paragraphSizeActive, setParagraphSizeActive] = useState(0);
 
+  const toggleColor = (editor: Editor, color: string) => {
+    Editor.addMark(editor, "color", color);
+  };
 
 
   const toggleFontSize = (size: number) => {
@@ -173,6 +189,18 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
     setBoldActive(isMarkActive(editor, "bold"));
     setItalicActive(isMarkActive(editor, "italic"));
     
+    const [colorMatch] = Editor.nodes(editor, {
+      match: n => Text.isText(n) && n.color !== undefined,
+      universal: true,
+    });
+
+    if (colorMatch) {
+      const [node] = colorMatch;
+      setFontColorActive((node as CustomText).color || fontColorActive); // <- keep previous if none
+    }
+
+
+
     const [match] = Editor.nodes(editor, {
       match: n => Text.isText(n) && n.fontSize !== undefined,
       universal: true,
@@ -220,6 +248,20 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
     }
   };
 
+  const toggleAlign = (align: "left" | "center" | "right") => {
+    const { selection } = editor;
+    if (!selection) return;
+
+    const [blockEntry] = Editor.nodes(editor, {
+      at: selection,
+      match: n => !Text.isText(n) && SlateElement.isElement(n) && n.type === "block",
+    });
+
+    if (blockEntry) {
+      const [_block, path] = blockEntry;
+      Transforms.setNodes(editor, { align }, { at: path });
+    }
+  };
 
 
 
@@ -262,21 +304,26 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
       children: [{ text: "" }],
       width: 200,
       height: 200,
+
+      x: 0,
+      y: 0,
     };
+    const lastImageIndex = editor.children.reduce((acc, node, i) => {
+      if ('type' in node && node.type === 'image') return i;
+      return acc;
+    }, -1);
 
-    const { selection } = editor;
-    const insertAtEnd =
-      selection && Editor.after(editor, selection) === undefined;
+    Transforms.insertNodes(editor, tempNode, { at: [lastImageIndex + 1] });
 
-    // Insert image node at current cursor position
-    Transforms.insertNodes(editor, tempNode);
 
-    // Only insert a paragraph if we're at the end of a block
+    const insertAtEnd = !editor.selection || Editor.after(editor, editor.selection) === undefined;
+
+  // Only insert a paragraph if we're at the end of the block list
     if (insertAtEnd) {
       Transforms.insertNodes(editor, {
         type: "block",
         children: [{ text: "", fontSize: 22 }],
-      });
+     });
     }
 
     const uploaded = await uploadImage(file);
@@ -359,6 +406,7 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
               lineHeight: element.paragraphSize
                 ? `${1 + element.paragraphSize}` 
                 : "1.2",
+              textAlign: element.align || "left",
             }}
           >
             {children}
@@ -368,106 +416,204 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
 
 
       if (element.type === "image") {
-        const { url, width = 200, height = 200 } = element;
+         const { url, width = 200, height = 200, x = 0, y = 0 } = element;
 
-        const resizingRef = useRef(false);
-        const startPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-        const startSizeRef = useRef<{ width: number; height: number }>({ width, height });
+         const resizingRef = useRef(false);
+         const draggingRef = useRef(false);
 
-        const handleResizeMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-          e.preventDefault();
-          e.stopPropagation(); // don't trigger drag
-          resizingRef.current = true;
-          startPosRef.current = { x: e.clientX, y: e.clientY };
-          startSizeRef.current = { width, height };
-          document.addEventListener("mousemove", handleMouseMove);
-          document.addEventListener("mouseup", handleMouseUp);
-        };
+         const startPosRef = useRef({ x: 0, y: 0 });
+         const startSizeRef = useRef({ width, height });
+         const startXYRef = useRef({ x, y });
 
-        const handleMouseMove = (e: MouseEvent) => {
-          if (!resizingRef.current) return;
-          const dx = (e.clientX - startPosRef.current.x) / scale;
-          const dy = (e.clientY - startPosRef.current.y) / scale;
-          const newWidth = Math.max(20, startSizeRef.current.width + dx);
-          const newHeight = Math.max(20, startSizeRef.current.height + dy);
-          const path = ReactEditor.findPath(editor, element);
-          Transforms.setNodes(editor, { width: newWidth, height: newHeight }, { at: path });
-          adjustEditorHeight();
-        };
+         const getCoords = (
+           e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent
+         ) => {
+           const evt = 'nativeEvent' in e ? e.nativeEvent : e;
 
-        const handleMouseUp = () => {
-          resizingRef.current = false;
-          document.removeEventListener("mousemove", handleMouseMove);
-          document.removeEventListener("mouseup", handleMouseUp);
-        };
+           if ('touches' in evt && evt.touches.length > 0) {
+             return { x: evt.touches[0].clientX, y: evt.touches[0].clientY };
+           } else if ('changedTouches' in evt && evt.changedTouches.length > 0) {
+             return { x: evt.changedTouches[0].clientX, y: evt.changedTouches[0].clientY };
+           } else {
+             return { x: (evt as MouseEvent).clientX, y: (evt as MouseEvent).clientY };
+           }
+         };
 
 
-        return (
-          <div
-            {...attributes}
-            contentEditable={false}
-            style={{
-              display: "inline-block",
-              position: "relative",
-              width,
-              height: "0em",
-              margin: "0 2px",
-              verticalAlign: "top",
-            }}
-          >
+         const handleResizeMouseDown = (
+           e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+         ) => {
+           e.preventDefault();
+           e.stopPropagation();
+
+           resizingRef.current = true;
+
+           const { x: startX, y: startY } = getCoords(e);
+           startPosRef.current = { x: startX, y: startY };
+           startSizeRef.current = { width, height };
+
+           document.addEventListener("mousemove", handleMouseMove);
+           document.addEventListener("mouseup", handleMouseUp);
+           document.addEventListener("touchmove", handleMouseMove as EventListener, false);
+           document.addEventListener("touchend", handleMouseUp as EventListener, false);
+         };
+
+
+
+
+         const handleMouseMove = (e: MouseEvent | TouchEvent) => {
+          
+            if (resizingRef.current) {
+               const { x: clientX, y: clientY } = getCoords(e);
+               const dx = (clientX - startPosRef.current.x) / scale;
+               const dy = (clientY - startPosRef.current.y) / scale;
+               const newWidth = Math.max(20, startSizeRef.current.width + dx);
+               const newHeight = Math.max(20, startSizeRef.current.height + dy);
+               const path = ReactEditor.findPath(editor, element);
+               Transforms.setNodes(editor, { width: newWidth, height: newHeight }, { at: path });
+               adjustEditorHeight();
+               return;
+            }
+
+            if (draggingRef.current) {
+              const { x: clientX, y: clientY } = getCoords(e);
+              const dx = (clientX - startPosRef.current.x) / scale;
+              const dy = (clientY - startPosRef.current.y) / scale;
+
+              const editorEl = editorContainerRef.current;
+              if (!editorEl) return;
+
+              const maxX = editorEl.clientWidth - (element.width ?? 200);
+              const maxY = editorEl.clientHeight - (element.height ?? 200);
+
+              const newX = Math.min(Math.max(startXYRef.current.x + dx, 0), maxX);
+              const newY = Math.min(Math.max(startXYRef.current.y + dy, 0), maxY);
+
+              const path = ReactEditor.findPath(editor, element);
+              Transforms.setNodes(editor, { x: newX, y: newY }, { at: path });
+              return;
+            }
+         };
+
+         const handleMouseUp = () => {
+            resizingRef.current = false;
+            draggingRef.current = false;
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("mouseup", handleMouseUp);
+            document.removeEventListener("touchmove", handleMouseMove as EventListener, false);
+            document.removeEventListener("touchend", handleMouseUp as EventListener, false);
+         };
+
+         // ------------------------
+         // DRAGGING IMAGE
+         // ------------------------
+         const handleDragMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+            e.preventDefault();
+            draggingRef.current = true;
+            const { x: startX, y: startY } = getCoords(e);
+            startPosRef.current = { x: startX, y: startY };
+            startXYRef.current = { x, y };
+            document.addEventListener("mousemove", handleMouseMove);
+            document.addEventListener("mouseup", handleMouseUp);
+            document.addEventListener("touchmove", handleMouseMove as EventListener, false);
+            document.addEventListener("touchend", handleMouseUp as EventListener, false);
+         };
+
+         const handleRemove = (e: React.MouseEvent<HTMLDivElement>) => {
+           e.preventDefault();
+           e.stopPropagation();
+           const path = ReactEditor.findPath(editor, element);
+           Transforms.removeNodes(editor, { at: path });
+         };
+
+         return (
             <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: 0,
-                height,          
-                pointerEvents: "none",
-              }}
-            />
-            <span style={{ position: "relative", display: "inline-block", width, height }}>
-            <img
-              ref={el => {
-                if (el) {
-                  imgRefs.current.add(el);
-                } else {
-                  imgRefs.current.forEach(img => {
-                    if (!img.isConnected) imgRefs.current.delete(img);
-                  });
-                }
-              }}
-              src={url}
-              alt=""
-              draggable
-              onLoad={() => {
-                if (element.id || !url.startsWith("blob:")) loadedImagesRef.current.add(url);
-                adjustEditorHeight();
-              }}
-              onDragStart={e => {
-                if (!loadedImagesRef.current.has(url)) e.preventDefault();
-              }}
-              style={{ width, height, display: "block", border: "2px solid black", position: "relative" }}
-            />
+               {...attributes}
+               contentEditable={false}
+               style={{
+                  position: "absolute",
+                  left: x,
+                  top: y,
+                  width,
+                  height,
+                  zIndex: 20,
+                  cursor: "grab",
+                  touchAction: "none",
+               }}
+               onMouseDown={handleDragMouseDown}
+               onTouchStart={handleDragMouseDown}
+            >
+               <img
+                  ref={el => {
+                     if (el) {
+                        imgRefs.current.add(el);
+                     } else {
+                        imgRefs.current.forEach(img => {
+                           if (!img.isConnected) imgRefs.current.delete(img);
+                        });
+                     }
+                  }}
+                  src={url}
+                  alt=""
+                  draggable={false}
+                  onLoad={() => {
+                     if (element.id || !url.startsWith("blob:")) loadedImagesRef.current.add(url);
+                     adjustEditorHeight();
+                  }}
+                  style={{
+                     width,
+                     height,
+                     display: "block",
+                     border: "2px solid black",
+                     pointerEvents: "none",
+                  }}
+               />
 
-            <div
-              onMouseDown={handleResizeMouseDown}
-              style={{
-                position: "absolute",
-                right: 0,
-                bottom: 0,
-                width: 12,
-                height: 12,
-                background: "white",
-                border: "1px solid black",
-                cursor: "nwse-resize",
-                zIndex: 10,
-              }}
-            />
-            </span>
-            {children}
-          </div>
-        );
+               <div
+                  onMouseDown={handleResizeMouseDown}
+                  onTouchStart={handleResizeMouseDown}
+                  style={{
+                     position: "absolute",
+                     right: 0,
+                     bottom: 0,
+                     width: 12,
+                     height: 12,
+                     background: "white",
+                     border: "1px solid black",
+                     cursor: "nwse-resize",
+                     zIndex: 30,
+                     pointerEvents: "auto",
+                     touchAction: "none",
+                  }}
+               />
+
+               <div
+                 onMouseDown={handleRemove}
+                 style={{
+                   position: "absolute",
+                   right: 0,
+                   top: 0,
+                   width: 20,
+                   height: 20,
+                   background: "red",
+                   color: "white",
+                   fontWeight: "bold",
+                   textAlign: "center",
+                   lineHeight: "20px",
+                   borderRadius: "50%",
+                   cursor: "pointer",
+                   zIndex: 40,
+                   userSelect: "none",
+                 }}
+               >
+                 ×
+               </div>
+
+               {children}
+            </div>
+         );
       }
+
 
 
 
@@ -483,6 +629,7 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
     if (props.leaf.bold) children = <strong>{children}</strong>;
     if (props.leaf.italic) children = <em>{children}</em>;
     if (props.leaf.fontSize) children = <span style={{ fontSize: `${props.leaf.fontSize}px` }}>{children}</span>;
+    if (props.leaf.color) children = <span style={{ color: props.leaf.color }}>{children}</span>;
 
     return <span {...props.attributes}>{children}</span>;
   }, []);
@@ -507,6 +654,87 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
         >
           <FaItalic />
         </button>
+
+
+        <button
+          onClick={() => setShowColorPicker(prev => !prev)}
+          style={{
+            flex: "0 0 auto",
+            aspectRatio: "1.8 / 1",
+            borderRadius: "5px",
+            border: "2px solid #555",
+            backgroundColor: fontColorActive, // <-- use the selected color
+            color: "#fff",
+            fontWeight: "bold",
+            cursor: "pointer",
+            minWidth: "40px",
+            minHeight: "50px",
+            fontSize: "clamp(0.7rem, 1.2vw, 1rem)",
+            verticalAlign: "middle",
+            lineHeight: 1,
+            transition: "all 0.2s ease",
+            boxShadow: "none",
+            marginRight: "5px",
+          }}
+        >
+          色
+        </button>
+        
+        {showColorPicker && (
+          <div
+            style={{
+              position: "absolute",
+              top: "60px", // adjust depending on your toolbar height
+              left: 0,     // or wherever you want it anchored
+              zIndex: 1000,
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "8px",
+              background: "#fff",
+              padding: "8px",
+              borderRadius: "6px",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              transform: `scale(${1 / scale})`,
+              transformOrigin: "top left",
+            }}
+          >
+            <SketchPicker
+              color={fontColorActive}
+              disableAlpha={true}
+              onChange={color => {
+                const newColor = color.hex;
+                toggleColor(editor, newColor); // apply color to selection
+                setFontColorActive(newColor);
+              }}
+            />
+            <button
+              onClick={() => {
+                setShowColorPicker(false);
+                ReactEditor.focus(editor);
+              }}
+              style={{
+                marginLeft: 8,
+                backgroundColor: fontColorActive,
+                color: "#fff",
+                border: "none",
+                padding: "6px 12px",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontWeight: 500,
+                boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                height: "fit-content",
+              }}
+            >
+              選択
+            </button>
+          </div>
+        )}
+
+
+        <button className={"editor-button"} onMouseDown={e => { e.preventDefault(); toggleAlign("left"); }}>左寄せ</button>
+        <button className={"editor-button"} onMouseDown={e => { e.preventDefault(); toggleAlign("center"); }}>中央</button>
+        <button className={"editor-button"} onMouseDown={e => { e.preventDefault(); toggleAlign("right"); }}>右寄せ</button>
+
 
         <div className="editor-select-wrapper">
           <select
@@ -583,6 +811,7 @@ const ClubSlateUpdate: React.FC<Props> = ({ club, clubId, onUpdated, scale, cate
         }}
         style={{
           border: "2px solid black",
+          fontSize: "14px",
         }}
       >
 

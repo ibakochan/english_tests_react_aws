@@ -5,11 +5,30 @@ from rest_framework.response import Response
 from .models import Member, Club, Lesson, Participation, SlateImage
 from accounts.models import CustomUser
 from django.contrib.auth import login
-
+import re
 import json
+import logging
 
 from .serializers import MemberSerializer, ClubSerializer, LessonSerializer, ParticipationSerializer, SlateImageSerializer
 from django.conf import settings
+from datetime import timedelta
+
+
+from django.db import transaction
+
+from .views import sync_member_quantity
+
+
+from collections import defaultdict
+def get_level_participation(member):
+    level_sums = defaultdict(int)
+    for p in member.participations.all():
+        if p.level_counts:
+            for lvl, count in p.level_counts.items():
+                level_sums[int(lvl)] += count
+    return dict(level_sums)
+
+VALID_SUBDOMAIN_RE = re.compile(r'^[a-z0-9-]+$', re.IGNORECASE)
 
 class SlateImageViewSet(viewsets.ModelViewSet):
     queryset = SlateImage.objects.all()
@@ -33,18 +52,43 @@ class ClubViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"], url_path="create-trial")
     def create_trial(self, request):
-        """
-        Only allow trial club creation if user is on the main page (no subdomain)
-        """
         subdomain = request.data.get("subdomain")
-        name = request.data.get("name")
-        if not name:
-            return Response({"name": "This field is required."}, status=status.HTTP_400_BAD_REQUEST)
+        join_key = request.data.get("join_key")
 
-        if not subdomain:
-            return Response({"subdomain": "This field is required."}, status=status.HTTP_400_BAD_REQUEST)
         
-        club = Club.objects.create(subdomain=subdomain, name=name, owner=request.user)
+        if not subdomain:
+            return Response({"error": "サブドメインは必須項目です。"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not join_key:
+            return Response({"error": "クラブのキーワードは必須項目です。"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not VALID_SUBDOMAIN_RE.match(subdomain):
+            return Response(
+                {"error": "サブドメインは英数字とハイフンのみ使用可能です。"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if subdomain.startswith("-") or subdomain.endswith("-"):
+            return Response(
+                {"error": "サブドメインはハイフンで始めたり終えたりできません。"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if Club.objects.filter(subdomain=subdomain).exists():
+            return Response(
+                {"error": "このサブドメインはすでに使用されています。"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        FORBIDDEN_SUBDOMAINS = ["www", "kaibaru"]
+
+        if subdomain.lower() in FORBIDDEN_SUBDOMAINS:
+            return Response(
+                {"error": f"サブドメイン '{subdomain}' は使用できません。"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        club = Club.objects.create(subdomain=subdomain, join_key=join_key, owner=request.user, expiration_date = timezone.localdate())
 
         serializer = self.get_serializer(club, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -112,10 +156,9 @@ class ClubViewSet(viewsets.ModelViewSet):
         image_ids_in_section = set()
         if isinstance(section_data, list):
             for node in section_data:
-                children = node.get("children", [])
-                for child in children:
-                    if child.get("type") == "image" and "id" in child:
-                        image_ids_in_section.add(child["id"])
+                if node.get("type") == "image" and "id" in node:
+                    image_ids_in_section.add(node["id"])
+
 
         SlateImage.objects.filter(club=club, category=section).exclude(id__in=image_ids_in_section).delete()
 
@@ -132,17 +175,56 @@ class MemberViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
 
+    @action(detail=True, methods=["post"])
+    def freeze(self, request, pk=None):
+        """Freeze / kyukai a member"""
+        member = self.get_object()
+        if not member.is_kyukai:
+            member.is_kyukai = True
+            member.kyukai_since = timezone.localdate()
+            member.is_kyukai_paid = False
+        else:
+            member.is_kyukai = False
+            member.kyukai_since = None
+            member.is_kyukai_paid = False
+        member.save()
+        sync_member_quantity(member.club)
+
+        status_text = "frozen" if member.is_kyukai else "unfrozen"
+        return Response({
+            "status": status_text,
+            "is_kyukai": member.is_kyukai,
+            "kyukai_since": member.kyukai_since,
+            "is_kyukai_paid": member.is_kyukai_paid,
+        }, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=["delete"])
+    def remove(self, request, pk=None):
+        """Delete a member"""
+        member = self.get_object()
+        club = member.club
+
+        member.delete()
+        sync_member_quantity(club)
+        return Response({"status": "deleted"}, status=status.HTTP_200_OK)
+
     def perform_create(self, serializer):
         subdomain = self.request.data.get("club_subdomain")
-        if not subdomain:
-            raise serializers.ValidationError({"club_subdomain": "This field is required."})
+        join_key = self.request.data.get("join_key")
 
         club = Club.objects.filter(subdomain=subdomain).first()
         if not club:
             raise serializers.ValidationError({"club_subdomain": "Club not found."})
+        
+        existing_member = Member.objects.filter(club=club, user=self.request.user).first()
+
+        if not existing_member:
+            if club.join_key != join_key:
+                raise serializers.ValidationError({"join_key": "入会キーワードが間違っています。"})
 
 
-        serializer.save(club=club, user=self.request.user)
+        member = serializer.save(club=club, user=self.request.user)
+        sync_member_quantity(member.club)
 
 
 class LessonViewSet(viewsets.ModelViewSet):
@@ -178,6 +260,8 @@ class ParticipationViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"], url_path="toggle-count")
     def toggle_count(self, request):
+      with transaction.atomic():
+
         member_id = request.data.get("member")
         lesson_id = request.data.get("lesson")
 
@@ -197,6 +281,7 @@ class ParticipationViewSet(viewsets.ModelViewSet):
             )
 
         today = timezone.localtime(timezone.now()).date()
+        yesterday = today - timedelta(days=1)
         level_key = str(member.level)
 
         participation = Participation.objects.filter(member=member, lesson=lesson).first()
@@ -223,6 +308,27 @@ class ParticipationViewSet(viewsets.ModelViewSet):
                 participation.last_participation_date = today
 
             participation.save()
+
+            club = member.club
+            try:
+                milestones = club.level_milestones or {}
+                if isinstance(milestones, str):
+                    milestones = json.loads(milestones)
+            except Exception:
+                milestones = {}
+
+            current_level_str = str(member.level)
+            next_level = member.level + 1
+            next_level_str = str(next_level)
+
+            level_totals = get_level_participation(member)
+            total_for_current_level = level_totals.get(member.level, 0)
+            required = milestones.get(str(member.level))
+            if required and total_for_current_level >= required:
+                member.level += 1
+                member.save()
+
+
         else:
             participation = Participation.objects.create(
                 member=member,
@@ -231,8 +337,41 @@ class ParticipationViewSet(viewsets.ModelViewSet):
                 monthly_count=1,
                 level_counts={level_key: 1},
                 last_participation_date=today,
-                second_last_participation_date=today
+                second_last_participation_date=yesterday
             )
+          
+
+            club = member.club
+
+            try:
+                milestones = club.level_milestones or {}
+                if isinstance(milestones, str):
+                    milestones = json.loads(milestones)
+            except Exception:
+                milestones = {}
+
+            current_level_str = str(member.level)
+            next_level = member.level + 1
+            next_level_str = str(next_level)
+
+            level_totals = get_level_participation(member)
+            total_for_current_level = level_totals.get(member.level, 0)
+
+            required = milestones.get(current_level_str)
+
+            if required and total_for_current_level >= required:
+                member.level = next_level
+                member.save()
 
         serializer = ParticipationSerializer(participation)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        response_data = serializer.data  # get the dict
+        response_data["member_data"] = {
+            "milestones": milestones,
+            "current_level": member.level,
+            "current_count": total_for_current_level,
+            "required_for_next_level": required,
+            "level_totals": level_totals,
+            "level_up": bool(required and total_for_current_level >= required),
+        }
+        return Response(response_data, status=status.HTTP_200_OK)

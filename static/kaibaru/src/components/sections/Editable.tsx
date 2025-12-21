@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FaEdit, FaTimesCircle } from "react-icons/fa";
 import { RenderSlateContent } from "./RenderSlateContent";
 import ClubSlateUpdate from "../update_forms/ClubHomeSlateUpdate";
-import type { Club } from "../types";
+import type { Club, Member } from "../types";
 
 interface Props {
   club?: Club;
@@ -27,6 +27,11 @@ const Editable: React.FC<Props> = ({
   extraBottom,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const currentMember = club?.members?.find(
+    (m: Member) => m.user === club?.current_user?.id
+  );
+
+  const manager = currentMember?.is_manager
 
   const handleUpdate = (newData: any) => {
     setClub((prev: any) => ({
@@ -51,7 +56,7 @@ const Editable: React.FC<Props> = ({
   return (
     <div className="home-content-container">
       {/* Edit / Stop Edit button */}
-      {owner && (
+      {(owner || manager) && !club?.frozen &&  (
         <div
           style={{
             marginBottom: "12px",

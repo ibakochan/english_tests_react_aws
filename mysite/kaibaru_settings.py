@@ -19,6 +19,9 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 import environ
 
+from celery.schedules import crontab
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -67,10 +70,11 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     "django_cleanup.apps.CleanupConfig",
+    "django_celery_beat",
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
@@ -139,13 +143,50 @@ DATABASES = {
     }
 }
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "email-smtp.us-east-1.amazonaws.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+EMAIL_HOST_USER = env("SES_SMTP_USER")
+EMAIL_HOST_PASSWORD = env("SES_SMTP_PASSWORD")
+
+DEFAULT_FROM_EMAIL = "Kaibaru <noreply@kaibaru.jp>"
+SERVER_EMAIL = "support@kaibaru.jp"
+
+
+
+CELERY_BROKER_URL = env("REDIS_URL").replace("/1", "/0")
+CELERY_RESULT_BACKEND = env("REDIS_URL")
+
+
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Tokyo"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUBLISHABLE_KEY')
+
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET')
+
+STRIPE_BASE_PRICE_ID = "price_1SeNvyEuyKDnirof2pUdCR0v"
+STRIPE_MEMBER_PRICE_ID = "price_1SeRBPEuyKDnirof40RPZZnw"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-SITE_ID = 1
+SITE_ID = 2
 
 
 

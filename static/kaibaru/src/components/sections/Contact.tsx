@@ -7,14 +7,15 @@ import Editable from "./Editable";
 
 interface Props {
   club?: Club;
+  manager?: boolean;
   owner?: boolean;
   setClub: React.Dispatch<React.SetStateAction<any>>;
   scale: number;
 }
 
-const Contact: React.FC<Props> = ({ club, owner, setClub, scale }) => {
+const Contact: React.FC<Props> = ({ manager, club, owner, setClub, scale }) => {
   return (
-    <div className="home-content-container">
+    <div className="home-content-container" style={{ position: "relative" }}>
       <Editable
         club={club}
         owner={owner}
@@ -43,7 +44,7 @@ const Contact: React.FC<Props> = ({ club, owner, setClub, scale }) => {
         }}
       >
         {/* LINE QR section */}
-        {(club?.line_qr_code || owner) && (
+        {(club?.line_qr_code || (owner || manager)) && (
           <div
             style={{
               flex: "0 0 200px",
@@ -94,7 +95,7 @@ const Contact: React.FC<Props> = ({ club, owner, setClub, scale }) => {
               )}
             </div>
 
-            {club && owner && (
+            {club && !club.frozen && (owner || manager) && (
               <ClubLineQrUpdate
                 clubId={club.id}
                 onUpdated={(newQrUrl) => setClub({ ...club, line_qr_code: newQrUrl })}
@@ -104,7 +105,7 @@ const Contact: React.FC<Props> = ({ club, owner, setClub, scale }) => {
         )}
 
         {/* LINE Link section */}
-        {(club?.line_url || owner) && (
+        {(club?.line_url || (owner || manager)) && (
           <div
             style={{
               flex: "0 0 200px",
@@ -142,7 +143,7 @@ const Contact: React.FC<Props> = ({ club, owner, setClub, scale }) => {
               </a>
             </div>
 
-            {club && owner && (
+            {club && !club.frozen && (owner || manager) && (
               <ClubLineLinkUpdate
                 clubId={club.id}
                 initialLineLink={club.line_url}

@@ -35,7 +35,11 @@ const Practice = ({ questions, handlePlay, isPlayDisabled, activeTestDescription
               >
                 {((value.picture && value.word) || (!value.picture && !value.word)) && (
                   <span className={`${value.picture ? 'text-center text-with-picture' : 'text-without-picture'} text-white`}>
-                    {value.numbers ?? value.label ?? value.word ?? key}
+                    {questions.name === 'レッスン６-語彙' 
+                        ? value.numbers ?? value.word ?? value.label ?? key 
+                        : value.numbers ?? value.label ?? value.word ?? key
+                    }
+
                     {
                       Array.isArray(value[0])
                         ? (

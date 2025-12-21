@@ -4,13 +4,18 @@ import { useCookies } from "react-cookie";
 import { Button, Form } from "react-bootstrap";
 import type { Member } from "../types";
 
-// same Instructor type as before
 interface Instructor {
-    id: number;
-    full_name: string;
-    user: number;
-    is_instructor: boolean;
-    picture_url?: string;
+  id: number;
+  full_name: string;
+  user: number;
+  is_instructor: boolean;
+  introduction?: string;
+  phone_number?: string;
+  emergency_number?: string;
+  member_type?: string;
+  contract?: string | null;
+  other_information?: string | null;
+  picture_url?: string;
 }
 
 // Adjusted Lesson interface to match LessonType
