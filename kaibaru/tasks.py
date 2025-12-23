@@ -5,11 +5,59 @@ import stripe
 import logging
 
 from .models import Club
-from .views import sync_member_quantity, add_one_month
+
+from .tasks_emails import send_subscription_activated_emails, send_club_deleted_emails
 
 logger = logging.getLogger(__name__)
 
 from .models import Participation
+from .utils import add_one_month, sync_member_quantity
+
+
+
+@shared_task
+def reconcile_single_club_subscription(club_id):
+    today = timezone.localdate()
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    try:
+        club = Club.objects.get(id=club_id)
+    except Club.DoesNotExist:
+        return
+
+    if not club.stripe_subscription_id:
+        return
+
+    sub = stripe.Subscription.retrieve(club.stripe_subscription_id)
+
+    if sub.status != "active":
+        club.subscription_active = False
+        club.save()
+        return
+
+    invoices = stripe.Invoice.list(
+        customer=club.stripe_customer_id,
+        limit=1
+    )
+
+    if not invoices.data:
+        return
+
+    invoice = invoices.data[0]
+
+    if invoice.status == "paid" and not invoice.paid is False and invoice.id != club.last_paid_invoice_id:
+        club.last_paid_invoice_id = invoice.id
+        club.expiration_date = add_one_month(
+            club.expiration_date or today
+        )
+        club.subscription_active = True
+        club.save()
+
+        send_subscription_activated_emails.delay(
+            club.id,
+            invoice.id,
+        )
+
 
 @shared_task
 def reset_monthly_participation_counts():
@@ -101,6 +149,19 @@ def reconcile_stripe_subscriptions():
                         )
 
                     if canceled:
+                        owner = club.owner
+                        owner_name = owner.get_full_name() if owner else ""
+                        owner_email = owner.email if owner else settings.SERVER_EMAIL
+
+                        club_data = {
+                            "subdomain": club.subdomain,
+                            "owner_name": owner_name,
+                            "owner_email": owner_email,
+                            "reason": "お支払いが確認できず、一定期間が経過したため",
+                        }
+
+
+                        send_club_deleted_emails.delay(club_data)
                         club.delete()
                     else:
                         club.subscription_active = False
@@ -132,7 +193,7 @@ def reconcile_stripe_subscriptions():
                 if invoices.data:
                     invoice = invoices.data[0]
 
-                    if invoice.status == "paid" and invoice.id != club.last_paid_invoice_id:
+                    if invoice.status == "paid" and not invoice.paid is False and invoice.id != club.last_paid_invoice_id:
                         club.last_paid_invoice_id = invoice.id
                         club.expiration_date = add_one_month(
                             club.expiration_date or today
@@ -140,6 +201,7 @@ def reconcile_stripe_subscriptions():
                         club.subscription_active = True
                         club.save()
 
+ 
                         logger.info(
                             f"[CELERY] Invoice applied: club={club.id}, "
                             f"invoice={invoice.id}, expiration={club.expiration_date}"
@@ -161,6 +223,20 @@ def reconcile_stripe_subscriptions():
                         logger.warning(
                             f"[CELERY] Deleting expired club={club.id}"
                         )
+
+                        owner = club.owner
+                        owner_name = owner.get_full_name() if owner else ""
+                        owner_email = owner.email if owner else settings.SERVER_EMAIL
+
+                        club_data = {
+                            "subdomain": club.subdomain,
+                            "owner_name": owner_name,
+                            "owner_email": owner_email,
+                            "reason": "お支払いが確認できず、一定期間が経過したため",
+                        }
+
+                        send_club_deleted_emails.delay(club_data)
+
                         club.delete()
 
         except stripe.error.InvalidRequestError as e:
@@ -175,3 +251,14 @@ def reconcile_stripe_subscriptions():
                 f"[CELERY] Unexpected error for club={club.id}: {e}"
             )
 
+
+
+@shared_task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_backoff=300,
+    retry_kwargs={"max_retries": 20},
+)
+def cancel_stripe_subscription(self, subscription_id):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    stripe.Subscription.delete(subscription_id)

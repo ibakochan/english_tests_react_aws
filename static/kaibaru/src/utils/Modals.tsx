@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import type { Member, Club } from "../components/types";
 
-import { X, UserMinus, PauseCircle } from "lucide-react";
+import { FaTimes, FaUserMinus, FaPauseCircle } from "react-icons/fa";
+
 import { useCookies } from "react-cookie";
 
 
@@ -87,7 +88,7 @@ export const MemberActionModal: React.FC<MemberActionModalProps> = ({
       <Modal.Header>
         <Modal.Title>メンバー操作: {member.full_name}</Modal.Title>
         <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-          <X size={20} />
+          <FaTimes size={20} />
         </button>
       </Modal.Header>
 
@@ -128,7 +129,7 @@ export const MemberActionModal: React.FC<MemberActionModalProps> = ({
             className="d-flex align-items-center"
             onClick={() => setActionType("kyukai")}
           >
-            <PauseCircle size={18} className="me-2" />
+            <FaPauseCircle size={18} className="me-2" />
             {member?.is_kyukai
               ? "休会を解除する"
               : "休会にする"}
@@ -139,7 +140,7 @@ export const MemberActionModal: React.FC<MemberActionModalProps> = ({
             className="d-flex align-items-center"
             onClick={() => setActionType("delete")}
           >
-            <UserMinus size={18} className="me-2" /> 削除
+            <FaUserMinus size={18} className="me-2" /> 削除
           </Button>
         </div>
 

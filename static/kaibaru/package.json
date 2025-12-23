@@ -17,7 +17,6 @@
     "axios": "^1.12.2",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
-    "lucide-react": "^0.556.0",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
     "react-color": "^2.19.3",

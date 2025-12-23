@@ -33,5 +33,4 @@ urlpatterns = [
     path('create_checkout_session/<int:club_id>/', views.create_checkout_session, name='create_checkout_session'),
     path('stripe_webhook/', views.stripe_webhook, name='stripe_webhook'),
     path('unsubscribe/<int:club_id>/', views.unsubscribe, name='unsubscribe'),
-    path('resubscribe/<int:club_id>/', views.resubscribe, name='resubscribe'),
 ]

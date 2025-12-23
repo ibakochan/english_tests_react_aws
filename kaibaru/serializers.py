@@ -334,14 +334,6 @@ class ClubSerializer(serializers.ModelSerializer):
                     f"その後 {days_left_till_delete} 日以内に支払いがない場合、クラブと所属メンバーの情報は完全に削除されます。"
                 )
 
-        if days_after_exp == 0:
-            if request.user == club.owner:
-                return (
-                    "クラブの有効期限は本日までです。"
-                    "あと７日で編集できなくなり、他の人からも見えなくなります。"
-                    "その後２８日以内に支払いがない場合、クラブと所属メンバーの情報は完全に削除されます。"
-                )
-
         return None
 
     def to_representation(self, instance):

@@ -3,7 +3,8 @@ import type { Member, Club } from "../types";
 import { safeParseJSON } from "../../utils/safeParseJSON";
 import { Modal, Button } from "react-bootstrap";
 import { MemberActionModal } from "../../utils/Modals";
-import { UserMinus, PauseCircle } from "lucide-react";
+import { FaUserMinus, FaPauseCircle } from "react-icons/fa";
+
 
 
 interface Props {
@@ -129,8 +130,9 @@ const MemberManagement: React.FC<Props> = ({ setClub, club, members, selectedMem
                     }}
                     className="text-orange-500 flex items-center"
                   >
-                    <PauseCircle size={20} className="mr-1" />
-                    休会か<UserMinus size={20} className="mr-1" />
+                    <FaPauseCircle size={20} style={{ marginRight: "4px" }} />
+                    休会か
+                    <FaUserMinus size={20} style={{ margin: "0 4px" }} />
                     削除
                   </button>
       

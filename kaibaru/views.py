@@ -16,7 +16,12 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from datetime import date
 from django.utils import timezone
+from .tasks import reconcile_single_club_subscription, cancel_stripe_subscription
 
+from .tasks_emails import send_subscription_activated_emails, send_subscription_canceled_emails
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.http import HttpResponseForbidden
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -135,6 +140,12 @@ def stripe_webhook(request):
         club.subscription_active = True
         club.save()
 
+        send_subscription_activated_emails.delay(
+            club.id,
+            invoice_id,
+        )
+
+
         logger.info(
             f"[PAYMENT OK] club={club.id}, invoice={invoice_id}, new_expiration={club.expiration_date}"
         )
@@ -146,10 +157,14 @@ def stripe_webhook(request):
 
 
 
-@csrf_exempt
+@require_POST
+@login_required
 def create_checkout_session(request, club_id):
     stripe.api_key = settings.STRIPE_SECRET_KEY
-    club = Club.objects.get(id=club_id)
+    club = get_object_or_404(Club, id=club_id)
+
+    if club.owner != request.user:
+        return HttpResponseForbidden("You do not own this club")
 
     # Customer
     if not club.stripe_customer_id:
@@ -186,33 +201,7 @@ def create_checkout_session(request, club_id):
 
 
 
-@csrf_exempt
-def resubscribe(request, club_id):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    club = Club.objects.get(id=club_id)
-
-    customer = stripe.Customer.retrieve(club.stripe_customer_id)
-
-    active_members = Member.objects.filter(
-        club=club
-    ).exclude(is_kyukai=True, is_kyukai_paid=True).count()
-
-    billable_members = max(active_members, 1)  # ⭐ FIX
-
-    session = stripe.checkout.Session.create(
-        customer=customer.id,
-        mode="subscription",
-        payment_method_types=["card"],
-        line_items=[
-            {"price": settings.STRIPE_BASE_PRICE_ID, "quantity": 1},
-            {"price": settings.STRIPE_MEMBER_PRICE_ID, "quantity": billable_members},
-        ],
-        metadata={"club_id": club.id},
-        success_url=f"https://{club.subdomain}.kaibaru.jp/?payment=success&type=resub",
-        cancel_url=f"https://{club.subdomain}.kaibaru.jp/?payment=cancel",
-    )
-
-    return JsonResponse({"id": session.id})
+ 
 
 
 
@@ -224,21 +213,40 @@ def resubscribe(request, club_id):
 
 
 
-@csrf_exempt
+@require_POST
+@login_required
 def unsubscribe(request, club_id):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     try:
-        club = Club.objects.get(id=club_id)
-        if not club.stripe_subscription_id:
-            return JsonResponse({"error": "No active subscription"}, status=400)
 
-        # Cancel subscription immediately
-        stripe.Subscription.delete(club.stripe_subscription_id)
+        club = get_object_or_404(Club, id=club_id)
 
-        # Update club record
-        club.stripe_subscription_id = None
-        club.subscription_active = False
-        club.save()
+        if club.owner != request.user:
+            return HttpResponseForbidden("You do not own this club")
+
+        subdomain = request.POST.get("subdomain")
+        nyukai_key = request.POST.get("nyukai_key")
+
+        if subdomain != club.subdomain or nyukai_key != club.nyukai_key:
+            return JsonResponse(
+                {"error": "Confirmation failed"},
+                status=400
+           )
+
+        subscription_id = club.stripe_subscription_id
+
+        club_data = {
+            "subdomain": club.subdomain,
+            "owner_name": club.owner.get_full_name() if club.owner else "",
+            "owner_email": club.owner.email if club.owner else None,
+        }
+
+        if club.stripe_subscription_id:
+            cancel_stripe_subscription.delay(subscription_id)
+
+        send_subscription_canceled_emails.delay(club_data)
+
+        club.delete()
 
         return JsonResponse({"success": True, "message": "Subscription canceled"})
     except Club.DoesNotExist:
