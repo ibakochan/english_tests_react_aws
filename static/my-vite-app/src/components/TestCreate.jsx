@@ -382,7 +382,7 @@ const TestCreate = () => {
               if (!newOptions[questionId]) {
                   newOptions[questionId] = [];
               }
-              newOptions[questionId].unshift({id: result.pk, name: result.name, is_correct: result.is_correct}); // Add the new option at the beginning of the array
+              newOptions[questionId].unshift({id: result.pk, name: result.name, is_correct: result.is_correct});  
               return newOptions;
           });
 

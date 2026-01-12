@@ -1,4 +1,3 @@
-// CharactersSection.jsx
 import React from "react";
 
 const IbaruCharacters = ({ isEnglish }) => {
@@ -114,7 +113,7 @@ const IbaruCharacters = ({ isEnglish }) => {
 
       <div
         className="d-flex flex-wrap justify-content-center"
-        style={{ gap: "0px" }} // no space between buttons
+        style={{ gap: "0px" }}  
       >
         {characters.map((c) => (
           <div key={c.name}>
@@ -127,7 +126,7 @@ const IbaruCharacters = ({ isEnglish }) => {
                 height: "320px",
                 width: "160px",
                 overflow: "hidden",
-                margin: "0", // remove margin that might add gaps
+                margin: "0",  
               }}
               onClick={() => {
                 const audio = new Audio(c.voice);

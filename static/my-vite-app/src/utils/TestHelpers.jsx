@@ -65,21 +65,19 @@ export const getRandomizedValues = (questions) => {
       let randomValue;
 
       if (question.story) {
-  // Get all keys sorted by the number in question_list[key][0]
+   
         const sortedKeys = Object.keys(question.question_list).sort(
           (a, b) => question.question_list[a][0] - question.question_list[b][0]
         );
-
-  // Filter out keys already used
+ 
         const unusedKeys = sortedKeys.filter(
           key => !Object.values(acc).some(item => item.randomAlphabet === key)
         );
-
-  // Take the next key in order, or first if all used
+ 
         randomKey = unusedKeys.length > 0 ? unusedKeys[0] : sortedKeys[0];
         randomValue = question.question_list[randomKey];
       } else {
-  // Non-story version: pick random key
+  
         const keys = Object.keys(question.question_list);
         const unusedKeys = keys.filter(
           key => !Object.values(acc).some(item => item.randomAlphabet === key)

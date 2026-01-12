@@ -115,7 +115,7 @@ export const TestReturnButton = ({ openModal, gameState, isEnglish, activeTestId
 );
 
 export const TestButtons = ({ test, activeCategory, activeTestId, toggleQuestionDetails, maxScores, isEnglish, audioRef, urlPath }) => {
-  // Find the matching maxScore for this test
+   
   const currentMaxScore = maxScores.find(score => score.test === test.id);
 
   return (

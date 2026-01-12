@@ -712,16 +712,16 @@ const Test = () => {
                       {!isPractice && currentQuestion?.story &&
                             <div
                               style={{
-                                height: '400px',           // double height
-                                width: '100%',             // full width
-                                maxWidth: '700px',         // optional max width to keep it readable
-                                overflowY: 'scroll',         // scroll when content overflows
-                                padding: '1rem 1.5rem',    // comfortable padding
-                                borderRadius: '12px',      // rounded corners
-                                border: '2px solid #888',  // subtle border
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.5)', // soft shadow for depth
-                                backgroundColor: '#000', // slight off-white background
-                                fontFamily: '"Georgia", serif', // storybook feel
+                                height: '400px',            
+                                width: '100%',              
+                                maxWidth: '700px',         
+                                overflowY: 'scroll',        
+                                padding: '1rem 1.5rem',    
+                                borderRadius: '12px',      
+                                border: '2px solid #888',   
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.5)',  
+                                backgroundColor: '#000',  
+                                fontFamily: '"Georgia", serif',  
                                 fontSize: '16px',
                                 lineHeight: '1.6',
                                 color: '#fff',  

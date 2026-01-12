@@ -58,7 +58,7 @@ const UserProfile = () => {
           if (prev <= 1) {
             clearInterval(intervalRef.current);
             setIsRunning(false);
-            audioRef.current.play(); // 🔔 final sound
+            audioRef.current.play();  
             handleReset();
             return 0;
           }
@@ -102,8 +102,7 @@ const UserProfile = () => {
   };
 
 
-
-  // Format display
+ 
   const formatTime = (totalSec) => {
     const mins = Math.floor(totalSec / 60);
     const secs = totalSec % 60;
@@ -111,16 +110,15 @@ const UserProfile = () => {
   };
 
   const handleTimeChange = (e) => {
-    // Remove all non-digit characters
+    
     let digits = e.target.value.replace(/\D/g, "");
     if (digits.length === 0) {
       setMinutes(0);
       setSeconds(0);
       return;
     }
-
-    // Parse minutes and seconds
-    let sec = parseInt(digits.slice(-2), 10); // last two digits
+ 
+    let sec = parseInt(digits.slice(-2), 10);  
     if (sec > 59) sec = 59;
     let min = digits.length > 2 ? parseInt(digits.slice(0, -2), 10) : 0;
 
@@ -192,13 +190,12 @@ const UserProfile = () => {
     const chosen = availableStudents[randomIndex];
 
     setUsedStudents(prev => [...prev, chosen.id]);
-
-    // Convert student_number to int (default 0 if empty)
+ 
     const num = parseInt(chosen.student_number, 10);
 
     let soundUrl = "";
     if (num && num >= 1 && num <= soundUrls.length) {
-      soundUrl = soundUrls[num - 1]; // -1 because array starts at 0
+      soundUrl = soundUrls[num - 1];  
       const audio = new Audio(soundUrl);
       audio.play();
     }
@@ -302,8 +299,8 @@ const UserProfile = () => {
                 borderRadius: "0.75rem",
                 border: "2px solid #333",
                 background: "linear-gradient(180deg, #222, #333)",
-                height: "355px", // slightly taller for more text
-                width: "240px",  // slightly wider
+                height: "355px",  
+                width: "240px",   
                 overflow: "hidden",
                 marginBottom: "8px",
               }}
@@ -336,8 +333,8 @@ const UserProfile = () => {
                 borderRadius: "0.75rem",
                 border: "2px solid #333",
                 background: "linear-gradient(180deg, #222, #333)",
-                height: "355px", // match profile card
-                width: "240px",  // match profile card
+                height: "355px",  
+                width: "240px",   
                 overflow: "hidden",
                 marginBottom: "8px"
               }}
