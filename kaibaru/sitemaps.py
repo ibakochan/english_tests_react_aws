@@ -17,7 +17,6 @@ class ClubSitemap(Sitemap):
         return f"https://{obj.subdomain}.kaibaru.jp/"
 
     def get_urls(self, site=None, **kwargs):
-        # Override to ignore the 'site' argument entirely
         urls = []
         for item in self.items():
             urls.append({

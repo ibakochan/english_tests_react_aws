@@ -483,7 +483,7 @@ jr_2_lesson_4_vocab = {
 jr_2_lesson_4_story = {
     "hiking": [1, "https://storage.googleapis.com/jr_high_2/2025_08_20_03_19_10_2.mp3"],
     "hike": [2, "https://storage.googleapis.com/eiken3sound1/2025_06_04_12_58_58_1.mp3"],
-    "usually": [3, "https://storage.googleapis.com/ibaru_repair/2025_08_30_16_44_55_2.mp3"],  # if "usually" exists in vocab, match its URL
+    "usually": [3, "https://storage.googleapis.com/ibaru_repair/2025_08_30_16_44_55_2.mp3"],  
     "bring": [4, "https://storage.googleapis.com/jr_high_2/2025_08_20_03_23_18_2.mp3"],
     "shampoo": [5, "https://storage.googleapis.com/jr_high_2/2025_08_20_03_18_19_2.mp3"],
     "water bottle": [6, "https://storage.googleapis.com/jr_high_2/2025_08_20_03_17_56_2.mp3"],

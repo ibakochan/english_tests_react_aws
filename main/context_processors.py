@@ -5,5 +5,4 @@ def settings(request):
     return {
         'settings': django_settings,
     }
-
-# This lets me access djangos debug etc from settings.
+ 

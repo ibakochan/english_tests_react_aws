@@ -17,11 +17,10 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
     path('account/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
-    path('', include('main.urls')),  # main app
+    path('', include('main.urls')),  
     re_path(r'^oauth/', include('social_django.urls', namespace='social')),
 ]
-
-# Serve the static HTML
+ 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 urlpatterns += [
     re_path(r'^site/(?P<path>.*)$', serve,
@@ -30,8 +29,7 @@ urlpatterns += [
         name='site_path'
         ),
 ]
-
-# Serve the favicon
+ 
 urlpatterns += [
     path('favicon.ico', serve, {
             'path': 'favicon.ico',
@@ -39,8 +37,7 @@ urlpatterns += [
         }
     ),
 ]
-
-# Optional social login override
+ 
 try:
     from . import github_settings
     social_login = 'registration/login_social.html'

@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     "django_cleanup.apps.CleanupConfig",
     "django_celery_beat",
+    'django_vite',
 ]
 
 
@@ -99,7 +100,21 @@ MIDDLEWARE = [
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
- 
+
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": False,   
+        "manifest_path": "/home/bitnami/dp/mysite/static/kaibaru/dist/.vite/manifest.json",
+        "static_url_prefix": "/kaibaru/dist/",
+    }
+}
+
+
+
+
+
+
+
 ROOT_URLCONF = 'mysite.urls'
 
 ROOT_HOSTCONF = 'mysite.hosts'
@@ -115,9 +130,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'main.context_processors.settings',      # Add
-                'social_django.context_processors.backends',  # Add
-                'social_django.context_processors.login_redirect', # Add
+                'main.context_processors.settings',       
+                'social_django.context_processors.backends',  
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
@@ -221,7 +236,7 @@ STORAGES = {
 GOOGLE_APPLICATION_CREDENTIALS = "/home/bitnami/dp/service-account.json"
 
 MEDIA_URL = "https://storage.googleapis.com/kaibaru/"
-DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024  # 20 MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024   
 FILE_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024 
 GS_FILE_OVERWRITE = False
 
@@ -247,8 +262,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-
-# Define the directory where your collected static files will be stored
+ 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
@@ -296,8 +310,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-# Security settings
+ 
 
 
 
@@ -318,7 +331,7 @@ USE_X_FORWARDED_HOST = True
  
 
 
-HOST = os.environ.get("DJANGO_HOST")  # set per process
+HOST = os.environ.get("DJANGO_HOST")   
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -331,6 +344,6 @@ SESSION_COOKIE_NAME = "csrftoken"
 SESSION_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SECURE = True
 
-CSRF_COOKIE_DOMAIN = None  # Let Django handle CSRF per subdomain
+CSRF_COOKIE_DOMAIN = None   
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SECURE = True

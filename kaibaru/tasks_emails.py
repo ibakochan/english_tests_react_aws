@@ -58,10 +58,7 @@ def send_subscription_canceled_emails(self, club_data):
     owner_email = club_data["owner_email"]
     owner_name = club_data["owner_name"]
     subdomain = club_data["subdomain"]
-
-    # ----------------------------
-    # Admin
-    # ----------------------------
+ 
     send_mail(
         subject=f"[Kaibaru] Subscription canceled ({subdomain})",
         message=(
@@ -72,10 +69,7 @@ def send_subscription_canceled_emails(self, club_data):
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[settings.SERVER_EMAIL],
     )
-
-    # ----------------------------
-    # Owner (Japanese)
-    # ----------------------------
+ 
     send_mail(
         subject="【Kaibaru】ご利用プランの解約が完了しました",
         message=(
@@ -100,10 +94,7 @@ def send_subscription_canceled_emails(self, club_data):
 def send_subscription_activated_emails(self, club_id, invoice_id):
     club = Club.objects.select_related("owner").get(id=club_id)
     owner = club.owner
-
-    # ----------------------------
-    # Admin email
-    # ----------------------------
+ 
     send_mail(
         subject=f"[Kaibaru] Subscription activated ({club.subdomain})",
         message=(
@@ -115,10 +106,7 @@ def send_subscription_activated_emails(self, club_id, invoice_id):
         from_email=settings.DEFAULT_FROM_EMAIL,
         recipient_list=[settings.SERVER_EMAIL],
     )
-
-    # ----------------------------
-    # Owner email (Japanese)
-    # ----------------------------
+ 
     send_mail(
         subject="【Kaibaru】ご利用プランの有効化が完了しました",
         message=(

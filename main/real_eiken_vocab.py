@@ -44,8 +44,7 @@ eiken2_real_vocab = {
 def extract_vocab_info_case_insensitive_structured(real_vocab, *vocab_dicts):
     matched_vocab = {}
     remaining_vocab = {}
-
-    # Create a mapping from lowercase -> original casing
+ 
     real_vocab_lower_map = {word.lower(): word for word in real_vocab}
     unmatched_lower_keys = set(real_vocab_lower_map.keys())
 
@@ -55,8 +54,7 @@ def extract_vocab_info_case_insensitive_structured(real_vocab, *vocab_dicts):
 
             if word_lower in unmatched_lower_keys:
                 original_word = real_vocab_lower_map[word_lower]
-
-                # Make sure we have the right structure: [[jp, sentence], sound_url]
+ 
                 if isinstance(info[0], list):
                     jp_sentence = info[0]
                 else:
@@ -64,8 +62,7 @@ def extract_vocab_info_case_insensitive_structured(real_vocab, *vocab_dicts):
 
                 matched_vocab[original_word] = [jp_sentence, info[1]]
                 unmatched_lower_keys.remove(word_lower)
-
-    # Now build remaining dict with correct structure
+ 
     for word_lower in unmatched_lower_keys:
         original_word = real_vocab_lower_map[word_lower]
         remaining_vocab[original_word] = [["", ""], ""]

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import View
 from allauth.socialaccount.models import SocialAccount
-from django.http import HttpResponseForbidden  # optional
+from django.http import HttpResponseForbidden  
 from django.shortcuts import get_object_or_404
 from .models import Club, Participation, Member
 from django.shortcuts import redirect
@@ -16,7 +16,7 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from datetime import date
 from django.utils import timezone
-from .tasks import reconcile_single_club_subscription, cancel_stripe_subscription
+from .tasks import cancel_stripe_subscription
 
 from .tasks_emails import send_subscription_activated_emails, send_subscription_canceled_emails
 from django.contrib.auth.decorators import login_required
@@ -25,63 +25,12 @@ from django.http import HttpResponseForbidden
 
 from django.views.decorators.csrf import csrf_exempt
 
+from django.utils import timezone
+from .utils import add_one_month
 
 
-def add_one_month(d):
-    year = d.year
-    month = d.month + 1
-    if month > 12:
-        month -= 12
-        year += 1
-
-    day = min(
-        d.day,
-        [31, 29 if year % 4 == 0 else 28, 31, 30, 31, 30,
-         31, 31, 30, 31, 30, 31][month - 1]
-    )
-    return date(year, month, day)
-
-def sync_member_quantity(club):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-
-    active_members = Member.objects.filter(
-        club=club
-    ).exclude(is_kyukai=True, is_kyukai_paid=True).count()
-
-    billable_members = max(active_members, 1)
-
-    if not club.stripe_subscription_id:
-        return
-
-    sub = stripe.Subscription.retrieve(club.stripe_subscription_id)
-
-    member_item = next(
-        (
-            item for item in sub["items"]["data"]
-            if item["price"]["id"] == settings.STRIPE_MEMBER_PRICE_ID
-        ),
-        None
-    )
-
-    if member_item:
-        stripe.Subscription.modify(
-            sub.id,
-            items=[{
-                "id": member_item.id,
-                "quantity": billable_members,
-            }],
-            proration_behavior="none",
-        )
-    else:
-        stripe.Subscription.modify(
-            sub.id,
-            items=[{
-                "price": settings.STRIPE_MEMBER_PRICE_ID,
-                "quantity": billable_members,
-            }],
-            proration_behavior="none",
-        )
-
+logger = logging.getLogger(__name__)
+ 
 
 
 @csrf_exempt
@@ -97,25 +46,22 @@ def stripe_webhook(request):
     except Exception as e:
         logger.error(f"[WEBHOOK ERROR] {e}")
         return HttpResponse(status=400)
-
-    # --- Checkout completed ---
+ 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
         club_id = session["metadata"].get("club_id")
         subscription_id = session.get("subscription")
 
-        club = Club.objects.filter(id=club_id).first()
+        club = Club.objects.filter(id=club_id, is_deleted=False).first()
         if not club:
             return HttpResponse(status=200)
-
-        # Save subscription id if not already saved
+ 
         if not club.stripe_subscription_id:
             club.stripe_subscription_id = subscription_id
             club.save()
 
         logger.info(f"[CHECKOUT COMPLETE] club={club.id}, sub={subscription_id}")
-
-    # --- Invoice paid (SOURCE OF TRUTH) ---
+ 
     elif event["type"] in ("invoice.paid", "invoice.payment_succeeded"):
         invoice = event["data"]["object"]
 
@@ -124,17 +70,15 @@ def stripe_webhook(request):
         invoice_id = invoice["id"]
         customer_id = invoice["customer"]
 
-        club = Club.objects.filter(stripe_customer_id=customer_id).first()
+        club = Club.objects.filter(stripe_customer_id=customer_id, is_deleted=False).first()
         if not club:
             return HttpResponse(status=200)
-
-        # Idempotency guard
+ 
         if club.last_paid_invoice_id == invoice_id:
             return HttpResponse(status=200)
 
         club.last_paid_invoice_id = invoice_id
-
-        # Extend expiration
+ 
         base = club.expiration_date or timezone.localdate()
         club.expiration_date = add_one_month(base)
         club.subscription_active = True
@@ -161,12 +105,11 @@ def stripe_webhook(request):
 @login_required
 def create_checkout_session(request, club_id):
     stripe.api_key = settings.STRIPE_SECRET_KEY
-    club = get_object_or_404(Club, id=club_id)
+    club = get_object_or_404(Club, id=club_id, is_deleted=False)
 
     if club.owner != request.user:
         return HttpResponseForbidden("You do not own this club")
-
-    # Customer
+ 
     if not club.stripe_customer_id:
         customer = stripe.Customer.create(
             name=club.title or club.subdomain,
@@ -181,7 +124,7 @@ def create_checkout_session(request, club_id):
         club=club
     ).exclude(is_kyukai=True, is_kyukai_paid=True).count()
 
-    billable_members = max(active_members, 1)  # ⭐ FIX
+    billable_members = max(active_members, 1)  
 
     session = stripe.checkout.Session.create(
         customer=customer.id,
@@ -217,17 +160,18 @@ def create_checkout_session(request, club_id):
 @login_required
 def unsubscribe(request, club_id):
     stripe.api_key = settings.STRIPE_SECRET_KEY
+    today = timezone.localdate()
     try:
 
-        club = get_object_or_404(Club, id=club_id)
+        club = get_object_or_404(Club, id=club_id, is_deleted=False)
 
         if club.owner != request.user:
             return HttpResponseForbidden("You do not own this club")
 
         subdomain = request.POST.get("subdomain")
-        nyukai_key = request.POST.get("nyukai_key")
+        join_key = request.POST.get("join_key")
 
-        if subdomain != club.subdomain or nyukai_key != club.nyukai_key:
+        if subdomain != club.subdomain or join_key != club.join_key:
             return JsonResponse(
                 {"error": "Confirmation failed"},
                 status=400
@@ -246,7 +190,9 @@ def unsubscribe(request, club_id):
 
         send_subscription_canceled_emails.delay(club_data)
 
-        club.delete()
+        club.is_deleted = True
+        club.deleted_at = today
+        club.save()
 
         return JsonResponse({"success": True, "message": "Subscription canceled"})
     except Club.DoesNotExist:
@@ -257,7 +203,7 @@ def unsubscribe(request, club_id):
 
 
 
-logger = logging.getLogger(__name__)
+
 def start_google_login(request):
     next_url = request.GET.get('next')
     if next_url:
@@ -276,7 +222,7 @@ class KaibaruPageView(View):
 
         subdomain = request.get_host().split('.')[0]
         
-        club = Club.objects.filter(subdomain=subdomain).first()
+        club = Club.objects.filter(subdomain=subdomain, is_deleted=False).first()
 
         club_data = {
             'title': club.title if club and club.title else 'ホームページ兼会員管理システム作成',

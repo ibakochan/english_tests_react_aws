@@ -12,11 +12,11 @@ import logging
 from .serializers import MemberSerializer, ClubSerializer, LessonSerializer, ParticipationSerializer, SlateImageSerializer
 from django.conf import settings
 from datetime import timedelta
-
+import hashlib
 
 from django.db import transaction
 
-from .views import sync_member_quantity
+from .utils import sync_member_quantity
 
 
 from collections import defaultdict
@@ -30,13 +30,67 @@ def get_level_participation(member):
 
 VALID_SUBDOMAIN_RE = re.compile(r'^[a-z0-9-]+$', re.IGNORECASE)
 
+
+
+def hash_uploaded_file(uploaded_file, chunk_size=8192):
+    hasher = hashlib.sha256()
+    for chunk in uploaded_file.chunks(chunk_size):
+        hasher.update(chunk)
+
+    uploaded_file.seek(0)  
+
+    return hasher.hexdigest()
+
+
+
 class SlateImageViewSet(viewsets.ModelViewSet):
     queryset = SlateImage.objects.all()
     serializer_class = SlateImageSerializer
 
     def perform_create(self, serializer):
-        club_id = self.request.data.get("club")
-        serializer.save(club_id=club_id)
+        serializer.save(
+            club_id=self.request.data.get("club")
+        )
+
+    def create(self, request, *args, **kwargs):
+        club_id = request.data.get("club")
+        image_file = request.FILES.get("image")
+
+        if not club_id or not image_file:
+            return Response(
+                {"detail": "club and image are required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+ 
+        image_hash = hash_uploaded_file(image_file)
+ 
+        existing = SlateImage.objects.filter(
+            club_id=club_id,
+            hash=image_hash,
+        ).first()
+
+        if existing:
+            existing.created_at = timezone.now()
+            existing.save(update_fields=["created_at"])
+            
+            serializer = self.get_serializer(existing)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+ 
+        serializer = self.get_serializer(
+            data={
+                "image": image_file,
+                "hash": image_hash,
+            }
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
+
+
 
 class ClubViewSet(viewsets.ModelViewSet):
     queryset = Club.objects.all()
@@ -44,7 +98,7 @@ class ClubViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="by-subdomain/(?P<subdomain>[^/.]+)")
     def by_subdomain(self, request, subdomain=None):
-        club = self.get_queryset().filter(subdomain=subdomain).first()
+        club = self.get_queryset().filter(subdomain=subdomain, is_deleted=False).first()
         if not club:
             return Response({"detail": "Not found"}, status=status.HTTP_404_NOT_FOUND)
         serializer = self.get_serializer(club, context={"request": request})
@@ -74,7 +128,7 @@ class ClubViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if Club.objects.filter(subdomain=subdomain).exists():
+        if Club.objects.filter(subdomain=subdomain, is_deleted=False).exists():
             return Response(
                 {"error": "このサブドメインはすでに使用されています。"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -96,79 +150,39 @@ class ClubViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["patch"], url_path="update_slate_section/(?P<section>[^/.]+)")
     def update_slate_section(self, request, pk=None, section=None):
         """
-        Generic endpoint to update a Slate editor section and its images.
-        section must be one of: home, trial, system, contact
+        Update a Slate section.
+        Images are uploaded separately and referenced by ID inside boxes[].content.
         """
         if section not in {"home", "trial", "system", "contact"}:
             return Response({"detail": "Invalid section"}, status=status.HTTP_400_BAD_REQUEST)
 
         club = self.get_object()
         section_data = request.data.get(section)
-        images_data = request.data.get(f"{section}_images", "[]")
-
-        # Parse section JSON if it's a string
+ 
         if isinstance(section_data, str):
             try:
                 section_data = json.loads(section_data)
             except json.JSONDecodeError:
-                pass
+                return Response(
+                    {"detail": "Invalid JSON payload"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
-        # Parse images JSON if it's a string
-        if isinstance(images_data, str):
-            try:
-                images_data = json.loads(images_data)
-            except json.JSONDecodeError:
-                images_data = []
-
-        # Save section JSON into club.<section>
-        if section_data is not None:
-            if isinstance(section_data, (list, dict)):
-                setattr(club, section, json.dumps(section_data))
-            else:
-                setattr(club, section, section_data)
-            club.save()
-
-        # Handle SlateImage objects
-        for idx, img in enumerate(images_data):
-            img_id = img.get("id")
-            uploaded_file = request.FILES.get(f"{section}_files_{idx}")  # actual file
-
-            if img_id:
-                try:
-                    slate_img = SlateImage.objects.get(id=img_id, club=club)
-                    if uploaded_file:
-                        slate_img.image = uploaded_file
-                    slate_img.category = section  # update category just in case
-                    slate_img.save()
-                    img["url"] = slate_img.image.url
-                except SlateImage.DoesNotExist:
-                    continue
-            else:
-                if uploaded_file:
-                    slate_img = SlateImage.objects.create(
-                        club=club,
-                        category=section,
-                        image=uploaded_file,
-                    )
-                    img["url"] = slate_img.image.url
-
-        # Delete SlateImages no longer referenced in JSON
+        if not isinstance(section_data, dict):
+            return Response(
+                {"detail": "Section payload must be an object"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+ 
+        setattr(club, section, json.dumps(section_data))
+        club.save()
+ 
         image_ids_in_section = set()
-        if isinstance(section_data, list):
-            for node in section_data:
-                if node.get("type") == "image" and "id" in node:
-                    image_ids_in_section.add(node["id"])
 
-
-        SlateImage.objects.filter(club=club, category=section).exclude(id__in=image_ids_in_section).delete()
-
-        # Save final section JSON
-        if section_data is not None:
-            setattr(club, section, json.dumps(section_data))
-            club.save()
 
         serializer = self.get_serializer(club, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class MemberViewSet(viewsets.ModelViewSet):
@@ -212,7 +226,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         subdomain = self.request.data.get("club_subdomain")
         join_key = self.request.data.get("join_key")
 
-        club = Club.objects.filter(subdomain=subdomain).first()
+        club = Club.objects.filter(subdomain=subdomain, is_deleted=False).first()
         if not club:
             raise serializers.ValidationError({"club_subdomain": "Club not found."})
         
@@ -236,7 +250,7 @@ class LessonViewSet(viewsets.ModelViewSet):
         if not subdomain:
             raise serializers.ValidationError({"club_subdomain": "This field is required."})
 
-        club = Club.objects.filter(subdomain=subdomain).first()
+        club = Club.objects.filter(subdomain=subdomain, is_deleted=False).first()
         if not club:
             raise serializers.ValidationError({"club_subdomain": "Club not found."})
         
@@ -365,7 +379,7 @@ class ParticipationViewSet(viewsets.ModelViewSet):
 
         serializer = ParticipationSerializer(participation)
 
-        response_data = serializer.data  # get the dict
+        response_data = serializer.data   
         response_data["member_data"] = {
             "milestones": milestones,
             "current_level": member.level,

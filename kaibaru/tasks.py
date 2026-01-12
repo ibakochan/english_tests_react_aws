@@ -21,7 +21,7 @@ def reconcile_single_club_subscription(club_id):
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
     try:
-        club = Club.objects.get(id=club_id)
+        club = Club.objects.get(id=club_id, is_deleted=False)
     except Club.DoesNotExist:
         return
 
@@ -71,10 +71,10 @@ def reset_monthly_participation_counts():
     today = timezone.localdate()
 
 
-    clubs = Club.objects.all()
+    clubs = Club.objects.filter(is_deleted=False)
+
 
     for club in clubs:
-        # Skip if already reset this month
         if club.last_reset and (
             club.last_reset.year == today.year
             and club.last_reset.month == today.month
@@ -108,13 +108,11 @@ def reconcile_stripe_subscriptions():
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
-    clubs = Club.objects.all()
+    clubs = Club.objects.filter(is_deleted=False)
+
 
     for club in clubs:
         try:
-            # ----------------------------------------
-            # Clubs WITH a Stripe subscription
-            # ----------------------------------------
             if club.stripe_subscription_id:
                 try:
                     sub = stripe.Subscription.retrieve(club.stripe_subscription_id)
@@ -162,7 +160,9 @@ def reconcile_stripe_subscriptions():
 
 
                         send_club_deleted_emails.delay(club_data)
-                        club.delete()
+                        club.is_deleted = True
+                        club.deleted_at = today
+                        club.save()
                     else:
                         club.subscription_active = False
                         club.save()
@@ -180,11 +180,9 @@ def reconcile_stripe_subscriptions():
                     club.save()
                   
                     continue
-
-                # 🔑 CORE: reconcile member quantity
+ 
                 sync_member_quantity(club)
-
-                # Check latest invoice
+ 
                 invoices = stripe.Invoice.list(
                     customer=club.stripe_customer_id,
                     limit=1
@@ -206,10 +204,7 @@ def reconcile_stripe_subscriptions():
                             f"[CELERY] Invoice applied: club={club.id}, "
                             f"invoice={invoice.id}, expiration={club.expiration_date}"
                         )
-
-            # ----------------------------------------
-            # Clubs WITHOUT a Stripe subscription
-            # ----------------------------------------
+ 
             else:
                 if club.expiration_date:
                     days_expired = max((today - club.expiration_date).days, 0)
@@ -217,8 +212,7 @@ def reconcile_stripe_subscriptions():
                     if days_expired >= 1 and club.subscription_active:
                         club.subscription_active = False
                         club.save()
-
-                    # Hard delete after 7 days
+ 
                     if days_expired >= 7:
                         logger.warning(
                             f"[CELERY] Deleting expired club={club.id}"
@@ -237,7 +231,9 @@ def reconcile_stripe_subscriptions():
 
                         send_club_deleted_emails.delay(club_data)
 
-                        club.delete()
+                        club.is_deleted = True
+                        club.deleted_at = today
+                        club.save()
 
         except stripe.error.InvalidRequestError as e:
             logger.error(

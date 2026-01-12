@@ -1,7 +1,7 @@
 from fugashi import Tagger
 import re
 
-KANJI_REGEX = re.compile(r'[\u4e00-\u9fff]')  # Unicode range for CJK Unified Ideographs
+KANJI_REGEX = re.compile(r'[\u4e00-\u9fff]')  
 
 def katakana_to_hiragana(katakana):
     return ''.join(

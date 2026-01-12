@@ -308,8 +308,7 @@ class UpdateProfileView(View):
                 user.last_name = last_name
                 user.save()
                 updated_fields.append(f"名字を {last_name} に変更")
-
-            # Only save student if we changed it
+ 
             if "出席番号" in "".join(updated_fields):
                 student.save()
 

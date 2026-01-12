@@ -1,4 +1,3 @@
-# Gets me images in readable binary form so I can render them through streaming.
 def naturalsize(count):
     fcount = float(count)
     k = 1024

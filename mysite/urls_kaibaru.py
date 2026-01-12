@@ -9,12 +9,11 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('allauth.urls')),
-    path('accounts/', include('accounts.urls')),   # accounts still available
-    path('', include('kaibaru.urls')),  # kaibaru app only
+    path('accounts/', include('accounts.urls')),    
+    path('', include('kaibaru.urls')),   
     re_path(r'^oauth/', include('social_django.urls', namespace='social')),
 ]
-
-# Serve the static HTML
+ 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 urlpatterns += [
     re_path(r'^site/(?P<path>.*)$', serve,
@@ -25,8 +24,7 @@ urlpatterns += [
 ]
 
 
-
-# Optional social login override
+ 
 try:
     from . import github_settings
     social_login = 'registration/login_social.html'

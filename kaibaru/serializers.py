@@ -12,6 +12,7 @@ import json
 from django.db.models import Sum
 from django.db import models
 
+from .models import MemberSubscription
 
 
 
@@ -19,7 +20,7 @@ class SlateImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SlateImage
-        fields = ["category", "id", "image"]
+        fields = [ "created_at", "id", "image", "hash"]
 
 class ParticipationMiniSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,6 +55,7 @@ class MemberSerializer(serializers.ModelSerializer):
     total_participation = serializers.SerializerMethodField()
     this_month_participation = serializers.SerializerMethodField()
     level_participation = serializers.SerializerMethodField()
+    subscription = serializers.SerializerMethodField()
 
     class Meta:
         model = Member
@@ -82,8 +84,18 @@ class MemberSerializer(serializers.ModelSerializer):
             "is_kyukai",
             "is_kyukai_paid",
             "kyukai_since",
+            "subscription",
         ]
         read_only_fields = ["id", "user"]
+
+    def get_subscription(self, obj):
+        sub = getattr(obj, "subscription", None)
+        if not sub:
+            sub = MemberSubscription.objects.filter(member=obj).first()
+        if not sub:
+            return None
+        from .serializers import MemberSubscriptionSerializer
+        return MemberSubscriptionSerializer(sub).data
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -128,7 +140,6 @@ class MemberSerializer(serializers.ModelSerializer):
         return obj.manual_total_participation + sum(p.total_count for p in obj.participations.all())
 
     def get_this_month_participation(self, obj):
-        # Just sum monthly_count, since it'll be reset automatically monthly
         return sum(p.monthly_count for p in obj.participations.all())
 
     def get_level_participation(self, obj):
@@ -191,13 +202,11 @@ class LessonSerializer(serializers.ModelSerializer):
 
     def get_monthly_average(self, obj):
         total = self.get_total_participation(obj)
-        # Estimate number of days the lesson has existed
         if hasattr(obj, 'created') and obj.created:
             days = (timezone.localdate() - obj.created.date()).days
         else:
-            # fallback: use 30 days if no creation date
             days = 30
-        months = max(days / 30, 1)  # avoid division by zero
+        months = max(days / 30, 1)  
         return round(total / months, 2)
 
 
@@ -212,6 +221,7 @@ class ClubSerializer(serializers.ModelSerializer):
     home = serializers.JSONField()
     warning_message = serializers.SerializerMethodField()
     frozen = serializers.SerializerMethodField()
+    slate_images = SlateImageSerializer(many=True, read_only=True)
 
 
 
@@ -250,6 +260,7 @@ class ClubSerializer(serializers.ModelSerializer):
             "subscription_active",
             "warning_message",
             "frozen",
+            "slate_images",
         ]
         read_only_fields = ["id"]
 
@@ -281,7 +292,6 @@ class ClubSerializer(serializers.ModelSerializer):
 
  
 
-        # DELETE after 28 days (view will delete object)
         if not club.stripe_subscription_id and days_after_exp >= 7:
             return None
 
@@ -298,8 +308,7 @@ class ClubSerializer(serializers.ModelSerializer):
                     "本日中に支払いが完了しない場合、明日からクラブは凍結され、"
                     "編集や他のユーザーからの閲覧ができなくなります。"
                 )
-    
-            # Day 1+: frozen message
+     
             if days_after_exp >= 1:
                 days_left = max(0, 7 - days_after_exp)
                 return (
@@ -310,8 +319,7 @@ class ClubSerializer(serializers.ModelSerializer):
                 )
     
             return None
-    
-        # FROZEN (7–28 days)
+     
         if 7 < days_after_exp <= 28:
             if request.user != club.owner:
                 return None
@@ -322,8 +330,7 @@ class ClubSerializer(serializers.ModelSerializer):
                 f"あと {days_left} 日以内に支払いが完了しない場合、"
                 f"クラブとその所属メンバーのデータは完全に削除されます。"
             )
-
-        # WARNING (0–7 days)
+ 
         if 1 <= days_after_exp <= 7:
             if request.user == club.owner:
                 days_left = 7 - days_after_exp
@@ -340,6 +347,19 @@ class ClubSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
 
         request = self.context.get("request")
+
+        if not request or not request.user.is_authenticated:
+            data.pop("stripe_customer_id", None)
+            data.pop("stripe_subscription_id", None)
+            return data
+
+        user = request.user
+
+        if instance.owner_id != user.id:
+            data.pop("stripe_customer_id", None)
+            data.pop("stripe_subscription_id", None)
+
+
         if not request or not request.user.is_authenticated:
             members_qs = instance.members.filter(
                 models.Q(is_instructor=True) |
@@ -349,7 +369,7 @@ class ClubSerializer(serializers.ModelSerializer):
             data["members"] = MemberSerializer(members_qs, many=True, context=self.context).data
             return data
 
-        user = request.user
+ 
         
         if instance.owner_id == user.id:
             return data

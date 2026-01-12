@@ -1,4 +1,3 @@
-# kaibaru/services/subscriptions.py
 
 from datetime import date
 import stripe

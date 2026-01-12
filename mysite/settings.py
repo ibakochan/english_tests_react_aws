@@ -95,6 +95,7 @@ MIDDLEWARE = [
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
+
  
 ROOT_URLCONF = 'mysite.urls'
 
@@ -111,9 +112,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'main.context_processors.settings',      # Add
-                'social_django.context_processors.backends',  # Add
-                'social_django.context_processors.login_redirect', # Add
+                'main.context_processors.settings',      
+                'social_django.context_processors.backends',  
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
@@ -180,7 +181,7 @@ STORAGES = {
 GOOGLE_APPLICATION_CREDENTIALS = "/home/bitnami/dp/service-account.json"
 
 MEDIA_URL = "https://storage.googleapis.com/kaibaru/"
-DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024  # 20 MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024   
 FILE_UPLOAD_MAX_MEMORY_SIZE = 20 * 1024 * 1024 
 GS_FILE_OVERWRITE = False
 
@@ -255,8 +256,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-# Security settings
+ 
 
 
 
@@ -276,10 +276,9 @@ USE_X_FORWARDED_HOST = True
 
  
 
+ 
 
-# Define redirect URLs and login URL
-
-HOST = os.environ.get("DJANGO_HOST")  # set per process
+HOST = os.environ.get("DJANGO_HOST")   
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

@@ -3577,7 +3577,7 @@ eiken_pre2_vocab_examples = {
     'insight': ["Her deep (        ) into human nature made her a great writer.", "https://storage.googleapis.com/eiken_pre2_sound1/2025_06_30_11_18_21_2.mp3"],
     'instance': ["For (        ), you could try using a different approach.", "https://storage.googleapis.com/eiken_pre2_sound1/2025_06_30_11_18_40_2.mp3"],
     'insurance': ["You should get travel (        ) before your trip.", "https://storage.googleapis.com/eiken_pre2_sound1/2025_06_30_11_18_43_2.mp3"],
-    'integrity': ["He is known for his honesty and (        ).", "https://storage.googleapis.com/eiken_che_sound1/2025_06_30_11_18_48_2.mp3"], # This URL was incorrect in the original, I've corrected it.
+    'integrity': ["He is known for his honesty and (        ).", "https://storage.googleapis.com/eiken_che_sound1/2025_06_30_11_18_48_2.mp3"],  
     'internal': ["The company is undergoing an (        ) review of its policies.", "https://storage.googleapis.com/eiken_pre2_sound1/2025_06_30_11_18_51_2.mp3"],
     'interpret': ["It's difficult to (        ) these complex instructions.", "https://storage.googleapis.com/eiken_pre2_sound1/2025_06_30_11_18_54_2.mp3"],
     'interval': ["There was a short (        ) between the two movie showings.", "https://storage.googleapis.com/eiken_pre2_sound1/2025_06_30_11_24_10_2.mp3"],
@@ -3963,7 +3963,7 @@ eiken_pre2_vocab_examples = {
     'tinkle': ["I heard the bells (        ) in the distance.", "https://storage.googleapis.com/eiken_pre2_sound2/2025_06_30_13_29_06_2.mp3"],
     'tissue': ["Could I have a (        ), please? I have a runny nose.", "https://storage.googleapis.com/eiken_pre2_sound2/2025_06_30_13_29_09_2.mp3"],
     'tobacco': ["Smoking (        ) is harmful to your health.", "https://storage.googleapis.com/eiken_pre2_sound2/2025_06_30_13_29_12_2.mp3"],
-    'toddler': ["The (        ) took her first steps today.", "https://storage.googleapis.com/eiken_一个人.mp3"], # This URL is incorrect based on the pattern
+    'toddler': ["The (        ) took her first steps today.", "https://storage.googleapis.com/eiken_一个人.mp3"], 
     'toilet': ["Where is the nearest (        )?" , "https://storage.googleapis.com/eiken_pre2_sound2/2025_06_30_13_29_17_2.mp3"],
     'token': ["Please accept this small gift as a (        ) of my appreciation." , "https://storage.googleapis.com/eiken_pre2_sound2/2025_06_30_13_29_20_2.mp3"],
     'tolerant': ["You should be more (        ) of other people's opinions." , "https://storage.googleapis.com/eiken_pre2_sound2/2025_06_30_13_29_33_2.mp3"],

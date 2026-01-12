@@ -80,14 +80,14 @@ class SimpleConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "user_joined",
             "username": event["username"],
-            "student_number": event.get("student_number"),  # include student_number if present
+            "student_number": event.get("student_number"),   
         }))
     
     async def user_left(self, event):
         await self.send(text_data=json.dumps({
             "type": "user_left",
             "username": event["username"],
-            "student_number": event.get("student_number"),  # include student_number if you send it on leave events
+            "student_number": event.get("student_number"),   
         }))
 
     async def receive(self, text_data):

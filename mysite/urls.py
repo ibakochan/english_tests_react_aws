@@ -19,11 +19,10 @@ urlpatterns = [
     path('account/', include('allauth.urls')),
     path('accounts/', include('accounts.urls')),
     path('', include('main.urls')),
-    re_path(r'^oauth/', include('social_django.urls', namespace='social')),# Keep
+    re_path(r'^oauth/', include('social_django.urls', namespace='social')), 
 ]
 
-
-# Serve the static HTML
+ 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 urlpatterns += [
     re_path(r'^site/(?P<path>.*)$', serve,
@@ -32,8 +31,7 @@ urlpatterns += [
         name='site_path'
         ),
 ]
-
-# Serve the favicon - Keep for later
+ 
 urlpatterns += [
     path('favicon.ico', serve, {
             'path': 'favicon.ico',
@@ -42,8 +40,7 @@ urlpatterns += [
     ),
 ]
 
-
-# Switch to social login if it is configured - Keep for later
+ 
 try:
     from . import github_settings
     social_login = 'registration/login_social.html'
