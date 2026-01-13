@@ -60,6 +60,8 @@ Deployment workflow: local build → rsync to server → collectstatic → resta
 Both applications leverage AWS, Redis, and Daphne for scalable real-time handling.
 
 
+
+
 Eibaru & Kaibaru プロジェクト
 このリポジトリには、私が開発・運用している2つのウェブアプリケーション、Kaibaru と Eibaru が含まれています。両プロジェクトは同じバックエンドインフラを共有していますが、それぞれ異なる目的で運用されています。
 
